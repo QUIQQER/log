@@ -226,22 +226,43 @@ define('package/quiqqer/log/bin/Manager', [
          * Download the active log
          */
         downloadActiveLog: function () {
-            var data         = this.$Grid.getSelectedData(),
-                log          = data[0].file,
-                downloadFile = URL_OPT_DIR + 'quiqqer/log/bin/downloadLog.php?log=' + encodeURIComponent(log),
-                iframeId     = Math.floor(Date.now() / 1000),
-                Frame        = new Element('iframe', {
-                    id             : 'download-iframe-' + iframeId,
-                    src            : downloadFile,
-                    styles         : {
-                        left    : -1000,
-                        height  : 10,
-                        position: 'absolute',
-                        top     : -1000,
-                        width   : 10
-                    },
-                    'data-iframeid': iframeId
-                }).inject(document.body);
+            var self = this;
+
+            // Check if the user is allowed to download logs
+            Ajax.get('package_quiqqer_log_ajax_canUserDownloadLogs', function (canUserDownloadLogs) {
+                // If user is not allowed to download logs...
+                if (!canUserDownloadLogs) {
+                    // ...display no-permission error on the button
+                    QUI.getMessageHandler(function (MH) {
+                        MH.addError(
+                            Locale.get(lg, 'logs.download.message.permission'),
+                            self.getButtons('download').getElm()
+                        );
+                    });
+
+                    return;
+                }
+
+                // Create an iframe that downloads the log
+                var data         = self.$Grid.getSelectedData(),
+                    log          = data[0].file,
+                    downloadFile = URL_OPT_DIR + 'quiqqer/log/bin/downloadLog.php?log=' + encodeURIComponent(log),
+                    iframeId     = Math.floor(Date.now() / 1000),
+                    Frame        = new Element('iframe', {
+                        id             : 'download-iframe-' + iframeId,
+                        src            : downloadFile,
+                        styles         : {
+                            left    : -1000,
+                            height  : 10,
+                            position: 'absolute',
+                            top     : -1000,
+                            width   : 10
+                        },
+                        'data-iframeid': iframeId
+                    }).inject(document.body);
+            }, {
+                'package': 'quiqqer/log'
+            });
         },
 
 
@@ -291,6 +312,12 @@ define('package/quiqqer/log/bin/Manager', [
             this.Loader.show();
 
             Ajax.get('package_quiqqer_log_ajax_file', function (result) {
+                if (!result) {
+                    $('qui-logs-message').set('text', Locale.get(lg, 'logs.panel.message.permission'));
+
+                    Control.Loader.hide();
+                    return false;
+                }
 
                 File.set(
                     'html',
