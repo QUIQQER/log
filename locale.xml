@@ -373,5 +373,10 @@
             <de><![CDATA[Du hast nicht die nötigen Berechtigungen, um diese Datei anzusehen.]]></de>
             <en><![CDATA[You do not have the necessary permissions to view this file.]]></en>
         </locale>
+
+        <locale name="logs.download.message.permission">
+            <de><![CDATA[Du hast nicht die nötigen Berechtigungen, um diese Datei herunterzuladen.]]></de>
+            <en><![CDATA[You do not have the necessary permissions to download this file.]]></en>
+        </locale>
     </groups>
 </locales>
