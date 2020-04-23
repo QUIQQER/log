@@ -4,12 +4,13 @@
  * System logs
  *
  * @param string $file - Name of the log
- * @return array
+ * @return array|boolean
  */
 function package_quiqqer_log_ajax_file($file)
 {
-    if (!QUI::getUserBySession()->getPermission('quiqqer.packages.quiqqerlog.canUse')) {
-        exit;
+    $User = QUI::getUserBySession();
+    if (!$User->getPermission('quiqqer.packages.quiqqerlog.canUse') && !$User->isSU()) {
+        return false;
     }
 
     // Return filename component of input so no files outside the log directory can be accessed
