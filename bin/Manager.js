@@ -291,6 +291,12 @@ define('package/quiqqer/log/bin/Manager', [
             this.Loader.show();
 
             Ajax.get('package_quiqqer_log_ajax_file', function (result) {
+                if (!result) {
+                    $('qui-logs-message').set('text', Locale.get(lg, 'logs.panel.message.permission'));
+
+                    Control.Loader.hide();
+                    return false;
+                }
 
                 File.set(
                     'html',
