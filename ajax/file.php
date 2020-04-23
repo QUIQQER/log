@@ -8,7 +8,8 @@
  */
 function package_quiqqer_log_ajax_file($file)
 {
-    if (!QUI::getUserBySession()->getPermission('quiqqer.packages.quiqqerlog.canUse')) {
+    $User = QUI::getUserBySession();
+    if (!$User->getPermission('quiqqer.packages.quiqqerlog.canUse') && !$User->isSU()) {
         return false;
     }
 
