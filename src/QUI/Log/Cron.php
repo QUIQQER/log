@@ -44,7 +44,8 @@ class Cron
 
         $Mailer->addRecipient($params['email']);
         $Mailer->setSubject('Logs from the last day');
-        $Mailer->setBody($body);
+
+        $maxMegaByte = 5;
 
         foreach ($result as $entry) {
             if (!isset($entry['file'])) {
@@ -53,11 +54,19 @@ class Cron
 
             $file = $logDir.$entry['file'];
 
-            if (file_exists($file)) {
-                $Mailer->addAttachments($file);
+            if (\file_exists($file)) {
+                $size = QUI\Utils\System\File::getFileSize($file);
+                $size = \number_format($size / 1048576);
+
+                if ($size <= $maxMegaByte) {
+                    $Mailer->addAttachments($file);
+                } else {
+                    $body .= '<br />File '.$file.' is to big for an Attachment';
+                }
             }
         }
 
+        $Mailer->setBody($body);
         $Mailer->send();
     }
 
@@ -90,6 +99,8 @@ class Cron
      *
      * @param $params
      * @param $CronManager
+     *
+     * @throws QUI\Exception
      */
     public static function cleanupLogsAndArchives($params, $CronManager)
     {
