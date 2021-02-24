@@ -31,41 +31,8 @@ class Events
             return;
         }
 
-
         $Template->extendHeader(
-            '<script type="text/javascript">
-              /* <![CDATA[ */
-                if ( typeof require !== "undefined" )
-                {
-                    require(["qui/QUI"], function(QUI)
-                    {
-                        QUI.addEvent("onError", function(msg, url, linenumber)
-                        {
-                            console.error(
-                                "Message "+ msg +"\n"+
-                                "URL "+ url +"\n"+
-                                "Linenumber "+ linenumber
-                            );
-
-                            require(["Ajax"], function(Ajax)
-                            {
-                                if ( typeof Ajax === "undefined" ) {
-                                    return;
-                                }
-
-                                Ajax.post("package_quiqqer_log_ajax_logJsError", false, {
-                                    "package" : "quiqqer/log",
-                                    errMsg        : msg,
-                                    errUrl        : url,
-                                    errLinenumber : linenumber,
-                                    browser       : navigator.userAgent.toString()
-                                });
-                            })
-                        });
-                    });
-                }
-              /* ]]> */
-              </script>'
+            '<script type="text/javascript">'.\file_get_contents(\dirname(__FILE__).'/logEvents.js').'</script>'
         );
     }
 
