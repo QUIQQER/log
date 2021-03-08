@@ -16,8 +16,14 @@ function package_quiqqer_log_ajax_logJsError(
 ) {
     $User = QUI::getUserBySession();
 
+    // don't log require.js error logs from search engines, search previews
+    if (strpos($browser, 'BingPreview') !== false
+        || strpos($browser, 'compatible; Googlebot') !== false) {
+        return;
+    }
+
     $error = "\n";
-    $error .= "Time: " . date('Y-m-d H:i:s') . "\n\n";
+    $error .= "Time: ".\date('Y-m-d H:i:s')."\n\n";
     $error .= "File: {$errUrl}\n";
     $error .= "Line Number: {$errLinenumber}\n";
     $error .= "Error: {$errMsg}\n";
@@ -26,10 +32,10 @@ function package_quiqqer_log_ajax_logJsError(
     $error .= "Username: {$User->getName()}\n";
     $error .= "\n================================\n";
 
-    QUI\System\Log::addError($error, array(), 'js_errors');
+    QUI\System\Log::addError($error, [], 'js_errors');
 }
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_logJsError',
-    array('errMsg', 'errUrl', 'errLinenumber', 'browser')
+    ['errMsg', 'errUrl', 'errLinenumber', 'browser']
 );
