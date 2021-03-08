@@ -16,9 +16,25 @@ function package_quiqqer_log_ajax_logJsError(
 ) {
     $User = QUI::getUserBySession();
 
+    $isSearchEngine = function () use ($browser) {
+        if (strpos($browser, 'BingPreview') !== false) {
+            return true;
+        }
+
+        if (strpos($browser, 'compatible; Googlebot') !== false) {
+            return true;
+        }
+
+        return false;
+    };
+
     // don't log require.js error logs from search engines, search previews
-    if (strpos($browser, 'BingPreview') !== false
-        || strpos($browser, 'compatible; Googlebot') !== false) {
+    if (strpos($errUrl, 'require.js') !== false && $isSearchEngine()) {
+        return;
+    }
+
+    // don't log require.js css min error logs from search engines, search previews
+    if (strpos($errUrl, 'css.min.js') !== false && $isSearchEngine()) {
         return;
     }
 
