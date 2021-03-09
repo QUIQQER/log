@@ -21,7 +21,8 @@ function package_quiqqer_log_ajax_logJsError(
             return true;
         }
 
-        if (strpos($browser, 'compatible; Googlebot') !== false) {
+        if (strpos($browser, 'compatible; Googlebot') !== false
+            || strpos($browser, 'AdsBot-Google-Mobile') !== false) {
             return true;
         }
 
