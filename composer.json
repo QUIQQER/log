@@ -16,7 +16,8 @@
     },
     "require": {
         "quiqqer\/quiqqer": "*",
-        "monolog\/monolog": "1.*"
+        "monolog\/monolog": "1.*",
+        "quiqqer/cron": "^1.10.1|*@dev"
     },
     "suggest": {
         "ext-zip": "Required to archive logs in zip files."
