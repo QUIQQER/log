@@ -19,6 +19,11 @@
         <description>
             <locale group="quiqqer/log" var="cron.cleanup.delete.desc"/>
         </description>
+
+        <autocreate>
+            <interval>0 3 * * *</interval>
+            <active>1</active>
+        </autocreate>
     </cron>
 
     <cron exec="\QUI\Log\Cron::archiveLogs">
@@ -28,5 +33,10 @@
         <description>
             <locale group="quiqqer/log" var="cron.cleanup.archive.desc"/>
         </description>
+
+        <autocreate>
+            <interval>0 3 * * *</interval>
+            <active>1</active>
+        </autocreate>
     </cron>
 </crons>
