@@ -16,11 +16,10 @@
         "email": "support@pcsg.de"
     },
     "require": {
+        "ext-zip": "*",
         "quiqqer\/quiqqer": "*",
-        "monolog\/monolog": "1.*"
-    },
-    "suggest": {
-        "ext-zip": "Required to archive logs in zip files."
+        "monolog\/monolog": "1.*",
+        "quiqqer/cron": "^1.10.1|*@dev"
     },
     "autoload": {
         "psr-4": {
