@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    var loadQUI = function () {
+    let loadQUI = function () {
         return Promise.resolve();
     };
 
@@ -24,12 +24,25 @@
                             return;
                         }
 
+                        const context = [];
+
+                        for (let i in Ajax.$onprogress) {
+                            if (!Ajax.$onprogress.hasOwnProperty(i)) {
+                                continue;
+                            }
+
+                            context.push({
+                                method: Ajax.$onprogress[i].getAttribute("_rf")
+                            });
+                        }
+
                         Ajax.post("package_quiqqer_log_ajax_logJsError", false, {
                             "package"    : "quiqqer/log",
                             errMsg       : msg,
                             errUrl       : url,
                             errLinenumber: linenumber,
-                            browser      : navigator.userAgent.toString()
+                            browser      : navigator.userAgent.toString(),
+                            context      : JSON.encode(context)
                         });
                     });
                 });

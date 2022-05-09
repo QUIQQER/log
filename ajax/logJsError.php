@@ -12,9 +12,14 @@ function package_quiqqer_log_ajax_logJsError(
     $errMsg,
     $errUrl,
     $errLinenumber,
-    $browser
+    $browser,
+    $context
 ) {
     $User = QUI::getUserBySession();
+
+    if (!empty($context)) {
+        $context = json_decode($context, true);
+    }
 
     $isSearchEngine = function () use ($browser) {
         if (strpos($browser, 'BingPreview') !== false) {
@@ -40,13 +45,19 @@ function package_quiqqer_log_ajax_logJsError(
     }
 
     $error = "\n";
-    $error .= "Time: ".\date('Y-m-d H:i:s')."\n\n";
+    $error .= "Time: " . date('Y-m-d H:i:s') . "\n\n";
     $error .= "File: {$errUrl}\n";
     $error .= "Line Number: {$errLinenumber}\n";
     $error .= "Error: {$errMsg}\n";
     $error .= "Browser: {$browser}\n";
     $error .= "\n";
     $error .= "Username: {$User->getName()}\n";
+
+    if (!empty($context)) {
+        $error .= "Context:" . PHP_EOL;
+        $error .= print_r($context, true);
+    }
+
     $error .= "\n================================\n";
 
     QUI\System\Log::addError($error, [], 'js_errors');
@@ -54,5 +65,5 @@ function package_quiqqer_log_ajax_logJsError(
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_logJsError',
-    ['errMsg', 'errUrl', 'errLinenumber', 'browser']
+    ['errMsg', 'errUrl', 'errLinenumber', 'browser', 'context']
 );
