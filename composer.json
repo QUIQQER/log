@@ -1,6 +1,7 @@
 {
     "name": "quiqqer\/log",
     "type": "quiqqer-module",
+    "version": "1.5.0",
     "description": "Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.",
     "license": "GPL-3.0+",
     "authors": [
