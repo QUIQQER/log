@@ -98,7 +98,7 @@ class Logger
         $arguments = func_get_args();
         $event     = $arguments[0]['event'] ?? $arguments[0];
 
-        $Logger->addInfo('event log ' . $event, $context);
+        $Logger->info('event log ' . $event, $context);
     }
 
     /**
@@ -192,49 +192,49 @@ class Logger
         switch ($loglevel) {
             case Log::LEVEL_DEBUG:
                 if (self::$logLevels['debug']) {
-                    $Logger->addDebug($message, $context);
+                    $Logger->debug($message, $context);
                 }
                 break;
 
             case Log::LEVEL_INFO:
                 if (self::$logLevels['info']) {
-                    $Logger->addInfo($message, $context);
+                    $Logger->info($message, $context);
                 }
                 break;
 
             case Log::LEVEL_NOTICE:
                 if (self::$logLevels['notice']) {
-                    $Logger->addNotice($message, $context);
+                    $Logger->notice($message, $context);
                 }
                 break;
 
             case Log::LEVEL_WARNING:
                 if (self::$logLevels['warning']) {
-                    $Logger->addWarning($message, $context);
+                    $Logger->warning($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ERROR:
                 if (self::$logLevels['error']) {
-                    $Logger->addError($message, $context);
+                    $Logger->error($message, $context);
                 }
                 break;
 
             case Log::LEVEL_CRITICAL:
                 if (self::$logLevels['critical']) {
-                    $Logger->addCritical($message, $context);
+                    $Logger->critical($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ALERT:
                 if (self::$logLevels['alert']) {
-                    $Logger->addAlert($message, $context);
+                    $Logger->alert($message, $context);
                 }
                 break;
 
             case Log::LEVEL_EMERGENCY:
                 if (self::$logLevels['emergency']) {
-                    $Logger->addEmergency($message, $context);
+                    $Logger->emergency($message, $context);
                 }
                 break;
         }
@@ -273,7 +273,7 @@ class Logger
         try {
             QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [$Logger]);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
 
         return $Logger;
@@ -322,7 +322,7 @@ class Logger
         try {
             $Logger->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -354,7 +354,7 @@ class Logger
         try {
             $Logger->pushHandler(new Monolog\Handler\ChromePHPHandler());
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -382,7 +382,7 @@ class Logger
             $Handler = new Monolog\Handler\CubeHandler($server);
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -414,7 +414,7 @@ class Logger
         try {
             $Logger->pushHandler(new Monolog\Handler\FirePHPHandler());
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -441,7 +441,7 @@ class Logger
 
 
         if (!class_exists('\Gelf\Publisher')) {
-            $Logger->addInfo(
+            $Logger->info(
                 '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
             );
 
@@ -460,7 +460,7 @@ class Logger
 
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -493,7 +493,7 @@ class Logger
 
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -529,7 +529,7 @@ class Logger
 
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 
@@ -559,7 +559,7 @@ class Logger
             $Handler = new Monolog\Handler\SyslogUdpHandler($host, $port);
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
-            $Logger->addNotice($Exception->getMessage());
+            $Logger->notice($Exception->getMessage());
         }
     }
 }
