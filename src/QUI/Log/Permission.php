@@ -6,6 +6,7 @@
 
 namespace QUI\Log;
 
+use QUI;
 use QUI\Interfaces\Users\User;
 
 /**
@@ -23,12 +24,12 @@ class Permission
      *
      * @return boolean
      */
-    public static function canUserDownloadLogs($User = null)
+    public static function canUserDownloadLogs($User = null): bool
     {
         if (is_null($User)) {
-            $User = \QUI::getUserBySession();
+            $User = QUI::getUserBySession();
         }
-        
+
         if ($User->isSU()) {
             return true;
         }
