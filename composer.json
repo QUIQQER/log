@@ -17,7 +17,7 @@
   "require": {
     "ext-zip": "*",
     "quiqqer\/quiqqer": "*",
-    "monolog\/monolog": "4.*",
+    "monolog\/monolog": "3.*",
     "quiqqer/cron": "^1.10.1|*@dev"
   },
   "autoload": {
