@@ -1,28 +1,28 @@
 {
-    "name": "quiqqer\/log",
-    "type": "quiqqer-module",
-    "description": "Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.",
-    "license": "GPL-3.0+",
-    "authors": [
-        {
-            "name": "Henning Leutz",
-            "email": "leutz@pcsg.de",
-            "homepage": "http:\/\/www.pcsg.de",
-            "role": "Developer"
-        }
-    ],
-    "support": {
-        "email": "support@pcsg.de"
-    },
-    "require": {
-        "ext-zip": "*",
-        "quiqqer\/quiqqer": "*",
-        "monolog\/monolog": "1.*",
-        "quiqqer/cron": "^1.10.1|*@dev"
-    },
-    "autoload": {
-        "psr-4": {
-            "QUI\\Log\\": "src\/QUI\/Log"
-        }
+  "name": "quiqqer\/log",
+  "type": "quiqqer-module",
+  "description": "Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.",
+  "license": "GPL-3.0+",
+  "authors": [
+    {
+      "name": "Henning Leutz",
+      "email": "leutz@pcsg.de",
+      "homepage": "http:\/\/www.pcsg.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "email": "support@pcsg.de"
+  },
+  "require": {
+    "ext-zip": "*",
+    "quiqqer\/quiqqer": "*",
+    "monolog\/monolog": "4.*",
+    "quiqqer/cron": "^1.10.1|*@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "QUI\\Log\\": "src\/QUI\/Log"
+    }
+  }
 }
