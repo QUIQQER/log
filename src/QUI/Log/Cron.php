@@ -6,7 +6,12 @@
 
 namespace QUI\Log;
 
+use DateInterval;
+use DateTime;
 use QUI;
+
+use function file_exists;
+use function number_format;
 
 /**
  * Class Cron / Log Crons
@@ -31,16 +36,16 @@ class Cron
             throw new QUI\Exception('Need a email parameter to send the log');
         }
 
-        $logDir = VAR_DIR.'log/';
+        $logDir = VAR_DIR . 'log/';
 
-        $Date = new \DateTime();
-        $Date->add(\DateInterval::createFromDateString('yesterday'));
+        $Date = new DateTime();
+        $Date->add(DateInterval::createFromDateString('yesterday'));
 
-        $Mailer     = new QUI\Mail\Mailer();
+        $Mailer = new QUI\Mail\Mailer();
         $LogManager = new QUI\Log\Manager();
 
-        $body   = '';
-        $result = $LogManager->search($Date->format('Y-m-d').'.log');
+        $body = '';
+        $result = $LogManager->search($Date->format('Y-m-d') . '.log');
 
         $Mailer->addRecipient($params['email']);
         $Mailer->setSubject('Logs from the last day');
@@ -52,16 +57,16 @@ class Cron
                 continue;
             }
 
-            $file = $logDir.$entry['file'];
+            $file = $logDir . $entry['file'];
 
-            if (\file_exists($file)) {
+            if (file_exists($file)) {
                 $size = QUI\Utils\System\File::getFileSize($file);
-                $size = \number_format($size / 1048576);
+                $size = number_format($size / 1048576);
 
                 if ($size <= $maxMegaByte) {
                     $Mailer->addAttachments($file);
                 } else {
-                    $body .= '<br />File '.$file.' is to big for an Attachment';
+                    $body .= '<br />File ' . $file . ' is to big for an Attachment';
                 }
             }
         }
@@ -81,7 +86,7 @@ class Cron
     public static function archiveLogs($params, $CronManager)
     {
         $Package = QUI::getPackage('quiqqer/log');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $minLogAgeForArchiving = $Config->getValue('log_cleanup', 'minLogAgeForArchiving');
         $isLogArchivingEnabled = $Config->getValue('log_cleanup', 'isArchivingEnabled');
@@ -105,10 +110,10 @@ class Cron
     public static function cleanupLogsAndArchives($params, $CronManager)
     {
         $Package = QUI::getPackage('quiqqer/log');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
-        $minLogAgeForDelete       = $Config->getValue('log_cleanup', 'minLogAgeForDelete');
-        $minArchiveAgeForDelete   = $Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
+        $minLogAgeForDelete = $Config->getValue('log_cleanup', 'minLogAgeForDelete');
+        $minArchiveAgeForDelete = $Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
         $isArchiveDeletionEnabled = $Config->getValue('log_cleanup', 'isArchiveDeletionEnabled');
 
         Manager::deleteLogsOlderThanDays($minLogAgeForDelete);
