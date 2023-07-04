@@ -16,8 +16,8 @@ function package_quiqqer_log_ajax_file($file)
     // Return filename component of input so no files outside the log directory can be accessed
     $file = basename($file);
 
-    $log          = VAR_DIR . 'log/' . $file;
-    $data         = '';
+    $log = VAR_DIR . 'log/' . $file;
+    $data = '';
     $isLogTrimmed = false;
 
     if (file_exists($log)) {
@@ -34,7 +34,7 @@ function package_quiqqer_log_ajax_file($file)
 
     return array(
         'isLogTrimmed' => $isLogTrimmed,
-        'data'         => $data
+        'data' => $data
     );
 }
 
@@ -42,16 +42,16 @@ function package_quiqqer_log_ajax_file($file)
 /**
  * Returns the last given number of lines of a file
  *
- * @author Torleif Berger, Lorenzo Stanco
- * @link http://stackoverflow.com/a/15025877/995958
- * @link https://gist.github.com/lorenzos/1711e81a9162320fde20
- * @license http://creativecommons.org/licenses/by/3.0/
- *
  * @param $filepath - The file to get last lines from
  * @param $lines - The amount of last lines to get
  * @param $adaptive - set to true when reading only a few lines
  *
  * @return string
+ * @author Torleif Berger, Lorenzo Stanco
+ * @link http://stackoverflow.com/a/15025877/995958
+ * @link https://gist.github.com/lorenzos/1711e81a9162320fde20
+ * @license http://creativecommons.org/licenses/by/3.0/
+ *
  */
 function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
 {
@@ -80,7 +80,7 @@ function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
 
     // Start reading
     $output = '';
-    $chunk  = '';
+    $chunk = '';
 
     // While we would like more
     while (ftell($f) > 0 && $lines >= 0) {
@@ -109,7 +109,7 @@ function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
     return trim($output);
 }
 
-\QUI::$Ajax->register(
+QUI::$Ajax->register(
     'package_quiqqer_log_ajax_file',
     array('file'),
     'Permission::checkSU'

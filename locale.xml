@@ -6,8 +6,10 @@
             <en><![CDATA[QUIQQER - Log]]></en>
         </locale>
         <locale name="package.description">
-            <de><![CDATA[Ergänzt QUIQQER um eine erweiterte Log-Verwaltung. Verwalten Sie die Logs von QUIQQER, schauen Sie Fehlermeldungen nach oder machen Sie sich ein Überblick was im System so passiert.]]></de>
-            <en><![CDATA[Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.]]></en>
+            <de>
+                <![CDATA[Ergänzt QUIQQER um eine erweiterte Log-Verwaltung. Verwalten Sie die Logs von QUIQQER, schauen Sie Fehlermeldungen nach oder machen Sie sich ein Überblick was im System so passiert.]]></de>
+            <en>
+                <![CDATA[Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.]]></en>
         </locale>
     </groups>
     <groups name="quiqqer/log" datatype="php,js">
@@ -49,16 +51,20 @@
             <en><![CDATA[Log administration JavaScript errors]]></en>
         </locale>
         <locale name="settings.general.log.logAdminJsErrors.description">
-            <de><![CDATA[Falls JavaScript Fehler in der Administration auftreten, werden diese an den Server gesendet und in einem seperaten JavaScript error log gespeichert.]]></de>
-            <en><![CDATA[If JavaScript errors occur in the administration they are sent to the server and stored in a seperate JavaScript error log.]]></en>
+            <de>
+                <![CDATA[Falls JavaScript Fehler in der Administration auftreten, werden diese an den Server gesendet und in einem seperaten JavaScript error log gespeichert.]]></de>
+            <en>
+                <![CDATA[If JavaScript errors occur in the administration they are sent to the server and stored in a seperate JavaScript error log.]]></en>
         </locale>
         <locale name="settings.general.log.logFrontendJsErrors.text">
             <de><![CDATA[JavaScript Fehler im Frontend loggen]]></de>
             <en><![CDATA[Log frontend JavaScript errors]]></en>
         </locale>
         <locale name="settings.general.log.logFrontendJsErrors.description">
-            <de><![CDATA[Falls JavaScript Fehler im Frontend auftreten, werden diese an den Server gesendet und in einem separaten JavaScript error log gespeichert.]]></de>
-            <en><![CDATA[If JavaScript errors occur in the frontend they are sent to the server and stored in a separate JavaScript error log.]]></en>
+            <de>
+                <![CDATA[Falls JavaScript Fehler im Frontend auftreten, werden diese an den Server gesendet und in einem separaten JavaScript error log gespeichert.]]></de>
+            <en>
+                <![CDATA[If JavaScript errors occur in the frontend they are sent to the server and stored in a separate JavaScript error log.]]></en>
         </locale>
 
         <locale name="settings.general.logLevels.title">
@@ -143,8 +149,10 @@
             <en><![CDATA[Archive logs?]]></en>
         </locale>
         <locale name="settings.cleanup.archiving.isArchivingEnabled.description">
-            <de><![CDATA[Fasst alte Log-Dateien in einem ZIP-Archiv zusammen um Speicherplatz freizumachen und um den Überblick zu bewahren.]]></de>
-            <en><![CDATA[Moves old log files into a zip archive to free storage and prevents losing the overview.]]></en>
+            <de>
+                <![CDATA[Fasst alte Log-Dateien in einem ZIP-Archiv zusammen um Speicherplatz freizumachen und um den Überblick zu bewahren.]]></de>
+            <en>
+                <![CDATA[Moves old log files into a zip archive to free storage and prevents losing the overview.]]></en>
         </locale>
 
         <locale name="settings.cleanup.archiving.minLogAgeForArchiving">
@@ -209,8 +217,10 @@
         </locale>
 
         <locale name="settings.cube.server.description">
-            <de><![CDATA[Mehr Informationen zu Cube Server finden Sie unter: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></de>
-            <en><![CDATA[More information about Cube Server can be found at: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></en>
+            <de>
+                <![CDATA[Mehr Informationen zu Cube Server finden Sie unter: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></de>
+            <en>
+                <![CDATA[More information about Cube Server can be found at: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></en>
         </locale>
 
 
@@ -230,8 +240,10 @@
         </locale>
 
         <locale name="settings.newrelic.appname.description">
-            <de><![CDATA[Mehr Informationen zu New Relic finden Sie unter: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></de>
-            <en><![CDATA[More information about New Relic can be found at: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></en>
+            <de>
+                <![CDATA[Mehr Informationen zu New Relic finden Sie unter: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></de>
+            <en>
+                <![CDATA[More information about New Relic can be found at: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></en>
         </locale>
 
 
@@ -251,7 +263,8 @@
         </locale>
 
         <locale name="settings.syslogudp.host.description">
-            <de><![CDATA[Es kann eine IP-Adresse oder eine Domain angegeben werden (z.B.: 192.168.1.200 oder my.server.com).]]></de>
+            <de>
+                <![CDATA[Es kann eine IP-Adresse oder eine Domain angegeben werden (z.B.: 192.168.1.200 oder my.server.com).]]></de>
             <en><![CDATA[You can enter an IP-address or a domain (e.g.: 192.168.1.200 or my.server.com).]]></en>
         </locale>
 
@@ -267,8 +280,10 @@
             <en><![CDATA[Logs: Send yesterday's logs to email address]]></en>
         </locale>
         <locale name="cron.mail.desc">
-            <de><![CDATA[Sendet die Log-Dateien des Vortages an die per Cron-Einstellung angegebene E-Mail Adresse.]]></de>
-            <en><![CDATA[Sends the log files of the previous day to the e-mail address specified by the cron setting.]]></en>
+            <de>
+                <![CDATA[Sendet die Log-Dateien des Vortages an die per Cron-Einstellung angegebene E-Mail Adresse.]]></de>
+            <en>
+                <![CDATA[Sends the log files of the previous day to the e-mail address specified by the cron setting.]]></en>
         </locale>
         <!-- endregion -->
 
@@ -278,8 +293,10 @@
             <en><![CDATA[Logs: Delete old logs]]></en>
         </locale>
         <locale name="cron.cleanup.delete.desc">
-            <de><![CDATA[Löscht Log-Dateien (auch archivierte, wenn in den Einstellungen aktiviert), die älter sind als in den Log-Einstellungen festgelegt.]]></de>
-            <en><![CDATA[Deletes log files (also archived ones, if enabled in the settings) which are older than defined in the log settings.]]></en>
+            <de>
+                <![CDATA[Löscht Log-Dateien (auch archivierte, wenn in den Einstellungen aktiviert), die älter sind als in den Log-Einstellungen festgelegt.]]></de>
+            <en>
+                <![CDATA[Deletes log files (also archived ones, if enabled in the settings) which are older than defined in the log settings.]]></en>
         </locale>
 
         <locale name="error.setup.cron.deletion">
@@ -366,8 +383,10 @@
             <en><![CDATA[Start search]]></en>
         </locale>
         <locale name="logs.panel.message.trimmed">
-            <de><![CDATA[Hinweis: Diese Log-Datei ist zu groß um sie komplett anzuzeigen, daher wurde sie gekürzt. Herunterladen um den gesamten Inhalt zu sehen.]]></de>
-            <en><![CDATA[Notice: This log file is too large to display, therefore it was truncated. Download it to view the entire content.]]></en>
+            <de>
+                <![CDATA[Hinweis: Diese Log-Datei ist zu groß um sie komplett anzuzeigen, daher wurde sie gekürzt. Herunterladen um den gesamten Inhalt zu sehen.]]></de>
+            <en>
+                <![CDATA[Notice: This log file is too large to display, therefore it was truncated. Download it to view the entire content.]]></en>
         </locale>
         <locale name="logs.panel.message.permission">
             <de><![CDATA[Du hast nicht die nötigen Berechtigungen, um diese Datei anzusehen.]]></de>

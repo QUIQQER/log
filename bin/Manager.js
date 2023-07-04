@@ -28,7 +28,7 @@ define('package/quiqqer/log/bin/Manager', [
     return new Class({
 
         Extends: Panel,
-        Type   : 'package/quiqqer/log/bin/Manager',
+        Type: 'package/quiqqer/log/bin/Manager',
 
         Binds: [
             'getLogs',
@@ -47,10 +47,10 @@ define('package/quiqqer/log/bin/Manager', [
         ],
 
         options: {
-            file        : '',
-            page        : 1,
-            limit       : 20,
-            search      : '',
+            file: '',
+            page: 1,
+            limit: 20,
+            search: '',
             'site-width': 220
         },
 
@@ -61,19 +61,19 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.parent(options);
 
-            this.$Fx            = null;
-            this.$Search        = null;
-            this.$Grid          = null;
+            this.$Fx = null;
+            this.$Search = null;
+            this.$Grid = null;
             this.$GridContainer = null;
 
 
             this.$openLog = false;
-            this.$file    = false;
+            this.$file = false;
 
             this.addEvents({
-                onCreate : this.$onCreate,
+                onCreate: this.$onCreate,
                 onDestroy: this.$onDestroy,
-                onResize : this.$onResize
+                onResize: this.$onResize
             });
         },
 
@@ -93,7 +93,7 @@ define('package/quiqqer/log/bin/Manager', [
                 for (var i = 0, len = result.data.length; i < len; i++) {
                     result.data[i].open = {
                         image: 'fa fa-code',
-                        file : result.data[i].file,
+                        file: result.data[i].file,
 
                         alt: Locale.get(lg, 'logs.panel.btn.open.log', {
                             date: result.data[i].mdate
@@ -113,11 +113,11 @@ define('package/quiqqer/log/bin/Manager', [
                 self.Loader.hide();
             }, {
                 'package': 'quiqqer/log',
-                page     : this.getAttribute('page'),
-                limit    : this.getAttribute('limit'),
-                search   : this.getAttribute('search'),
-                sortOn   : sortOn,
-                sortBy   : sortBy
+                page: this.getAttribute('page'),
+                limit: this.getAttribute('limit'),
+                search: this.getAttribute('search'),
+                sortOn: sortOn,
+                sortBy: sortBy
             });
         },
 
@@ -138,7 +138,7 @@ define('package/quiqqer/log/bin/Manager', [
             Control.getButtons('closeLog').enable();
 
             Control.$openLog = true;
-            Control.$file    = file;
+            Control.$file = file;
 
             Control.setAttribute(
                 'title',
@@ -151,7 +151,7 @@ define('package/quiqqer/log/bin/Manager', [
                 width: Control.getAttribute('site-width')
             }, {
                 callback: function () {
-                    var Body   = Control.getContent(),
+                    var Body = Control.getContent(),
                         Parent = Body.getParent();
 
                     var MessageOverlay = $('qui-logs-message');
@@ -172,8 +172,8 @@ define('package/quiqqer/log/bin/Manager', [
 
                     MessageOverlay.position({
                         relativeTo: Parent.getElement('.qui-logs-file'),
-                        position  : "topLeft",
-                        offset    : {x: 0, y: -3}
+                        position: "topLeft",
+                        offset: {x: 0, y: -3}
                     });
                 }
             });
@@ -192,7 +192,7 @@ define('package/quiqqer/log/bin/Manager', [
                 }
             }, {
                 'package': 'quiqqer/log',
-                file     : file
+                file: file
             });
         },
 
@@ -201,14 +201,14 @@ define('package/quiqqer/log/bin/Manager', [
          */
         deleteActiveLog: function () {
             var self = this,
-                sel  = this.$Grid.getSelectedData();
+                sel = this.$Grid.getSelectedData();
 
             new QUIConfirm({
-                title : Locale.get(lg, 'logs.panel.delete.window.title', {
+                title: Locale.get(lg, 'logs.panel.delete.window.title', {
                     file: sel[0].file
                 }),
-                icon  : 'fa fa-remove',
-                text  : Locale.get(lg, 'logs.panel.delete.window.text'),
+                icon: 'fa fa-remove',
+                text: Locale.get(lg, 'logs.panel.delete.window.text'),
                 events: {
                     onSubmit: function () {
                         self.Loader.show();
@@ -244,19 +244,19 @@ define('package/quiqqer/log/bin/Manager', [
                 }
 
                 // Create an iframe that downloads the log
-                var data         = self.$Grid.getSelectedData(),
-                    log          = data[0].file,
+                var data = self.$Grid.getSelectedData(),
+                    log = data[0].file,
                     downloadFile = URL_OPT_DIR + 'quiqqer/log/bin/downloadLog.php?log=' + encodeURIComponent(log),
-                    iframeId     = Math.floor(Date.now() / 1000),
-                    Frame        = new Element('iframe', {
-                        id             : 'download-iframe-' + iframeId,
-                        src            : downloadFile,
-                        styles         : {
-                            left    : -1000,
-                            height  : 10,
+                    iframeId = Math.floor(Date.now() / 1000),
+                    Frame = new Element('iframe', {
+                        id: 'download-iframe-' + iframeId,
+                        src: downloadFile,
+                        styles: {
+                            left: -1000,
+                            height: 10,
                             position: 'absolute',
-                            top     : -1000,
-                            width   : 10
+                            top: -1000,
+                            width: 10
                         },
                         'data-iframeid': iframeId
                     }).inject(document.body);
@@ -269,16 +269,16 @@ define('package/quiqqer/log/bin/Manager', [
         /**
          * Closes the active log (panel)
          */
-        closeActiveLog: function() {
+        closeActiveLog: function () {
 
             var Control = this,
-                Body   = Control.getContent(),
+                Body = Control.getContent(),
                 Parent = Body.getParent();
 
             Control.Loader.show();
 
             Control.$openLog = false;
-            Control.$file    = '';
+            Control.$file = '';
 
             // Log Content Panel
             Parent.getElement('.qui-logs-file').destroy();
@@ -307,7 +307,7 @@ define('package/quiqqer/log/bin/Manager', [
             }
 
             var Control = this,
-                File    = this.getBody().getParent().getElement('.qui-logs-file');
+                File = this.getBody().getParent().getElement('.qui-logs-file');
 
             this.Loader.show();
 
@@ -337,7 +337,7 @@ define('package/quiqqer/log/bin/Manager', [
                 LogFileData.scrollTop = LogFileData.scrollHeight;
             }, {
                 'package': 'quiqqer/log',
-                file     : this.$file
+                file: this.$file
             });
         },
 
@@ -356,37 +356,37 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.$Grid = new Grid(this.$GridContainer, {
                 columnModel: [{
-                    header   : '&nbsp;',
+                    header: '&nbsp;',
                     dataIndex: 'open',
-                    dataType : 'button',
-                    width    : 60
+                    dataType: 'button',
+                    width: 60
                 }, {
-                    header   : Locale.get(lg, 'logs.panel.log.file'),
+                    header: Locale.get(lg, 'logs.panel.log.file'),
                     dataIndex: 'file',
-                    dataType : 'string',
-                    width    : 200
+                    dataType: 'string',
+                    width: 200
                 }, {
-                    header   : Locale.get('quiqqer/system', 'e_date'),
+                    header: Locale.get('quiqqer/system', 'e_date'),
                     dataIndex: 'mdate',
-                    dataType : 'date',
-                    width    : 200
+                    dataType: 'date',
+                    width: 200
                 }],
-                sortBy     : 'DESC',
-                sortOn     : 'mdate',
-                pagination : true,
-                onrefresh  : this.$gridRefresh,
-                serverSort : true
+                sortBy: 'DESC',
+                sortOn: 'mdate',
+                pagination: true,
+                onrefresh: this.$gridRefresh,
+                serverSort: true
             });
 
             this.$Grid.addEvents({
-                onClick   : this.$gridClick,
+                onClick: this.$gridClick,
                 onDblClick: this.$gridDblClick
             });
 
             this.$Search = new Element('input', {
-                'class'    : 'qui-logs-search',
+                'class': 'qui-logs-search',
                 placeholder: Locale.get(lg, 'logs.panel.search.placeholder'),
-                events     : {
+                events: {
                     keyup: function (event) {
                         if (event.key === 'enter') {
                             Control.getButtons('search').onclick();
@@ -399,10 +399,10 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.addButton(
                 new QUIButton({
-                    name  : 'search',
-                    image : 'fa fa-search',
-                    alt   : Locale.get(lg, 'logs.panel.search.btn.start.alt'),
-                    title : Locale.get(lg, 'logs.panel.search.btn.start.title'),
+                    name: 'search',
+                    image: 'fa fa-search',
+                    alt: Locale.get(lg, 'logs.panel.search.btn.start.alt'),
+                    title: Locale.get(lg, 'logs.panel.search.btn.start.title'),
                     events: {
                         onClick: function () {
                             Control.setAttribute(
@@ -423,11 +423,11 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.addButton(
                 new QUIButton({
-                    name     : 'refresh',
-                    text     : Locale.get(lg, 'logs.panel.btn.refresh'),
+                    name: 'refresh',
+                    text: Locale.get(lg, 'logs.panel.btn.refresh'),
                     textimage: 'fa fa-refresh',
-                    disabled : true,
-                    events   : {
+                    disabled: true,
+                    events: {
                         onClick: this.refreshFile
                     }
                 })
@@ -439,11 +439,11 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.addButton(
                 new QUIButton({
-                    name     : 'delete',
-                    text     : Locale.get(lg, 'logs.panel.btn.delete.marked'),
+                    name: 'delete',
+                    text: Locale.get(lg, 'logs.panel.btn.delete.marked'),
                     textimage: 'fa fa-trash',
-                    disabled : true,
-                    events   : {
+                    disabled: true,
+                    events: {
                         onClick: this.deleteActiveLog
                     }
                 })
@@ -455,11 +455,11 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.addButton(
                 new QUIButton({
-                    name     : 'download',
-                    text     : Locale.get(lg, 'logs.panel.btn.download.marked'),
+                    name: 'download',
+                    text: Locale.get(lg, 'logs.panel.btn.download.marked'),
                     textimage: 'fa fa-download',
-                    disabled : true,
-                    events   : {
+                    disabled: true,
+                    events: {
                         onClick: this.downloadActiveLog
                     }
                 })
@@ -468,14 +468,14 @@ define('package/quiqqer/log/bin/Manager', [
 
             this.addButton(
                 new QUIButton({
-                    name    : 'closeLog',
-                    icon    : 'fa fa-close',
-                    title   : Locale.get(lg, 'logs.panel.btn.close.log'),
+                    name: 'closeLog',
+                    icon: 'fa fa-close',
+                    title: Locale.get(lg, 'logs.panel.btn.close.log'),
                     disabled: true,
-                    events  : {
+                    events: {
                         onClick: this.closeActiveLog
                     },
-                    styles  : {
+                    styles: {
                         float: 'right'
                     }
                 })
@@ -497,12 +497,12 @@ define('package/quiqqer/log/bin/Manager', [
 
             var size, height, width;
 
-            var Body   = this.getBody(),
+            var Body = this.getBody(),
                 Header = this.getHeader(),
                 Parent = Body.getParent(),
-                File   = Parent.getElement('.qui-logs-file');
+                File = Parent.getElement('.qui-logs-file');
 
-            size   = Parent.getSize();
+            size = Parent.getSize();
             height = size.y - Header.getSize().y - 50;
 
             if (this.getButtonBar()) {
@@ -523,17 +523,17 @@ define('package/quiqqer/log/bin/Manager', [
 
                     File.setStyles({
                         height: height,
-                        width : size.x - width
+                        width: size.x - width
                     });
 
                     File.getElement('pre').setStyles({
                         height: height,
-                        width : size.x - width
+                        width: size.x - width
                     });
                 }
 
                 var LogMessage = $('qui-logs-message');
-                if(LogMessage) {
+                if (LogMessage) {
                     LogMessage.setStyles({
                         height: 40,
                         width: size.x - width
@@ -576,7 +576,7 @@ define('package/quiqqer/log/bin/Manager', [
         $gridRefresh: function (Grid) {
             this.setAttributes({
                 limit: Grid.getAttribute('perPage'),
-                page : Grid.getAttribute('page')
+                page: Grid.getAttribute('page')
             });
 
             this.getLogs();
@@ -588,8 +588,8 @@ define('package/quiqqer/log/bin/Manager', [
          * @param {Object} data - Grid Data
          */
         $gridClick: function (data) {
-            var len      = data.target.selected.length,
-                Delete   = this.getButtons('delete'),
+            var len = data.target.selected.length,
+                Delete = this.getButtons('delete'),
                 Download = this.getButtons('download');
 
             Delete.disable();

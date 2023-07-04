@@ -26,10 +26,10 @@ class Setup
         }
 
         $CronManager = new QUI\Cron\Manager();
-        $Config      = QUI::getPackage('quiqqer/log')->getConfig();
+        $Config = QUI::getPackage('quiqqer/log')->getConfig();
 
         // Setup cron for default log deletion every 180 days
-        $cleanupCronName           = QUI::getLocale()->get('quiqqer/log', 'cron.cleanup.delete.title');
+        $cleanupCronName = QUI::getLocale()->get('quiqqer/log', 'cron.cleanup.delete.title');
         $isCleanupCronAlreadySetup = $Config->getValue('log_cleanup', 'isCleanupCronAlreadySetup');
 
         // if locale doesn't exists, we try to import the locale.xml
@@ -70,7 +70,7 @@ class Setup
 
 
         // Setup cron for default log archiving every 3 days
-        $archivingCronName           = QUI::getLocale()->get('quiqqer/log', 'cron.cleanup.archive.title');
+        $archivingCronName = QUI::getLocale()->get('quiqqer/log', 'cron.cleanup.archive.title');
         $isArchivingCronAlreadySetup = $Config->getValue('log_cleanup', 'isArchivingCronAlreadySetup');
 
         if (!$CronManager->isCronSetUp($archivingCronName) && !$isArchivingCronAlreadySetup) {
