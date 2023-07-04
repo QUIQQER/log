@@ -8,10 +8,13 @@ namespace QUI\Log;
 
 use Monolog;
 use QUI;
+use QUI\Exception;
 use QUI\System\Log;
 
+use function explode;
+
 /**
- * QUIQQER logging service
+ * QUIQQER logging
  *
  * @package quiqqer/log
  * @author  Henning Leutz (PCSG)
@@ -26,10 +29,12 @@ class Logger
      */
     protected static ?bool $logOnFireEvent = null;
 
+    protected static ?int $monologVersion = null;
+
     /**
      * Monolog Logger
      *
-     * @var ?\Monolog\Logger
+     * @var ?Monolog\Logger
      */
     public static ?Monolog\Logger $Logger = null;
 
@@ -39,15 +44,15 @@ class Logger
      * @var array
      */
     public static array $logLevels = [
-        'debug'      => true,
+        'debug' => true,
         'deprecated' => true,
-        'info'       => true,
-        'notice'     => true,
-        'warning'    => true,
-        'error'      => true,
-        'critical'   => true,
-        'alert'      => true,
-        'emergency'  => true
+        'info' => true,
+        'notice' => true,
+        'warning' => true,
+        'error' => true,
+        'critical' => true,
+        'alert' => true,
+        'emergency' => true
     ];
 
     /**
@@ -75,10 +80,7 @@ class Logger
 
         $arguments = func_get_args();
 
-        if (isset($arguments[0])
-            && isset($arguments[0]['event'])
-            && $arguments[0]['event'] == 'userLoad'
-        ) {
+        if (isset($arguments[0]['event']) && $arguments[0]['event'] == 'userLoad') {
             return;
         }
 
@@ -87,16 +89,16 @@ class Logger
         }
 
         $Logger = self::getLogger();
-        $User   = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
         $context = [
-            'username'  => $User->getName(),
-            'uid'       => $User->getId(),
+            'username' => $User->getName(),
+            'uid' => $User->getId(),
             'arguments' => $arguments
         ];
 
         $arguments = func_get_args();
-        $event     = $arguments[0]['event'] ?? $arguments[0];
+        $event = $arguments[0]['event'] ?? $arguments[0];
 
         $Logger->info('event log ' . $event, $context);
     }
@@ -122,7 +124,8 @@ class Logger
             $errorLevel = $errorLevel | E_WARNING;
         }
 
-        if (self::$logLevels['error']
+        if (
+            self::$logLevels['error']
             || self::$logLevels['critical']
             || self::$logLevels['alert']
         ) {
@@ -182,11 +185,11 @@ class Logger
     public static function write(string $message, int $loglevel = Log::LEVEL_INFO)
     {
         $Logger = self::getLogger();
-        $User   = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
         $context = [
             'username' => $User->getName(),
-            'uid'      => $User->getId()
+            'uid' => $User->getId()
         ];
 
         switch ($loglevel) {
@@ -243,8 +246,8 @@ class Logger
     /**
      * Return the Logger object
      *
-     * @return \Monolog\Logger
-     * @throws \QUI\Exception
+     * @return Monolog\Logger
+     * @throws Exception
      */
     public static function getLogger(): ?Monolog\Logger
     {
@@ -256,11 +259,15 @@ class Logger
 
         self::$Logger = $Logger;
 
-        // which levels should be loged
+        // which levels should be logged
         self::$logLevels = self::getPackage()->getConfig()->get('log_levels');
 
-        $Logger->pushHandler(new QUI\Log\Monolog\LogHandler());
-
+        // v2 or v3
+        if (self::isMonologV2()) {
+            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV2());
+        } else {
+            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
+        }
 
         self::addGraylogToLogger($Logger);
         self::addChromePHPHandlerToLogger($Logger);
@@ -283,11 +290,25 @@ class Logger
      * Return the quiqqer log plugins
      *
      * @return QUI\Package\Package
-     * @throws \QUI\Exception
+     * @throws Exception
      */
     public static function getPackage(): QUI\Package\Package
     {
         return QUI::getPackage('quiqqer/log');
+    }
+
+    public static function isMonologV2(): bool
+    {
+        if (self::$monologVersion === null) {
+            $Monolog = QUI::getPackageManager()->getInstalledPackage('monolog/monolog');
+            $lock = QUI::getPackageManager()->getPackageLock($Monolog);
+            $version = explode('.', $lock['version'])[0];
+            $version = (int)$version;
+
+            self::$monologVersion = $version;
+        }
+
+        return self::$monologVersion === 2;
     }
 
     /**
@@ -297,8 +318,8 @@ class Logger
     /**
      * Add a Browser php handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger)
     {
@@ -308,7 +329,7 @@ class Logger
             return;
         }
 
-        $browserPHP   = self::getPackage()->getConfig()->get('browser_logs', 'browserphp');
+        $browserPHP = self::getPackage()->getConfig()->get('browser_logs', 'browserphp');
         $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
         if (empty($browserPHP)) {
@@ -329,8 +350,8 @@ class Logger
     /**
      * Add a ChromePHP handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger)
     {
@@ -340,7 +361,7 @@ class Logger
             return;
         }
 
-        $chromephp   = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
+        $chromephp = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
         $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
         if (empty($chromephp) || !$chromephp) {
@@ -361,8 +382,8 @@ class Logger
     /**
      * Add a Cube handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger)
     {
@@ -389,8 +410,8 @@ class Logger
     /**
      * Add a FirePHP handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger)
     {
@@ -400,7 +421,7 @@ class Logger
             return;
         }
 
-        $firephp     = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
+        $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
         $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
         if (empty($firephp) || !$firephp) {
@@ -422,7 +443,7 @@ class Logger
      * Add a graylog handler to the logger, if settings are available
      *
      * @param Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @throws Exception
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger)
     {
@@ -433,7 +454,7 @@ class Logger
         }
 
         $server = self::getPackage()->getConfig()->get('graylog', 'server');
-        $port   = self::getPackage()->getConfig()->get('graylog', 'port');
+        $port = self::getPackage()->getConfig()->get('graylog', 'port');
 
         if (empty($server) || empty($port)) {
             return;
@@ -467,8 +488,8 @@ class Logger
     /**
      * Add a NewRelic handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger)
     {
@@ -502,8 +523,8 @@ class Logger
      *
      * @needle predis/predis
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger)
     {
@@ -536,8 +557,8 @@ class Logger
     /**
      * Add a SystelogUPD handler to the logger, if settings are available
      *
-     * @param \Monolog\Logger $Logger
-     * @throws \QUI\Exception
+     * @param Monolog\Logger $Logger
+     * @throws Exception
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger)
     {
