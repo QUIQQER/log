@@ -18,7 +18,7 @@
     "php": ">=7.4",
     "ext-zip": "*",
     "quiqqer\/quiqqer": "^1.8|dev-master|dev-dev",
-    "monolog\/monolog": "3.*",
+    "monolog\/monolog": "2.*|3.*",
     "quiqqer/cron": "^1.10.1|dev-master|dev-dev"
   },
   "conflict": {
