@@ -14,7 +14,7 @@ function package_quiqqer_log_ajax_delete($file)
     \QUI\Utils\System\File::unlink($log);
 }
 
-\QUI::$Ajax->register(
+QUI::$Ajax->register(
     'package_quiqqer_log_ajax_delete',
     array('file'),
     'Permission::checkSU'

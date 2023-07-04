@@ -10,6 +10,8 @@ use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
 use QUI;
 
+use const JSON_PRETTY_PRINT;
+
 /**
  * Class LogHandler
  * @package QUI\Log\Monolog
@@ -55,7 +57,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
             "{$record->level->getName()} - " .
             $record->message;
 
-        $message .= "\n" . json_encode($record->context, \JSON_PRETTY_PRINT) . "\n";
+        $message .= "\n" . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
 
         error_log($message, 3, $file);
     }

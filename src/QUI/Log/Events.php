@@ -8,6 +8,9 @@ namespace QUI\Log;
 
 use QUI;
 
+use function dirname;
+use function file_get_contents;
+
 /**
  * Class Events - Main Events
  *
@@ -25,14 +28,14 @@ class Events
      */
     public static function onTemplateGetHeader($Template)
     {
-        $Package = \QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
+        $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
         if (!$Package->getConfig()->get('log', 'logFrontendJsErrors')) {
             return;
         }
 
         $Template->extendHeader(
-            '<script type="text/javascript">'.\file_get_contents(\dirname(__FILE__).'/logEvents.js').'</script>'
+            '<script type="text/javascript">' . file_get_contents(dirname(__FILE__) . '/logEvents.js') . '</script>'
         );
     }
 

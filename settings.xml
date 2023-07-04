@@ -265,7 +265,8 @@
                                 <locale group="quiqqer/log" var="settings.cleanup.archiving.isArchivingEnabled"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/log" var="settings.cleanup.archiving.isArchivingEnabled.description"/>
+                                <locale group="quiqqer/log"
+                                        var="settings.cleanup.archiving.isArchivingEnabled.description"/>
                             </description>
                         </input>
                         <input conf="log_cleanup.minLogAgeForArchiving" type="number">
@@ -284,7 +285,8 @@
                                 <locale group="quiqqer/log" var="settings.cleanup.archiving.minLogAgeForDelete"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/log" var="settings.cleanup.archiving.minLogAgeForDelete.description"/>
+                                <locale group="quiqqer/log"
+                                        var="settings.cleanup.archiving.minLogAgeForDelete.description"/>
                             </description>
                         </input>
                         <input conf="log_cleanup.isArchiveDeletionEnabled" type="checkbox">

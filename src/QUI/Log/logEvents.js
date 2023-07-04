@@ -37,12 +37,12 @@
                         }
 
                         Ajax.post("package_quiqqer_log_ajax_logJsError", false, {
-                            "package"    : "quiqqer/log",
-                            errMsg       : msg,
-                            errUrl       : url,
+                            "package": "quiqqer/log",
+                            errMsg: msg,
+                            errUrl: url,
                             errLinenumber: linenumber,
-                            browser      : navigator.userAgent.toString(),
-                            context      : JSON.encode(context)
+                            browser: navigator.userAgent.toString(),
+                            context: JSON.encode(context)
                         });
                     });
                 });

@@ -6,7 +6,10 @@
 
 namespace QUI\Log;
 
+use Gelf\Publisher;
+use Gelf\Transport\TcpTransport;
 use Monolog;
+use Predis\Client;
 use QUI;
 use QUI\Exception;
 use QUI\System\Log;
@@ -23,21 +26,11 @@ use function explode;
 class Logger
 {
     /**
-     * log events?
-     *
-     * @var boolean|null
-     */
-    protected static ?bool $logOnFireEvent = null;
-
-    protected static ?int $monologVersion = null;
-
-    /**
      * Monolog Logger
      *
      * @var ?Monolog\Logger
      */
     public static ?Monolog\Logger $Logger = null;
-
     /**
      * which levels should be logged
      *
@@ -54,6 +47,13 @@ class Logger
         'alert' => true,
         'emergency' => true
     ];
+    /**
+     * log events?
+     *
+     * @var boolean|null
+     */
+    protected static ?bool $logOnFireEvent = null;
+    protected static ?int $monologVersion = null;
 
     /**
      * event on fire event
@@ -101,6 +101,314 @@ class Logger
         $event = $arguments[0]['event'] ?? $arguments[0];
 
         $Logger->info('event log ' . $event, $context);
+    }
+
+    /**
+     * Return the quiqqer log plugins
+     *
+     * @return QUI\Package\Package
+     * @throws Exception
+     */
+    public static function getPackage(): QUI\Package\Package
+    {
+        return QUI::getPackage('quiqqer/log');
+    }
+
+    /**
+     * Return the Logger object
+     *
+     * @return Monolog\Logger
+     * @throws Exception
+     */
+    public static function getLogger(): ?Monolog\Logger
+    {
+        if (self::$Logger) {
+            return self::$Logger;
+        }
+
+        $Logger = new Monolog\Logger('QUI:Log');
+
+        self::$Logger = $Logger;
+
+        // which levels should be logged
+        self::$logLevels = self::getPackage()->getConfig()->get('log_levels');
+
+        // v2 or v3
+        if (self::isMonologV2()) {
+            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV2());
+        } else {
+            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
+        }
+
+        self::addGraylogToLogger($Logger);
+        self::addChromePHPHandlerToLogger($Logger);
+        self::addFirePHPHandlerToLogger($Logger);
+        self::addBrowserPHPHandlerToLogger($Logger);
+        self::addCubeHandlerToLogger($Logger);
+        self::addRedisHandlerToLogger($Logger);
+        self::addSyslogUDPHandlerToLogger($Logger);
+
+        try {
+            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [$Logger]);
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+
+        return $Logger;
+    }
+
+    public static function isMonologV2(): bool
+    {
+        if (self::$monologVersion === null) {
+            $Monolog = QUI::getPackageManager()->getInstalledPackage('monolog/monolog');
+            $lock = QUI::getPackageManager()->getPackageLock($Monolog);
+            $version = explode('.', $lock['version'])[0];
+            $version = (int)$version;
+
+            self::$monologVersion = $version;
+        }
+
+        return self::$monologVersion === 2;
+    }
+
+    /**
+     * Add a graylog handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addGraylogToLogger(Monolog\Logger $Logger)
+    {
+        $graylog = self::getPackage()->getConfig()->get('graylog');
+
+        if (!$graylog) {
+            return;
+        }
+
+        $server = self::getPackage()->getConfig()->get('graylog', 'server');
+        $port = self::getPackage()->getConfig()->get('graylog', 'port');
+
+        if (empty($server) || empty($port)) {
+            return;
+        }
+
+
+        if (!class_exists('\Gelf\Publisher')) {
+            $Logger->info(
+                '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
+            );
+
+            return;
+        }
+
+        try {
+            $Publisher = new Publisher(
+                new TcpTransport(
+                    self::getPackage()->getConfig()->get('graylog', 'server'),
+                    self::getPackage()->getConfig()->get('graylog', 'port')
+                )
+            );
+
+            $Handler = new Monolog\Handler\GelfHandler($Publisher);
+
+            $Logger->pushHandler($Handler);
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Add a ChromePHP handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $browser = self::getPackage()->getConfig()->get('browser_logs');
+
+        if (!$browser) {
+            return;
+        }
+
+        $chromephp = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
+        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+
+        if (empty($chromephp) || !$chromephp) {
+            return;
+        }
+
+        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
+            return;
+        }
+
+        try {
+            $Logger->pushHandler(new Monolog\Handler\ChromePHPHandler());
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Handler
+     */
+
+    /**
+     * Add a FirePHP handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $browser = self::getPackage()->getConfig()->get('browser_logs');
+
+        if (!$browser) {
+            return;
+        }
+
+        $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
+        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+
+        if (empty($firephp) || !$firephp) {
+            return;
+        }
+
+        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
+            return;
+        }
+
+        try {
+            $Logger->pushHandler(new Monolog\Handler\FirePHPHandler());
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Add a Browser php handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $browser = self::getPackage()->getConfig()->get('browser_logs');
+
+        if (!$browser) {
+            return;
+        }
+
+        $browserPHP = self::getPackage()->getConfig()->get('browser_logs', 'browserphp');
+        $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+
+        if (empty($browserPHP)) {
+            return;
+        }
+
+        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
+            return;
+        }
+
+        try {
+            $Logger->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Add a Cube handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addCubeHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $cube = self::getPackage()->getConfig()->get('cube');
+
+        if (!$cube) {
+            return;
+        }
+
+        $server = self::getPackage()->getConfig()->get('cube', 'server');
+
+        if (empty($server)) {
+            return;
+        }
+
+        try {
+            $Handler = new Monolog\Handler\CubeHandler($server);
+            $Logger->pushHandler($Handler);
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Add a Redis handler to the logger, if settings are available
+     *
+     * @needle predis/predis
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addRedisHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $redis = self::getPackage()->getConfig()->get('redis');
+
+        if (!$redis) {
+            return;
+        }
+
+        $server = self::getPackage()->getConfig()->get('redis', 'server');
+
+        if (empty($server)) {
+            return;
+        }
+
+        try {
+            $Client = new Client($server);
+
+            $Handler = new Monolog\Handler\RedisHandler(
+                $Client,
+                $server
+            );
+
+            $Logger->pushHandler($Handler);
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
+    }
+
+    /**
+     * Add a SystelogUPD handler to the logger, if settings are available
+     *
+     * @param Monolog\Logger $Logger
+     * @throws Exception
+     */
+    public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger)
+    {
+        $syslog = self::getPackage()->getConfig()->get('syslogUdp');
+
+        if (!$syslog) {
+            return;
+        }
+
+        $host = self::getPackage()->getConfig()->get('syslogUdp', 'host');
+        $port = self::getPackage()->getConfig()->get('syslogUdp', 'port');
+
+        if (empty($host)) {
+            return;
+        }
+
+
+        try {
+            $Handler = new Monolog\Handler\SyslogUdpHandler($host, $port);
+            $Logger->pushHandler($Handler);
+        } catch (\Exception $Exception) {
+            $Logger->notice($Exception->getMessage());
+        }
     }
 
     /**
@@ -244,248 +552,6 @@ class Logger
     }
 
     /**
-     * Return the Logger object
-     *
-     * @return Monolog\Logger
-     * @throws Exception
-     */
-    public static function getLogger(): ?Monolog\Logger
-    {
-        if (self::$Logger) {
-            return self::$Logger;
-        }
-
-        $Logger = new Monolog\Logger('QUI:Log');
-
-        self::$Logger = $Logger;
-
-        // which levels should be logged
-        self::$logLevels = self::getPackage()->getConfig()->get('log_levels');
-
-        // v2 or v3
-        if (self::isMonologV2()) {
-            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV2());
-        } else {
-            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
-        }
-
-        self::addGraylogToLogger($Logger);
-        self::addChromePHPHandlerToLogger($Logger);
-        self::addFirePHPHandlerToLogger($Logger);
-        self::addBrowserPHPHandlerToLogger($Logger);
-        self::addCubeHandlerToLogger($Logger);
-        self::addRedisHandlerToLogger($Logger);
-        self::addSyslogUDPHandlerToLogger($Logger);
-
-        try {
-            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [$Logger]);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-
-        return $Logger;
-    }
-
-    /**
-     * Return the quiqqer log plugins
-     *
-     * @return QUI\Package\Package
-     * @throws Exception
-     */
-    public static function getPackage(): QUI\Package\Package
-    {
-        return QUI::getPackage('quiqqer/log');
-    }
-
-    public static function isMonologV2(): bool
-    {
-        if (self::$monologVersion === null) {
-            $Monolog = QUI::getPackageManager()->getInstalledPackage('monolog/monolog');
-            $lock = QUI::getPackageManager()->getPackageLock($Monolog);
-            $version = explode('.', $lock['version'])[0];
-            $version = (int)$version;
-
-            self::$monologVersion = $version;
-        }
-
-        return self::$monologVersion === 2;
-    }
-
-    /**
-     * Handler
-     */
-
-    /**
-     * Add a Browser php handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $browserPHP = self::getPackage()->getConfig()->get('browser_logs', 'browserphp');
-        $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
-
-        if (empty($browserPHP)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a ChromePHP handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $chromephp = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
-        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
-
-        if (empty($chromephp) || !$chromephp) {
-            return;
-        }
-
-        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\ChromePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a Cube handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addCubeHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $cube = self::getPackage()->getConfig()->get('cube');
-
-        if (!$cube) {
-            return;
-        }
-
-        $server = self::getPackage()->getConfig()->get('cube', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        try {
-            $Handler = new Monolog\Handler\CubeHandler($server);
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a FirePHP handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
-        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
-
-        if (empty($firephp) || !$firephp) {
-            return;
-        }
-
-        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\FirePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a graylog handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addGraylogToLogger(Monolog\Logger $Logger)
-    {
-        $graylog = self::getPackage()->getConfig()->get('graylog');
-
-        if (!$graylog) {
-            return;
-        }
-
-        $server = self::getPackage()->getConfig()->get('graylog', 'server');
-        $port = self::getPackage()->getConfig()->get('graylog', 'port');
-
-        if (empty($server) || empty($port)) {
-            return;
-        }
-
-
-        if (!class_exists('\Gelf\Publisher')) {
-            $Logger->info(
-                '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
-            );
-
-            return;
-        }
-
-        try {
-            $Publisher = new \Gelf\Publisher(
-                new \Gelf\Transport\TcpTransport(
-                    self::getPackage()->getConfig()->get('graylog', 'server'),
-                    self::getPackage()->getConfig()->get('graylog', 'port')
-                )
-            );
-
-            $Handler = new Monolog\Handler\GelfHandler($Publisher);
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
      * Add a NewRelic handler to the logger, if settings are available
      *
      * @param Monolog\Logger $Logger
@@ -512,72 +578,6 @@ class Logger
                 $appName
             );
 
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a Redis handler to the logger, if settings are available
-     *
-     * @needle predis/predis
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addRedisHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $redis = self::getPackage()->getConfig()->get('redis');
-
-        if (!$redis) {
-            return;
-        }
-
-        $server = self::getPackage()->getConfig()->get('redis', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        try {
-            $Client = new \Predis\Client($server);
-
-            $Handler = new Monolog\Handler\RedisHandler(
-                $Client,
-                $server
-            );
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-    }
-
-    /**
-     * Add a SystelogUPD handler to the logger, if settings are available
-     *
-     * @param Monolog\Logger $Logger
-     * @throws Exception
-     */
-    public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger)
-    {
-        $syslog = self::getPackage()->getConfig()->get('syslogUdp');
-
-        if (!$syslog) {
-            return;
-        }
-
-        $host = self::getPackage()->getConfig()->get('syslogUdp', 'host');
-        $port = self::getPackage()->getConfig()->get('syslogUdp', 'port');
-
-        if (empty($host)) {
-            return;
-        }
-
-
-        try {
-            $Handler = new Monolog\Handler\SyslogUdpHandler($host, $port);
             $Logger->pushHandler($Handler);
         } catch (\Exception $Exception) {
             $Logger->notice($Exception->getMessage());

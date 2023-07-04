@@ -9,7 +9,6 @@ Package Name:
 
     quiqqer/log
 
-
 Features
 --------
 
@@ -23,7 +22,6 @@ Features
 - Send Logs To New Relic
 - Send Logs To Syslog UDP Servers
 
-
 Setup
 ------------
 
@@ -36,12 +34,11 @@ Contribute
 - Issue Tracker: https://dev.quiqqer.com/quiqqer/package-log/issues
 - Source Code: https://dev.quiqqer.com/quiqqer/package-log/tree/master
 
-
 Support
 -------
 
 If you found any flaws, have any wishes or suggestions you can send an email
-to [support@pcsg.de](mailto:support@pcsg.de) to inform us about your concerns. 
+to [support@pcsg.de](mailto:support@pcsg.de) to inform us about your concerns.
 We will try to respond to your request and forward it to the responsible developer.
 
 
