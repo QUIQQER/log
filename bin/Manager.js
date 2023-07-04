@@ -20,11 +20,8 @@ define('package/quiqqer/log/bin/Manager', [
 ], function (QUI, Panel, Grid, Ajax, Locale, QUIButton, QUIButtonSeparator, QUIConfirm) {
     "use strict";
 
-    var lg = 'quiqqer/log';
+    const lg = 'quiqqer/log';
 
-    /**
-     * @class package/quiqqer/log/bin/Manager
-     */
     return new Class({
 
         Extends: Panel,
@@ -81,16 +78,16 @@ define('package/quiqqer/log/bin/Manager', [
          * Asking for logs, show the log list
          */
         getLogs: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
-            var sortOn = this.$Grid.options.sortOn,
+            const sortOn = this.$Grid.options.sortOn,
                 sortBy = this.$Grid.options.sortBy;
 
             Ajax.get('package_quiqqer_log_ajax_get', function (result) {
                 // open buttons
-                for (var i = 0, len = result.data.length; i < len; i++) {
+                for (let i = 0, len = result.data.length; i < len; i++) {
                     result.data[i].open = {
                         image: 'fa fa-code',
                         file: result.data[i].file,
@@ -131,7 +128,7 @@ define('package/quiqqer/log/bin/Manager', [
                 return;
             }
 
-            var Control = this;
+            const Control = this;
 
             Control.Loader.show();
 
@@ -151,10 +148,11 @@ define('package/quiqqer/log/bin/Manager', [
                 width: Control.getAttribute('site-width')
             }, {
                 callback: function () {
-                    var Body = Control.getContent(),
+                    const Body = Control.getContent(),
                         Parent = Body.getParent();
 
-                    var MessageOverlay = $('qui-logs-message');
+                    let MessageOverlay = $('qui-logs-message');
+
                     if (!MessageOverlay) {
                         MessageOverlay = new Element('div#qui-logs-message.messages-message.message-attention');
                         MessageOverlay.hide();
@@ -200,7 +198,7 @@ define('package/quiqqer/log/bin/Manager', [
          * Delete the active log
          */
         deleteActiveLog: function () {
-            var self = this,
+            const self = this,
                 sel = this.$Grid.getSelectedData();
 
             new QUIConfirm({
@@ -221,12 +219,11 @@ define('package/quiqqer/log/bin/Manager', [
             }).open();
         },
 
-
         /**
          * Download the active log
          */
         downloadActiveLog: function () {
-            var self = this;
+            const self = this;
 
             // Check if the user is allowed to download logs
             Ajax.get('package_quiqqer_log_ajax_canUserDownloadLogs', function (canUserDownloadLogs) {
@@ -244,34 +241,34 @@ define('package/quiqqer/log/bin/Manager', [
                 }
 
                 // Create an iframe that downloads the log
-                var data = self.$Grid.getSelectedData(),
+                const data = self.$Grid.getSelectedData(),
                     log = data[0].file,
                     downloadFile = URL_OPT_DIR + 'quiqqer/log/bin/downloadLog.php?log=' + encodeURIComponent(log),
-                    iframeId = Math.floor(Date.now() / 1000),
-                    Frame = new Element('iframe', {
-                        id: 'download-iframe-' + iframeId,
-                        src: downloadFile,
-                        styles: {
-                            left: -1000,
-                            height: 10,
-                            position: 'absolute',
-                            top: -1000,
-                            width: 10
-                        },
-                        'data-iframeid': iframeId
-                    }).inject(document.body);
+                    iframeId = Math.floor(Date.now() / 1000);
+
+                new Element('iframe', {
+                    id: 'download-iframe-' + iframeId,
+                    src: downloadFile,
+                    styles: {
+                        left: -1000,
+                        height: 10,
+                        position: 'absolute',
+                        top: -1000,
+                        width: 10
+                    },
+                    'data-iframeid': iframeId
+                }).inject(document.body);
             }, {
                 'package': 'quiqqer/log'
             });
         },
-
 
         /**
          * Closes the active log (panel)
          */
         closeActiveLog: function () {
 
-            var Control = this,
+            const Control = this,
                 Body = Control.getContent(),
                 Parent = Body.getParent();
 
@@ -295,7 +292,6 @@ define('package/quiqqer/log/bin/Manager', [
             Control.Loader.hide();
         },
 
-
         /**
          * Refresh the current file
          *
@@ -306,14 +302,14 @@ define('package/quiqqer/log/bin/Manager', [
                 return this;
             }
 
-            var Control = this,
+            const Control = this,
                 File = this.getBody().getParent().getElement('.qui-logs-file');
 
             this.Loader.show();
 
             Ajax.get('package_quiqqer_log_ajax_file', function (result) {
                 if (!result) {
-                    $('qui-logs-message').set('text', Locale.get(lg, 'logs.panel.message.permission'));
+                    document.getElements('.qui-logs-message').set('text', Locale.get(lg, 'logs.panel.message.permission'));
 
                     Control.Loader.hide();
                     return false;
@@ -325,15 +321,15 @@ define('package/quiqqer/log/bin/Manager', [
                 );
 
                 if (result.isLogTrimmed) {
-                    $('qui-logs-message').show();
+                    document.getElements('.qui-logs-message').show();
                 } else {
-                    $('qui-logs-message').hide();
+                    document.getElements('.qui-logs-message').hide();
                 }
 
                 Control.Loader.hide();
                 Control.refresh();
 
-                var LogFileData = File.getElement('#qui-logs-file-data');
+                const LogFileData = File.getElement('#qui-logs-file-data');
                 LogFileData.scrollTop = LogFileData.scrollHeight;
             }, {
                 'package': 'quiqqer/log',
@@ -346,7 +342,7 @@ define('package/quiqqer/log/bin/Manager', [
          * build the panel
          */
         $onCreate: function () {
-            var Control = this;
+            const Control = this;
 
             this.$GridContainer = new Element('div', {
                 'class': 'qui-logs-container'
@@ -495,9 +491,9 @@ define('package/quiqqer/log/bin/Manager', [
                 return;
             }
 
-            var size, height, width;
+            let size, height, width;
 
-            var Body = this.getBody(),
+            const Body = this.getBody(),
                 Header = this.getHeader(),
                 Parent = Body.getParent(),
                 File = Parent.getElement('.qui-logs-file');
@@ -532,7 +528,8 @@ define('package/quiqqer/log/bin/Manager', [
                     });
                 }
 
-                var LogMessage = $('qui-logs-message');
+                const LogMessage = document.getElements('.qui-logs-message');
+
                 if (LogMessage) {
                     LogMessage.setStyles({
                         height: 40,
@@ -571,12 +568,12 @@ define('package/quiqqer/log/bin/Manager', [
         /**
          * event : grid refresh
          *
-         * @param {Object} Grid - controls/grid/Grid
+         * @param {Object} Gridinstance - controls/grid/Grid
          */
-        $gridRefresh: function (Grid) {
+        $gridRefresh: function (Gridinstance) {
             this.setAttributes({
-                limit: Grid.getAttribute('perPage'),
-                page: Grid.getAttribute('page')
+                limit: Gridinstance.getAttribute('perPage'),
+                page: Gridinstance.getAttribute('page')
             });
 
             this.getLogs();
@@ -588,7 +585,7 @@ define('package/quiqqer/log/bin/Manager', [
          * @param {Object} data - Grid Data
          */
         $gridClick: function (data) {
-            var len = data.target.selected.length,
+            const len = data.target.selected.length,
                 Delete = this.getButtons('delete'),
                 Download = this.getButtons('download');
 
@@ -605,7 +602,7 @@ define('package/quiqqer/log/bin/Manager', [
          * event : on grid dbl click
          */
         $gridDblClick: function () {
-            var sel = this.$Grid.getSelectedData();
+            const sel = this.$Grid.getSelectedData();
 
             this.openLog(sel[0].file);
         }
