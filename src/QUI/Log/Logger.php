@@ -29,7 +29,7 @@ class Logger
      */
     protected static ?bool $logOnFireEvent = null;
 
-    protected static int $monologVersion;
+    protected static ?int $monologVersion = null;
 
     /**
      * Monolog Logger
