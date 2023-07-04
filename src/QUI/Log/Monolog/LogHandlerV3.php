@@ -35,7 +35,8 @@ class LogHandlerV3 extends AbstractProcessingHandler
             $filename = 'debug';
         } elseif (DEVELOPMENT) {
             $filename = 'dev';
-        } elseif ($record->context
+        } elseif (
+            $record->context
             && isset($record->context['filename'])
             && $record->context['filename']
         ) {
@@ -44,7 +45,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
             $filename = QUI\System\Log::levelToLogName($record->level) . date('-Y-m-d');
         }
 
-        $dir  = VAR_DIR . 'log/';
+        $dir = VAR_DIR . 'log/';
         $file = $dir . $filename . '.log';
 
 

@@ -10,6 +10,7 @@ use Monolog;
 use QUI;
 use QUI\Exception;
 use QUI\System\Log;
+
 use function explode;
 
 /**
@@ -79,10 +80,7 @@ class Logger
 
         $arguments = func_get_args();
 
-        if (isset($arguments[0])
-            && isset($arguments[0]['event'])
-            && $arguments[0]['event'] == 'userLoad'
-        ) {
+        if (isset($arguments[0]['event']) && $arguments[0]['event'] == 'userLoad') {
             return;
         }
 
@@ -126,7 +124,8 @@ class Logger
             $errorLevel = $errorLevel | E_WARNING;
         }
 
-        if (self::$logLevels['error']
+        if (
+            self::$logLevels['error']
             || self::$logLevels['critical']
             || self::$logLevels['alert']
         ) {

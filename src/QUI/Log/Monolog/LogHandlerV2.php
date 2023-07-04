@@ -8,6 +8,7 @@ namespace QUI\Log\Monolog;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use QUI;
+
 use const JSON_PRETTY_PRINT;
 
 /**
@@ -35,7 +36,8 @@ class LogHandlerV2 extends AbstractProcessingHandler
             $filename = 'debug';
         } elseif (DEVELOPMENT) {
             $filename = 'dev';
-        } elseif ($record['context']
+        } elseif (
+            $record['context']
             && isset($record['context']['filename'])
             && $record['context']['filename']
         ) {
