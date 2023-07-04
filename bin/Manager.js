@@ -2,6 +2,7 @@
  * Log Manager
  *
  * @module package/quiqqer/log/bin/Manager
+ * @author www.pcsg.de (Henning Leutz)
  */
 
 define('package/quiqqer/log/bin/Manager', [
