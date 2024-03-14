@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Starts a download for a log file
  *
