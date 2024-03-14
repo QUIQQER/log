@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Starts a download for a log file
  *
@@ -19,7 +20,8 @@ $logDir = VAR_DIR . 'log/';
 $requestedLogName = urldecode(filter_var($_GET['log'], FILTER_SANITIZE_STRING));
 $requestedLogPath = $logDir . $requestedLogName;
 
-if (!file_exists($requestedLogPath)
+if (
+    !file_exists($requestedLogPath)
     || is_dir($requestedLogPath)
     || dirname($requestedLogPath) . '/' != $logDir
 ) {
