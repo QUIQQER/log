@@ -44,7 +44,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
         ) {
             $filename = $record->context['filename'] . date('-Y-m-d');
         } else {
-            $filename = QUI\System\Log::levelToLogName($record->level) . date('-Y-m-d');
+            $filename = QUI\System\Log::levelToLogName($record->level->value) . date('-Y-m-d');
         }
 
         $dir = VAR_DIR . 'log/';
