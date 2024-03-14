@@ -27,10 +27,7 @@ function package_quiqqer_log_ajax_logJsError(
             return true;
         }
 
-        if (
-            str_contains($browser, 'compatible; Googlebot')
-            || str_contains($browser, 'AdsBot-Google-Mobile')
-        ) {
+        if (str_contains($browser, 'compatible; Googlebot') || str_contains($browser, 'AdsBot-Google-Mobile')) {
             return true;
         }
 
