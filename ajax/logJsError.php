@@ -8,6 +8,7 @@
  * @param integer|String $errLinenumber
  * @param string $browser - Browser String
  */
+
 function package_quiqqer_log_ajax_logJsError(
     $errMsg,
     $errUrl,
