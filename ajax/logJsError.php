@@ -8,6 +8,7 @@
  * @param integer|String $errLinenumber
  * @param string $browser - Browser String
  */
+
 function package_quiqqer_log_ajax_logJsError(
     $errMsg,
     $errUrl,
@@ -22,12 +23,11 @@ function package_quiqqer_log_ajax_logJsError(
     }
 
     $isSearchEngine = function () use ($browser) {
-        if (strpos($browser, 'BingPreview') !== false) {
+        if (str_contains($browser, 'BingPreview')) {
             return true;
         }
 
-        if (strpos($browser, 'compatible; Googlebot') !== false
-            || strpos($browser, 'AdsBot-Google-Mobile') !== false) {
+        if (str_contains($browser, 'compatible; Googlebot') || str_contains($browser, 'AdsBot-Google-Mobile')) {
             return true;
         }
 
@@ -35,12 +35,12 @@ function package_quiqqer_log_ajax_logJsError(
     };
 
     // don't log require.js error logs from search engines, search previews
-    if (strpos($errUrl, 'require.js') !== false && $isSearchEngine()) {
+    if (str_contains($errUrl, 'require.js') && $isSearchEngine()) {
         return;
     }
 
     // don't log require.js css min error logs from search engines, search previews
-    if (strpos($errUrl, 'css.min.js') !== false && $isSearchEngine()) {
+    if (str_contains($errUrl, 'css.min.js') && $isSearchEngine()) {
         return;
     }
 
