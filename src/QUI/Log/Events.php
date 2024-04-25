@@ -7,7 +7,6 @@
 namespace QUI\Log;
 
 use QUI;
-
 use QUI\Exception;
 
 use function dirname;

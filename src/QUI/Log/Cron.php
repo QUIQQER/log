@@ -9,7 +9,7 @@ namespace QUI\Log;
 use DateInterval;
 use DateTime;
 use QUI;
-use \PHPMailer\PHPMailer\Exception as PhPHPMailerException;
+use PHPMailer\PHPMailer\Exception as PhPHPMailerException;
 
 use function file_exists;
 use function number_format;
