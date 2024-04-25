@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains \QUI\Log\Cron
+ * This filoe contains \QUI\Log\Cron
  */
 
 namespace QUI\Log;
@@ -9,6 +9,7 @@ namespace QUI\Log;
 use DateInterval;
 use DateTime;
 use QUI;
+use \PHPMailer\PHPMailer\Exception as PhPHPMailerException;
 
 use function file_exists;
 use function number_format;
@@ -28,9 +29,9 @@ class Cron
      * @param array $params
      * @param \QUI\Cron\Manager $CronManager
      *
-     * @throws QUI\Exception
+     * @throws QUI\Exception|PhPHPMailerException
      */
-    public static function sendLogsFromLastDay($params, $CronManager)
+    public static function sendLogsFromLastDay(array $params, QUI\Cron\Manager $CronManager): void
     {
         if (!isset($params['email'])) {
             throw new QUI\Exception('Need a email parameter to send the log');
@@ -66,7 +67,7 @@ class Cron
                 if ($size <= $maxMegaByte) {
                     $Mailer->addAttachments($file);
                 } else {
-                    $body .= '<br />File ' . $file . ' is to big for an Attachment';
+                    $body .= '<br />File ' . $file . ' is too big for an attachment';
                 }
             }
         }
@@ -83,7 +84,7 @@ class Cron
      *
      * @throws QUI\Exception
      */
-    public static function archiveLogs($params, $CronManager)
+    public static function archiveLogs($params, $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
@@ -107,7 +108,7 @@ class Cron
      *
      * @throws QUI\Exception
      */
-    public static function cleanupLogsAndArchives($params, $CronManager)
+    public static function cleanupLogsAndArchives($params, $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();

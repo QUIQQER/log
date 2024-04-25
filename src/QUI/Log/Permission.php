@@ -24,7 +24,7 @@ class Permission
      *
      * @return boolean
      */
-    public static function canUserDownloadLogs($User = null): bool
+    public static function canUserDownloadLogs(User $User = null): bool
     {
         if (is_null($User)) {
             $User = QUI::getUserBySession();

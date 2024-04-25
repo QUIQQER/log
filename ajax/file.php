@@ -1,12 +1,16 @@
 <?php
 
 /**
+ * This file contains package_quiqqer_log_ajax_file
+ */
+
+/**
  * System logs
  *
  * @param string $file - Name of the log
  * @return array|boolean
  */
-function package_quiqqer_log_ajax_file($file)
+function package_quiqqer_log_ajax_file(string $file): bool|array
 {
     $User = QUI::getUserBySession();
     if (!$User->getPermission('quiqqer.packages.quiqqerlog.canUse') && !$User->isSU()) {
@@ -32,10 +36,10 @@ function package_quiqqer_log_ajax_file($file)
         }
     }
 
-    return array(
+    return [
         'isLogTrimmed' => $isLogTrimmed,
         'data' => $data
-    );
+    ];
 }
 
 
@@ -111,6 +115,6 @@ function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_file',
-    array('file'),
+    ['file'],
     'Permission::checkSU'
 );

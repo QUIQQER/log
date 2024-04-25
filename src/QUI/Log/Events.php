@@ -8,6 +8,8 @@ namespace QUI\Log;
 
 use QUI;
 
+use QUI\Exception;
+
 use function dirname;
 use function file_get_contents;
 
@@ -24,9 +26,11 @@ class Events
     /**
      * Event on template get header
      * Extend the template header and register the on error event
+     *
      * @param QUI\Template $Template
+     * @throws Exception
      */
-    public static function onTemplateGetHeader($Template)
+    public static function onTemplateGetHeader(QUI\Template $Template): void
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
@@ -51,14 +55,14 @@ class Events
      *
      * @throws QUI\Exception
      */
-    public static function onPackageConfigSave(QUI\Package\Package $Package)
+    public static function onPackageConfigSave(QUI\Package\Package $Package): void
     {
         if ($Package->getName() == "quiqqer/log") {
             $isArchivingEnabled = $Package->getConfig()->getValue('log_cleanup', 'isArchivingEnabled');
             if ($isArchivingEnabled) {
                 try {
                     QUI\Archiver\Zip::check();
-                } catch (QUI\Exception $exception) {
+                } catch (QUI\Exception) {
                     QUI::getMessagesHandler()->addError(QUI::getLocale()->get("quiqqer/log", "error.config.save.zip"));
                 }
             }

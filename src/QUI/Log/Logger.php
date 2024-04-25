@@ -61,7 +61,7 @@ class Logger
      *
      * @param array|string $params
      */
-    public static function logOnFireEvent($params)
+    public static function logOnFireEvent(array|string $params): void
     {
         if (self::$logOnFireEvent === null) {
             self::$logOnFireEvent = 0;
@@ -70,7 +70,7 @@ class Logger
                 if (self::getPackage()->getConfig()->get('log', 'logAllEvents')) {
                     self::$logOnFireEvent = 1;
                 }
-            } catch (\Exception $Exception) {
+            } catch (\Exception) {
             }
         }
 
@@ -117,7 +117,7 @@ class Logger
     /**
      * Return the Logger object
      *
-     * @return Monolog\Logger
+     * @return Monolog\Logger|null
      * @throws Exception
      */
     public static function getLogger(): ?Monolog\Logger
@@ -177,7 +177,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addGraylogToLogger(Monolog\Logger $Logger)
+    public static function addGraylogToLogger(Monolog\Logger $Logger): void
     {
         $graylog = self::getPackage()->getConfig()->get('graylog');
 
@@ -223,7 +223,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger)
+    public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
         $browser = self::getPackage()->getConfig()->get('browser_logs');
 
@@ -234,7 +234,7 @@ class Logger
         $chromephp = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
         $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
-        if (empty($chromephp) || !$chromephp) {
+        if (empty($chromephp)) {
             return;
         }
 
@@ -259,7 +259,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger)
+    public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
         $browser = self::getPackage()->getConfig()->get('browser_logs');
 
@@ -270,7 +270,7 @@ class Logger
         $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
         $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
-        if (empty($firephp) || !$firephp) {
+        if (empty($firephp)) {
             return;
         }
 
@@ -291,7 +291,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger)
+    public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
     {
         $browser = self::getPackage()->getConfig()->get('browser_logs');
 
@@ -323,7 +323,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addCubeHandlerToLogger(Monolog\Logger $Logger)
+    public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
     {
         $cube = self::getPackage()->getConfig()->get('cube');
 
@@ -353,7 +353,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addRedisHandlerToLogger(Monolog\Logger $Logger)
+    public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
     {
         $redis = self::getPackage()->getConfig()->get('redis');
 
@@ -387,7 +387,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger)
+    public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
     {
         $syslog = self::getPackage()->getConfig()->get('syslogUdp');
 
@@ -414,7 +414,7 @@ class Logger
     /**
      * event : on header loaded -> set error reporting
      */
-    public static function onHeaderLoaded()
+    public static function onHeaderLoaded(): void
     {
         if (self::$logLevels['debug'] || DEVELOPMENT == 1) {
             error_reporting(E_ALL);
@@ -489,8 +489,9 @@ class Logger
      *
      * @param string $message - Log message
      * @param integer $loglevel - Log::LEVEL_*
+     * @throws Exception
      */
-    public static function write(string $message, int $loglevel = Log::LEVEL_INFO)
+    public static function write(string $message, int $loglevel = Log::LEVEL_INFO): void
     {
         $Logger = self::getLogger();
         $User = QUI::getUserBySession();
@@ -557,7 +558,7 @@ class Logger
      * @param Monolog\Logger $Logger
      * @throws Exception
      */
-    public static function addNewRelicToLogger(Monolog\Logger $Logger)
+    public static function addNewRelicToLogger(Monolog\Logger $Logger): void
     {
         $newRelic = self::getPackage()->getConfig()->get('newRelic');
 

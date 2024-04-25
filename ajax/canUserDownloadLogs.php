@@ -1,13 +1,19 @@
 <?php
 
 /**
+ * This file contains package_quiqqer_log_ajax_canUserDownloadLogs
+ */
+
+use QUI\Interfaces\Users\User;
+
+/**
  * Returns if the given user can download log files.
  *
- * @param \QUI\Interfaces\Users\User $User
+ * @param User $User
  *
  * @return boolean
  */
-function package_quiqqer_log_ajax_canUserDownloadLogs($User = null)
+function package_quiqqer_log_ajax_canUserDownloadLogs(User $User = null): bool
 {
     return \QUI\Log\Permission::canUserDownloadLogs($User);
 }
