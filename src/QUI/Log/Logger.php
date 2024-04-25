@@ -6,15 +6,12 @@
 
 namespace QUI\Log;
 
-use Gelf\Publisher;
-use Gelf\Transport\TcpTransport;
 use Monolog;
-use Predis\Client;
 use QUI;
 use QUI\Exception;
 use QUI\System\Log;
 
-use function explode;
+use function class_exists;
 
 /**
  * QUIQQER logging
@@ -173,8 +170,7 @@ class Logger
             return;
         }
 
-
-        if (!class_exists('\Gelf\Publisher')) {
+        if (!class_exists('Gelf\Publisher') || !class_exists('Gelf\Transport\TcpTransport')) {
             $Logger->info(
                 '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
             );
@@ -183,8 +179,8 @@ class Logger
         }
 
         try {
-            $Publisher = new Publisher(
-                new TcpTransport(
+            $Publisher = new \Gelf\Publisher(
+                new \Gelf\Transport\TcpTransport(
                     self::getPackage()->getConfig()->get('graylog', 'server'),
                     self::getPackage()->getConfig()->get('graylog', 'port')
                 )
@@ -249,13 +245,13 @@ class Logger
         }
 
         $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
-        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+        $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
 
         if (empty($firephp)) {
             return;
         }
 
-        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
+        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
             return;
         }
 
@@ -348,8 +344,16 @@ class Logger
             return;
         }
 
+        if (!class_exists('Predis\Client')) {
+            $Logger->info(
+                '\Predis\Client class is missing.'
+            );
+
+            return;
+        }
+
         try {
-            $Client = new Client($server);
+            $Client = new \Predis\Client($server);
 
             $Handler = new Monolog\Handler\RedisHandler(
                 $Client,
