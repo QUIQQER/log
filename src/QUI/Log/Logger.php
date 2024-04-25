@@ -133,12 +133,7 @@ class Logger
         // which levels should be logged
         self::$logLevels = self::getPackage()->getConfig()->get('log_levels');
 
-        // v2 or v3
-        if (self::isMonologV2()) {
-            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV2());
-        } else {
-            $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
-        }
+        $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
 
         self::addGraylogToLogger($Logger);
         self::addChromePHPHandlerToLogger($Logger);
@@ -155,20 +150,6 @@ class Logger
         }
 
         return $Logger;
-    }
-
-    public static function isMonologV2(): bool
-    {
-        if (self::$monologVersion === null) {
-            $Monolog = QUI::getPackageManager()->getInstalledPackage('monolog/monolog');
-            $lock = QUI::getPackageManager()->getPackageLock($Monolog);
-            $version = explode('.', $lock['version'])[0];
-            $version = (int)$version;
-
-            self::$monologVersion = $version;
-        }
-
-        return self::$monologVersion === 2;
     }
 
     /**
