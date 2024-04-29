@@ -5,17 +5,18 @@
  */
 
 use QUI\Interfaces\Users\User;
+use QUI\Log\Permission;
 
 /**
  * Returns if the given user can download log files.
  *
- * @param User $User
+ * @param User|null $User $User
  *
  * @return boolean
  */
 function package_quiqqer_log_ajax_canUserDownloadLogs(User $User = null): bool
 {
-    return \QUI\Log\Permission::canUserDownloadLogs($User);
+    return Permission::canUserDownloadLogs($User);
 }
 
 QUI::$Ajax->register('package_quiqqer_log_ajax_canUserDownloadLogs');
