@@ -21,9 +21,6 @@
     "monolog\/monolog": "^3",
     "quiqqer/cron": "^2"
   },
-  "conflict": {
-    "quiqqer\/quiqqer": "*"
-  },
   "autoload": {
     "psr-4": {
       "QUI\\Log\\": "src/QUI/Log"
