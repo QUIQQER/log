@@ -17,8 +17,8 @@
   "require": {
     "php": "^8",
     "ext-zip": "*",
-    "quiqqer\/core": "^2",
-    "monolog\/monolog": "^3",
+    "quiqqer/core": "^2",
+    "monolog/monolog": "^3",
     "quiqqer/cron": "^2"
   },
   "autoload": {
