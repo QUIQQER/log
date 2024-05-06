@@ -7,6 +7,7 @@
 namespace QUI\Log;
 
 use QUI;
+use QUI\Exception;
 
 /**
  * Setup routine for log package
@@ -16,7 +17,11 @@ use QUI;
  */
 class Setup
 {
-    public static function run()
+    /**
+     * @throws Exception
+     * @throws QUI\Database\Exception
+     */
+    public static function run(): void
     {
         // Create Log Archive Directory
         $logArchiveDir = Manager::LOG_ARCHIVE_DIR;
@@ -32,7 +37,7 @@ class Setup
         $cleanupCronName = QUI::getLocale()->get('quiqqer/log', 'cron.cleanup.delete.title');
         $isCleanupCronAlreadySetup = $Config->getValue('log_cleanup', 'isCleanupCronAlreadySetup');
 
-        // if locale doesn't exists, we try to import the locale.xml
+        // if locale doesn't exist, we try to import the locale.xml
         if (!QUI::getLocale()->exists('quiqqer/log', 'cron.cleanup.delete.title')) {
             try {
                 // locale import
@@ -44,7 +49,7 @@ class Setup
         }
 
 
-        // if cron doesn't installed, we try to execute the setup, so we can add the cron
+        // if cron isn't installed, we try to execute the setup, so we can add the cron
         if (!QUI::getDataBase()->table()->exist('cron')) {
             try {
                 $CronPackage = QUI::getPackage('quiqqer/cron');
@@ -61,7 +66,7 @@ class Setup
 
                 $Config->setValue('log_cleanup', 'isCleanupCronAlreadySetup', 1);
                 $Config->save();
-            } catch (QUI\Exception $exception) {
+            } catch (QUI\Exception) {
                 $msg = QUI::getLocale()->get('quiqqer/log', 'error.setup.cron.deletion');
                 QUI\System\Log::addError($msg);
                 QUI::getMessagesHandler()->addError($msg);
@@ -79,7 +84,7 @@ class Setup
 
                 $Config->setValue('log_cleanup', 'isArchivingCronAlreadySetup', 1);
                 $Config->save();
-            } catch (QUI\Exception $exception) {
+            } catch (QUI\Exception) {
                 $msg = QUI::getLocale()->get('quiqqer/log', 'error.setup.cron.archiving');
                 QUI\System\Log::addError($msg);
                 QUI::getMessagesHandler()->addError($msg);

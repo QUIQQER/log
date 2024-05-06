@@ -19,7 +19,7 @@ class Admin
     /**
      * event : on admin load
      */
-    public static function onAdminLoad()
+    public static function onAdminLoad(): void
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
@@ -41,7 +41,7 @@ class Admin
     /**
      * event : on admin load footer
      */
-    public static function onAdminLoadFooter()
+    public static function onAdminLoadFooter(): void
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
