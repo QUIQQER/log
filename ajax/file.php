@@ -1,12 +1,16 @@
 <?php
 
 /**
+ * This file contains package_quiqqer_log_ajax_file
+ */
+
+/**
  * System logs
  *
  * @param string $file - Name of the log
  * @return array|boolean
  */
-function package_quiqqer_log_ajax_file($file)
+function package_quiqqer_log_ajax_file(string $file): bool|array
 {
     $User = QUI::getUserBySession();
     if (!$User->getPermission('quiqqer.packages.quiqqerlog.canUse') && !$User->isSU()) {
@@ -32,28 +36,27 @@ function package_quiqqer_log_ajax_file($file)
         }
     }
 
-    return array(
+    return [
         'isLogTrimmed' => $isLogTrimmed,
         'data' => $data
-    );
+    ];
 }
 
 
 /**
  * Returns the last given number of lines of a file
  *
- * @param $filepath - The file to get last lines from
- * @param $lines - The amount of last lines to get
- * @param $adaptive - set to true when reading only a few lines
+ * @param string $filepath - The file to get last lines from
+ * @param int $lines - The amount of last lines to get
+ * @param bool $adaptive - set to true when reading only a few lines
  *
- * @return string
+ * @return bool|string
  * @author Torleif Berger, Lorenzo Stanco
  * @link http://stackoverflow.com/a/15025877/995958
  * @link https://gist.github.com/lorenzos/1711e81a9162320fde20
  * @license http://creativecommons.org/licenses/by/3.0/
- *
  */
-function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
+function getLastLinesOfFile(string $filepath, int $lines = 1, bool $adaptive = true): bool|string
 {
     // Open file
     $f = @fopen($filepath, "rb");
@@ -111,6 +114,6 @@ function getLastLinesOfFile($filepath, $lines = 1, $adaptive = true)
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_file',
-    array('file'),
+    ['file'],
     'Permission::checkSU'
 );

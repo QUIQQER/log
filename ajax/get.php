@@ -1,10 +1,14 @@
 <?php
 
 /**
+ * This file contains package_quiqqer_log_ajax_get
+ */
+
+/**
  * Return the log list
  *
- * @param string|integer $page
- * @param string|integer $limit
+ * @param integer|string $page
+ * @param integer|string $limit
  * @param string $search
  * @param string $sortOn
  * @param string $sortBy
@@ -12,19 +16,19 @@
  * @return array
  */
 function package_quiqqer_log_ajax_get(
-    $page,
-    $limit,
-    $search = '',
-    $sortOn = 'mdate',
-    $sortBy = 'DESC'
-) {
+    int|string $page,
+    int|string $limit,
+    string $search = '',
+    string $sortOn = 'mdate',
+    string $sortBy = 'DESC'
+): array {
     $LogManager = new QUI\Log\Manager();
 
-    if (!isset($sortOn) || empty($sortOn)) {
+    if (empty($sortOn)) {
         $sortOn = 'mdate';
     }
 
-    if (!isset($sortBy) || empty($sortBy)) {
+    if (empty($sortBy)) {
         $sortBy = 'DESC';
     }
 
@@ -38,6 +42,6 @@ function package_quiqqer_log_ajax_get(
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_get',
-    array('page', 'limit', 'search', 'sortOn', 'sortBy'),
+    ['page', 'limit', 'search', 'sortOn', 'sortBy'],
     'Permission::checkSU'
 );
