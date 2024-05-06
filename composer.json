@@ -1,5 +1,5 @@
 {
-  "name": "quiqqer\/log",
+  "name": "quiqqer/log",
   "type": "quiqqer-module",
   "description": "Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.",
   "license": "GPL-3.0-or-later",
@@ -7,7 +7,7 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "http:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     }
   ],
@@ -15,18 +15,15 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "php": ">=7.4",
+    "php": "^8",
     "ext-zip": "*",
-    "quiqqer\/quiqqer": "^1.8|dev-master|dev-dev",
-    "monolog\/monolog": "2.*|3.*",
-    "quiqqer/cron": "^1.10.1|dev-master|dev-dev"
-  },
-  "conflict": {
-    "quiqqer\/quiqqer": "<1.8"
+    "quiqqer/core": "^2",
+    "monolog/monolog": "^3",
+    "quiqqer/cron": "^2"
   },
   "autoload": {
     "psr-4": {
-      "QUI\\Log\\": "src\/QUI\/Log"
+      "QUI\\Log\\": "src/QUI/Log"
     }
   }
 }

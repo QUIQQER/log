@@ -1,21 +1,30 @@
 <?php
 
 /**
- * System logs löschen
+ * This file contains package_quiqqer_log_ajax_delete
+ */
+
+use QUI\Exception;
+use QUI\Utils\Security\Orthos;
+use QUI\Utils\System\File;
+
+/**
+ * Delete a log
  *
  * @param string $file - Name of the log
- * @return array
+ * @return void
+ * @throws Exception
  */
-function package_quiqqer_log_ajax_delete($file)
+function package_quiqqer_log_ajax_delete(string $file): void
 {
     $log = VAR_DIR . 'log/' . $file;
-    $log = \QUI\Utils\Security\Orthos::clearPath($log);
+    $log = Orthos::clearPath($log);
 
-    \QUI\Utils\System\File::unlink($log);
+    File::unlink($log);
 }
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_delete',
-    array('file'),
+    ['file'],
     'Permission::checkSU'
 );

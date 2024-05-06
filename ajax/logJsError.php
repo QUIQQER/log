@@ -1,21 +1,25 @@
 <?php
 
 /**
+ * This file contains package_quiqqer_log_ajax_logJsError
+ */
+
+/**
  * Log a javascript error
  *
  * @param string $errMsg
  * @param string $errUrl
  * @param integer|String $errLinenumber
  * @param string $browser - Browser String
+ * @param $context
  */
-
 function package_quiqqer_log_ajax_logJsError(
-    $errMsg,
-    $errUrl,
-    $errLinenumber,
-    $browser,
+    string $errMsg,
+    string $errUrl,
+    int|string $errLinenumber,
+    string $browser,
     $context
-) {
+): void {
     $User = QUI::getUserBySession();
 
     if (!empty($context)) {

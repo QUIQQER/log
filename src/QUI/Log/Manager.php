@@ -30,7 +30,7 @@ class Manager extends QUI\QDOM
      *
      * @param array $params
      */
-    public function __construct($params = [])
+    public function __construct(array $params = [])
     {
         // default
         $this->setAttributes([
@@ -46,7 +46,7 @@ class Manager extends QUI\QDOM
      *
      * @param int $days
      */
-    public static function deleteLogsOlderThanDays($days)
+    public static function deleteLogsOlderThanDays(int $days): void
     {
         $OldLogs = Manager::getLogsOlderThanDays($days);
 
@@ -62,7 +62,7 @@ class Manager extends QUI\QDOM
      * @param int $days - Maximum for the logs in days
      * @return Collection|DirectoryIterator
      */
-    public static function getLogsOlderThanDays($days)
+    public static function getLogsOlderThanDays(int $days): Collection|DirectoryIterator
     {
         return self::getLogsOlderThanSeconds($days * 24 * 60 * 60);
     }
@@ -73,12 +73,12 @@ class Manager extends QUI\QDOM
      * @param int $seconds - Maximum age for the log in seconds
      * @return Collection|DirectoryIterator
      */
-    public static function getLogsOlderThanSeconds($seconds)
+    public static function getLogsOlderThanSeconds(int $seconds): Collection|DirectoryIterator
     {
         $DirectoryIterator = new DirectoryIterator(self::LOG_DIR);
         $DirectoryCollection = Collection::from($DirectoryIterator);
 
-        $OlderLogs = $DirectoryCollection->filter(function ($log) use ($seconds) {
+        return $DirectoryCollection->filter(function ($log) use ($seconds) {
             /* @var $log DirectoryIterator */
             if ($log->isDot() || !$log->isFile() || $log->getExtension() != 'log') {
                 return false;
@@ -88,8 +88,6 @@ class Manager extends QUI\QDOM
 
             return ($logAge >= $seconds);
         });
-
-        return $OlderLogs;
     }
 
     /**
@@ -99,7 +97,7 @@ class Manager extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public static function archiveLogsOlderThanDays($days)
+    public static function archiveLogsOlderThanDays(int $days): void
     {
         $OldLogs = Manager::getLogsOlderThanDays($days);
 
@@ -122,7 +120,7 @@ class Manager extends QUI\QDOM
      *
      * @param int $days
      */
-    public static function deleteArchivedLogsOlderThanDays($days)
+    public static function deleteArchivedLogsOlderThanDays(int $days): void
     {
         $OldArchives = Manager::getArchivedLogsOlderThanDays($days);
 
@@ -138,7 +136,7 @@ class Manager extends QUI\QDOM
      * @param int $days - Maximum age for the archived logs in days
      * @return Collection|DirectoryIterator
      */
-    public static function getArchivedLogsOlderThanDays($days)
+    public static function getArchivedLogsOlderThanDays(int $days): Collection|DirectoryIterator
     {
         return self::getArchivedLogsOlderThanSeconds($days * 24 * 60 * 60);
     }
@@ -149,12 +147,12 @@ class Manager extends QUI\QDOM
      * @param int $seconds - Maximum age for the archived logs in seconds
      * @return Collection|DirectoryIterator
      */
-    public static function getArchivedLogsOlderThanSeconds($seconds)
+    public static function getArchivedLogsOlderThanSeconds(int $seconds): Collection|DirectoryIterator
     {
         $DirectoryIterator = new DirectoryIterator(self::LOG_ARCHIVE_DIR);
         $DirectoryCollection = Collection::from($DirectoryIterator);
 
-        $OlderArchives = $DirectoryCollection->filter(function ($archive) use ($seconds) {
+        return $DirectoryCollection->filter(function ($archive) use ($seconds) {
             /* @var $archive DirectoryIterator */
             if ($archive->isDot() || !$archive->isFile() || $archive->getExtension() != 'zip') {
                 return false;
@@ -164,8 +162,6 @@ class Manager extends QUI\QDOM
 
             return ($archiveAge >= $seconds);
         });
-
-        return $OlderArchives;
     }
 
     /**
@@ -176,7 +172,7 @@ class Manager extends QUI\QDOM
      *
      * @return array
      */
-    public function search($search = '')
+    public function search(string $search = ''): array
     {
         $dir = self::LOG_DIR;
         $list = [];
@@ -201,7 +197,7 @@ class Manager extends QUI\QDOM
         rsort($files);
 
         foreach ($files as $file) {
-            if ($search && strpos($file, $search) === false) {
+            if ($search && !str_contains($file, $search)) {
                 continue;
             }
 
