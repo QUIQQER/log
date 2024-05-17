@@ -61,11 +61,11 @@ class Logger
     public static function logOnFireEvent(array|string $params): void
     {
         if (self::$logOnFireEvent === null) {
-            self::$logOnFireEvent = 0;
+            self::$logOnFireEvent = false;
 
             try {
                 if (self::getPackage()->getConfig()->get('log', 'logAllEvents')) {
-                    self::$logOnFireEvent = 1;
+                    self::$logOnFireEvent = true;
                 }
             } catch (\Exception) {
             }
