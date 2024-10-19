@@ -49,6 +49,10 @@ function package_quiqqer_log_ajax_logJsError(
         return;
     }
 
+    if (str_contains($errUrl, 'image.min.js') && $isSearchEngine()) {
+        return;
+    }
+
     // don't log require.js css min error logs from search engines, search previews
     if (str_contains($errUrl, 'css.min.js')) {
         return;
