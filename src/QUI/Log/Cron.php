@@ -89,8 +89,8 @@ class Cron
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForArchiving = $Config->getValue('log_cleanup', 'minLogAgeForArchiving');
-        $isLogArchivingEnabled = $Config->getValue('log_cleanup', 'isArchivingEnabled');
+        $minLogAgeForArchiving = (int)$Config->getValue('log_cleanup', 'minLogAgeForArchiving');
+        $isLogArchivingEnabled = (int)$Config->getValue('log_cleanup', 'isArchivingEnabled');
 
         if ($isLogArchivingEnabled) {
             Manager::archiveLogsOlderThanDays($minLogAgeForArchiving);
@@ -113,9 +113,9 @@ class Cron
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForDelete = $Config->getValue('log_cleanup', 'minLogAgeForDelete');
-        $minArchiveAgeForDelete = $Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
-        $isArchiveDeletionEnabled = $Config->getValue('log_cleanup', 'isArchiveDeletionEnabled');
+        $minLogAgeForDelete = (int)$Config->getValue('log_cleanup', 'minLogAgeForDelete');
+        $minArchiveAgeForDelete = (int)$Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
+        $isArchiveDeletionEnabled = (int)$Config->getValue('log_cleanup', 'isArchiveDeletionEnabled');
 
         Manager::deleteLogsOlderThanDays($minLogAgeForDelete);
 

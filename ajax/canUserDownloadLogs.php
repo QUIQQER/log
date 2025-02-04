@@ -14,7 +14,7 @@ use QUI\Log\Permission;
  *
  * @return boolean
  */
-function package_quiqqer_log_ajax_canUserDownloadLogs(User $User = null): bool
+function package_quiqqer_log_ajax_canUserDownloadLogs(null|User $User = null): bool
 {
     return Permission::canUserDownloadLogs($User);
 }
