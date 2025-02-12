@@ -58,7 +58,7 @@ class Logger
      *
      * @param array|string $params
      */
-    public static function logOnFireEvent(array|string $params): void
+    public static function logOnFireEvent(array | string $params): void
     {
         if (self::$logOnFireEvent === null) {
             self::$logOnFireEvent = false;
@@ -186,6 +186,7 @@ class Logger
                 )
             );
 
+            // @phpstan-ignore-next-line
             $Handler = new Monolog\Handler\GelfHandler($Publisher);
 
             $Logger->pushHandler($Handler);
@@ -401,10 +402,14 @@ class Logger
      */
     public static function onHeaderLoaded(): void
     {
-        if (self::$logLevels['debug'] || DEVELOPMENT == 1) {
+        if (
+            self::$logLevels['debug']
+            || (defined('DEVELOPMENT') && DEVELOPMENT === true) // @phpstan-ignore-line
+        ) {
             error_reporting(E_ALL);
 
-            if (DEVELOPMENT == 1) {
+            // @phpstan-ignore-next-line
+            if (defined('DEVELOPMENT') && DEVELOPMENT === true) {
                 error_reporting(E_ALL | E_DEPRECATED);
             }
 

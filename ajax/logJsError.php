@@ -9,14 +9,14 @@
  *
  * @param string $errMsg
  * @param string $errUrl
- * @param integer|String $errLinenumber
+ * @param integer|String $errLineNumber
  * @param string $browser - Browser String
  * @param $context
  */
 function package_quiqqer_log_ajax_logJsError(
     string $errMsg,
     string $errUrl,
-    int|string $errLinenumber,
+    int|string $errLineNumber,
     string $browser,
     $context
 ): void {
@@ -27,11 +27,17 @@ function package_quiqqer_log_ajax_logJsError(
     }
 
     $isSearchEngine = function () use ($browser) {
-        if (str_contains($browser, 'BingPreview')) {
+        if (
+            str_contains($browser, 'BingPreview')
+            || str_contains($browser, 'bingbot')
+        ) {
             return true;
         }
 
-        if (str_contains($browser, 'compatible; Googlebot') || str_contains($browser, 'AdsBot-Google-Mobile')) {
+        if (
+            str_contains($browser, 'compatible; Googlebot')
+            || str_contains($browser, 'AdsBot-Google-Mobile')
+        ) {
             return true;
         }
 
@@ -43,17 +49,21 @@ function package_quiqqer_log_ajax_logJsError(
         return;
     }
 
+    if (str_contains($errUrl, 'image.min.js') && $isSearchEngine()) {
+        return;
+    }
+
     // don't log require.js css min error logs from search engines, search previews
-    if (str_contains($errUrl, 'css.min.js') && $isSearchEngine()) {
+    if (str_contains($errUrl, 'css.min.js')) {
         return;
     }
 
     $error = "\n";
     $error .= "Time: " . date('Y-m-d H:i:s') . "\n\n";
-    $error .= "File: {$errUrl}\n";
-    $error .= "Line Number: {$errLinenumber}\n";
-    $error .= "Error: {$errMsg}\n";
-    $error .= "Browser: {$browser}\n";
+    $error .= "File: $errUrl\n";
+    $error .= "Line Number: $errLineNumber\n";
+    $error .= "Error: $errMsg\n";
+    $error .= "Browser: $browser\n";
     $error .= "\n";
     $error .= "Username: {$User->getName()}\n";
 
@@ -69,5 +79,5 @@ function package_quiqqer_log_ajax_logJsError(
 
 QUI::$Ajax->register(
     'package_quiqqer_log_ajax_logJsError',
-    ['errMsg', 'errUrl', 'errLinenumber', 'browser', 'context']
+    ['errMsg', 'errUrl', 'errLineNumber', 'browser', 'context']
 );

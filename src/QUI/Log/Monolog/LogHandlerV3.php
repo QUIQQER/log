@@ -32,10 +32,11 @@ class LogHandlerV3 extends AbstractProcessingHandler
 //        $record['extra'];
 //        $record['formatted'];
 
-
-        if (DEBUG_MODE) {
+        // @phpstan-ignore-next-line
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
             $filename = 'debug';
-        } elseif (DEVELOPMENT) {
+        // @phpstan-ignore-next-line
+        } elseif (defined('DEVELOPMENT') && DEVELOPMENT) {
             $filename = 'dev';
         } elseif (
             $record->context
