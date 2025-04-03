@@ -51,8 +51,6 @@ class Cron
         $Mailer->addRecipient($params['email']);
         $Mailer->setSubject('Logs from the last day');
 
-        $maxMegaByte = 5;
-
         foreach ($result as $entry) {
             if (!isset($entry['file'])) {
                 continue;
@@ -61,10 +59,9 @@ class Cron
             $file = $logDir . $entry['file'];
 
             if (file_exists($file)) {
-                $size = QUI\Utils\System\File::getFileSize($file);
-                $size = number_format($size / 1048576);
+                $size = filesize($file);
 
-                if ($size <= $maxMegaByte) {
+                if ($size && $size <= 5242880) { // 5MB max
                     $Mailer->addAttachments($file);
                 } else {
                     $body .= '<br />File ' . $file . ' is too big for an attachment';
