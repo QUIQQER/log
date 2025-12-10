@@ -16,7 +16,7 @@
 function package_quiqqer_log_ajax_logJsError(
     string $errMsg,
     string $errUrl,
-    int|string $errLineNumber,
+    int | string $errLineNumber,
     string $browser,
     $context
 ): void {
@@ -50,6 +50,12 @@ function package_quiqqer_log_ajax_logJsError(
     }
 
     if (str_contains($errUrl, 'image.min.js') && $isSearchEngine()) {
+        return;
+    }
+
+    // don't log empty url errors from search engines
+    // we can't fix them, because the error is not from our site
+    if (empty($errUrl) && $isSearchEngine()) {
         return;
     }
 
