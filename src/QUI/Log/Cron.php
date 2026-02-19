@@ -11,7 +11,10 @@ use DateTime;
 use QUI;
 use PHPMailer\PHPMailer\Exception as PhPHPMailerException;
 
+use function defined;
 use function file_exists;
+use function gethostname;
+use function phpversion;
 use function number_format;
 
 /**
@@ -47,9 +50,25 @@ class Cron
 
         $body = '';
         $result = $LogManager->search($Date->format('Y-m-d') . '.log');
+        $attachedFiles = [];
+        $skippedFiles = [];
+
+        $host = defined('HOST') ? (string)HOST : '';
+        $serverHost = (string)gethostname();
+
+        if ($host === '') {
+            $host = $serverHost;
+        }
+        $quiqqerVersion = QUI::version();
+        $phpVersion = phpversion();
+        $subject = 'Logs from the last day';
+
+        if (!empty($host)) {
+            $subject = '[' . $host . '] ' . $subject;
+        }
 
         $Mailer->addRecipient($params['email']);
-        $Mailer->setSubject('Logs from the last day');
+        $Mailer->setSubject($subject);
 
         foreach ($result as $entry) {
             if (!isset($entry['file'])) {
@@ -63,10 +82,53 @@ class Cron
 
                 if ($size && $size <= 5242880) { // 5MB max
                     $Mailer->addAttachments($file);
+                    $attachedFiles[] = [
+                        'file' => $file,
+                        'size' => $size
+                    ];
                 } else {
-                    $body .= '<br />File ' . $file . ' is too big for an attachment';
+                    $skippedFiles[] = [
+                        'file' => $file,
+                        'size' => $size
+                    ];
                 }
             }
+        }
+
+        $body .= '<h2>Daily Log Report</h2>';
+        $body .= '<p>System information:</p>';
+        $body .= '<ul>';
+        $body .= '<li><strong>System:</strong> ' . $host . '</li>';
+        $body .= '<li><strong>Server:</strong> ' . $serverHost . '</li>';
+        $body .= '<li><strong>QUIQQER Version:</strong> ' . $quiqqerVersion . '</li>';
+        $body .= '<li><strong>PHP Version:</strong> ' . $phpVersion . '</li>';
+        $body .= '<li><strong>Date:</strong> ' . $Date->format('Y-m-d') . '</li>';
+        $body .= '<li><strong>Log directory:</strong> ' . $logDir . '</li>';
+        $body .= '</ul>';
+
+        $body .= '<p><strong>Attachments:</strong> ' . count($attachedFiles) . '</p>';
+
+        if (!empty($attachedFiles)) {
+            $body .= '<ul>';
+
+            foreach ($attachedFiles as $attachedFile) {
+                $body .= '<li>' . $attachedFile['file']
+                    . ' (' . number_format((float)$attachedFile['size'] / 1024, 2) . ' KB)</li>';
+            }
+
+            $body .= '</ul>';
+        }
+
+        if (!empty($skippedFiles)) {
+            $body .= '<p><strong>Skipped files (too large for attachment):</strong></p>';
+            $body .= '<ul>';
+
+            foreach ($skippedFiles as $skippedFile) {
+                $body .= '<li>' . $skippedFile['file']
+                    . ' (' . number_format((float)$skippedFile['size'] / 1024, 2) . ' KB)</li>';
+            }
+
+            $body .= '</ul>';
         }
 
         $Mailer->setBody($body);
