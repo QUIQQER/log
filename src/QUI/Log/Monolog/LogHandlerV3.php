@@ -34,7 +34,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
         // @phpstan-ignore-next-line
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
             $filename = 'debug';
-        // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
         } elseif (defined('DEVELOPMENT') && DEVELOPMENT) {
             $filename = 'dev';
         } elseif (
