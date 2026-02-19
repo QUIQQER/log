@@ -11,8 +11,6 @@ use QUI\Interfaces\Users\User;
 
 /**
  * Class Permission
- *
- * @package QUI\Log
  */
 class Permission
 {

@@ -19,4 +19,4 @@ function package_quiqqer_log_ajax_canUserDownloadLogs(null|User $User = null): b
     return Permission::canUserDownloadLogs($User);
 }
 
-QUI::$Ajax->register('package_quiqqer_log_ajax_canUserDownloadLogs');
+QUI::getAjax()->register('package_quiqqer_log_ajax_canUserDownloadLogs');

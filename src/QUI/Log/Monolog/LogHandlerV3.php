@@ -14,7 +14,6 @@ use const JSON_PRETTY_PRINT;
 
 /**
  * Class LogHandler
- * @package QUI\Log\Monolog
  */
 class LogHandlerV3 extends AbstractProcessingHandler
 {

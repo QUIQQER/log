@@ -18,18 +18,14 @@ use function phpversion;
 use function number_format;
 
 /**
- * Class Cron / Log Crons
- *
- * @package quiqqer/log
- * @author  Henning Leutz (PCSG)
- * @author  Jan Wennrich (PCSG)
+ * Class Cron / Log Cron
  */
 class Cron
 {
     /**
      * Send the logs from the last day
      *
-     * @param array $params
+     * @param array<string, mixed> $params
      * @param \QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception|PhPHPMailerException
@@ -138,18 +134,18 @@ class Cron
     /**
      * Archive old log files
      *
-     * @param $params
-     * @param $CronManager
+     * @param array<string, mixed> $params
+     * @param QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception
      */
-    public static function archiveLogs($params, $CronManager): void
+    public static function archiveLogs(array $params, QUI\Cron\Manager $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForArchiving = (int)$Config->getValue('log_cleanup', 'minLogAgeForArchiving');
-        $isLogArchivingEnabled = (int)$Config->getValue('log_cleanup', 'isArchivingEnabled');
+        $minLogAgeForArchiving = (int)$Config?->getValue('log_cleanup', 'minLogAgeForArchiving');
+        $isLogArchivingEnabled = (int)$Config?->getValue('log_cleanup', 'isArchivingEnabled');
 
         if ($isLogArchivingEnabled) {
             Manager::archiveLogsOlderThanDays($minLogAgeForArchiving);
@@ -162,19 +158,19 @@ class Cron
     /**
      * Deletes old log files (and archives)
      *
-     * @param $params
-     * @param $CronManager
+     * @param array<string, mixed> $params
+     * @param QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception
      */
-    public static function cleanupLogsAndArchives($params, $CronManager): void
+    public static function cleanupLogsAndArchives(array $params, QUI\Cron\Manager $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForDelete = (int)$Config->getValue('log_cleanup', 'minLogAgeForDelete');
-        $minArchiveAgeForDelete = (int)$Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
-        $isArchiveDeletionEnabled = (int)$Config->getValue('log_cleanup', 'isArchiveDeletionEnabled');
+        $minLogAgeForDelete = (int)$Config?->getValue('log_cleanup', 'minLogAgeForDelete');
+        $minArchiveAgeForDelete = (int)$Config?->getValue('log_cleanup', 'minArchiveAgeForDelete');
+        $isArchiveDeletionEnabled = (int)$Config?->getValue('log_cleanup', 'isArchiveDeletionEnabled');
 
         Manager::deleteLogsOlderThanDays($minLogAgeForDelete);
 

@@ -13,11 +13,6 @@ use QUI\Utils\System\File;
 
 /**
  * Class Manager - log manager
- *
- * @package quiqqer/log
- *
- * @author  Henning Leutz (PCSG)
- * @author Jan Wennrich (PCSG)
  */
 class Manager extends QUI\QDOM
 {
@@ -28,7 +23,7 @@ class Manager extends QUI\QDOM
     /**
      * constructor
      *
-     * @param array $params
+     * @param array<string, mixed> $params
      */
     public function __construct(array $params = [])
     {
@@ -170,7 +165,7 @@ class Manager extends QUI\QDOM
      *
      * @param string $search
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function search(string $search = ''): array
     {
@@ -207,6 +202,10 @@ class Manager extends QUI\QDOM
             }
 
             $mtime = filemtime($dir . $file);
+
+            if ($mtime === false) {
+                continue;
+            }
 
             $list[] = [
                 'file' => $file,
