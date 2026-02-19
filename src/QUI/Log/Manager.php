@@ -13,11 +13,6 @@ use QUI\Utils\System\File;
 
 /**
  * Class Manager - log manager
- *
- * @package quiqqer/log
- *
- * @author  Henning Leutz (PCSG)
- * @author Jan Wennrich (PCSG)
  */
 class Manager extends QUI\QDOM
 {
@@ -28,7 +23,7 @@ class Manager extends QUI\QDOM
     /**
      * constructor
      *
-     * @param array $params
+     * @param array<string, mixed> $params
      */
     public function __construct(array $params = [])
     {
@@ -62,7 +57,7 @@ class Manager extends QUI\QDOM
      * @param int $days - Maximum for the logs in days
      * @return Collection|DirectoryIterator
      */
-    public static function getLogsOlderThanDays(int $days): Collection|DirectoryIterator
+    public static function getLogsOlderThanDays(int $days): Collection | DirectoryIterator
     {
         return self::getLogsOlderThanSeconds($days * 24 * 60 * 60);
     }
@@ -73,7 +68,7 @@ class Manager extends QUI\QDOM
      * @param int $seconds - Maximum age for the log in seconds
      * @return Collection|DirectoryIterator
      */
-    public static function getLogsOlderThanSeconds(int $seconds): Collection|DirectoryIterator
+    public static function getLogsOlderThanSeconds(int $seconds): Collection | DirectoryIterator
     {
         $DirectoryIterator = new DirectoryIterator(self::LOG_DIR);
         $DirectoryCollection = Collection::from($DirectoryIterator);
@@ -136,7 +131,7 @@ class Manager extends QUI\QDOM
      * @param int $days - Maximum age for the archived logs in days
      * @return Collection|DirectoryIterator
      */
-    public static function getArchivedLogsOlderThanDays(int $days): Collection|DirectoryIterator
+    public static function getArchivedLogsOlderThanDays(int $days): Collection | DirectoryIterator
     {
         return self::getArchivedLogsOlderThanSeconds($days * 24 * 60 * 60);
     }
@@ -147,7 +142,7 @@ class Manager extends QUI\QDOM
      * @param int $seconds - Maximum age for the archived logs in seconds
      * @return Collection|DirectoryIterator
      */
-    public static function getArchivedLogsOlderThanSeconds(int $seconds): Collection|DirectoryIterator
+    public static function getArchivedLogsOlderThanSeconds(int $seconds): Collection | DirectoryIterator
     {
         $DirectoryIterator = new DirectoryIterator(self::LOG_ARCHIVE_DIR);
         $DirectoryCollection = Collection::from($DirectoryIterator);
@@ -170,7 +165,7 @@ class Manager extends QUI\QDOM
      *
      * @param string $search
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function search(string $search = ''): array
     {
@@ -207,6 +202,10 @@ class Manager extends QUI\QDOM
             }
 
             $mtime = filemtime($dir . $file);
+
+            if ($mtime === false) {
+                continue;
+            }
 
             $list[] = [
                 'file' => $file,

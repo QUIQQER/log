@@ -11,22 +11,21 @@ use DateTime;
 use QUI;
 use PHPMailer\PHPMailer\Exception as PhPHPMailerException;
 
+use function defined;
 use function file_exists;
+use function gethostname;
+use function phpversion;
 use function number_format;
 
 /**
- * Class Cron / Log Crons
- *
- * @package quiqqer/log
- * @author  Henning Leutz (PCSG)
- * @author  Jan Wennrich (PCSG)
+ * Class Cron / Log Cron
  */
 class Cron
 {
     /**
      * Send the logs from the last day
      *
-     * @param array $params
+     * @param array<string, mixed> $params
      * @param \QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception|PhPHPMailerException
@@ -47,9 +46,25 @@ class Cron
 
         $body = '';
         $result = $LogManager->search($Date->format('Y-m-d') . '.log');
+        $attachedFiles = [];
+        $skippedFiles = [];
+
+        $host = defined('HOST') ? (string)HOST : '';
+        $serverHost = (string)gethostname();
+
+        if ($host === '') {
+            $host = $serverHost;
+        }
+        $quiqqerVersion = QUI::version();
+        $phpVersion = phpversion();
+        $subject = 'Logs from the last day';
+
+        if (!empty($host)) {
+            $subject = '[' . $host . '] ' . $subject;
+        }
 
         $Mailer->addRecipient($params['email']);
-        $Mailer->setSubject('Logs from the last day');
+        $Mailer->setSubject($subject);
 
         foreach ($result as $entry) {
             if (!isset($entry['file'])) {
@@ -63,10 +78,53 @@ class Cron
 
                 if ($size && $size <= 5242880) { // 5MB max
                     $Mailer->addAttachments($file);
+                    $attachedFiles[] = [
+                        'file' => $file,
+                        'size' => $size
+                    ];
                 } else {
-                    $body .= '<br />File ' . $file . ' is too big for an attachment';
+                    $skippedFiles[] = [
+                        'file' => $file,
+                        'size' => $size
+                    ];
                 }
             }
+        }
+
+        $body .= '<h2>Daily Log Report</h2>';
+        $body .= '<p>System information:</p>';
+        $body .= '<ul>';
+        $body .= '<li><strong>System:</strong> ' . $host . '</li>';
+        $body .= '<li><strong>Server:</strong> ' . $serverHost . '</li>';
+        $body .= '<li><strong>QUIQQER Version:</strong> ' . $quiqqerVersion . '</li>';
+        $body .= '<li><strong>PHP Version:</strong> ' . $phpVersion . '</li>';
+        $body .= '<li><strong>Date:</strong> ' . $Date->format('Y-m-d') . '</li>';
+        $body .= '<li><strong>Log directory:</strong> ' . $logDir . '</li>';
+        $body .= '</ul>';
+
+        $body .= '<p><strong>Attachments:</strong> ' . count($attachedFiles) . '</p>';
+
+        if (!empty($attachedFiles)) {
+            $body .= '<ul>';
+
+            foreach ($attachedFiles as $attachedFile) {
+                $body .= '<li>' . $attachedFile['file']
+                    . ' (' . number_format((float)$attachedFile['size'] / 1024, 2) . ' KB)</li>';
+            }
+
+            $body .= '</ul>';
+        }
+
+        if (!empty($skippedFiles)) {
+            $body .= '<p><strong>Skipped files (too large for attachment):</strong></p>';
+            $body .= '<ul>';
+
+            foreach ($skippedFiles as $skippedFile) {
+                $body .= '<li>' . $skippedFile['file']
+                    . ' (' . number_format((float)$skippedFile['size'] / 1024, 2) . ' KB)</li>';
+            }
+
+            $body .= '</ul>';
         }
 
         $Mailer->setBody($body);
@@ -76,18 +134,18 @@ class Cron
     /**
      * Archive old log files
      *
-     * @param $params
-     * @param $CronManager
+     * @param array<string, mixed> $params
+     * @param QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception
      */
-    public static function archiveLogs($params, $CronManager): void
+    public static function archiveLogs(array $params, QUI\Cron\Manager $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForArchiving = (int)$Config->getValue('log_cleanup', 'minLogAgeForArchiving');
-        $isLogArchivingEnabled = (int)$Config->getValue('log_cleanup', 'isArchivingEnabled');
+        $minLogAgeForArchiving = (int)$Config?->getValue('log_cleanup', 'minLogAgeForArchiving');
+        $isLogArchivingEnabled = (int)$Config?->getValue('log_cleanup', 'isArchivingEnabled');
 
         if ($isLogArchivingEnabled) {
             Manager::archiveLogsOlderThanDays($minLogAgeForArchiving);
@@ -100,19 +158,19 @@ class Cron
     /**
      * Deletes old log files (and archives)
      *
-     * @param $params
-     * @param $CronManager
+     * @param array<string, mixed> $params
+     * @param QUI\Cron\Manager $CronManager
      *
      * @throws QUI\Exception
      */
-    public static function cleanupLogsAndArchives($params, $CronManager): void
+    public static function cleanupLogsAndArchives(array $params, QUI\Cron\Manager $CronManager): void
     {
         $Package = QUI::getPackage('quiqqer/log');
         $Config = $Package->getConfig();
 
-        $minLogAgeForDelete = (int)$Config->getValue('log_cleanup', 'minLogAgeForDelete');
-        $minArchiveAgeForDelete = (int)$Config->getValue('log_cleanup', 'minArchiveAgeForDelete');
-        $isArchiveDeletionEnabled = (int)$Config->getValue('log_cleanup', 'isArchiveDeletionEnabled');
+        $minLogAgeForDelete = (int)$Config?->getValue('log_cleanup', 'minLogAgeForDelete');
+        $minArchiveAgeForDelete = (int)$Config?->getValue('log_cleanup', 'minArchiveAgeForDelete');
+        $isArchiveDeletionEnabled = (int)$Config?->getValue('log_cleanup', 'isArchiveDeletionEnabled');
 
         Manager::deleteLogsOlderThanDays($minLogAgeForDelete);
 

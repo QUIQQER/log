@@ -11,18 +11,18 @@
  * @param string $errUrl
  * @param integer|String $errLineNumber
  * @param string $browser - Browser String
- * @param $context
+ * @param array<string, mixed>|string|null $context
  */
 function package_quiqqer_log_ajax_logJsError(
     string $errMsg,
     string $errUrl,
     int | string $errLineNumber,
     string $browser,
-    $context
+    array|string|null $context
 ): void {
     $User = QUI::getUserBySession();
 
-    if (!empty($context)) {
+    if (is_string($context) && $context !== '') {
         $context = json_decode($context, true);
     }
 
@@ -83,7 +83,7 @@ function package_quiqqer_log_ajax_logJsError(
     QUI\System\Log::addError($error, [], 'js_errors');
 }
 
-QUI::$Ajax->register(
+QUI::getAjax()->register(
     'package_quiqqer_log_ajax_logJsError',
     ['errMsg', 'errUrl', 'errLineNumber', 'browser', 'context']
 );

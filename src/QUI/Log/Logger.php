@@ -15,10 +15,6 @@ use function class_exists;
 
 /**
  * QUIQQER logging
- *
- * @package quiqqer/log
- * @author  Henning Leutz (PCSG)
- * @licence For copyright and license information, please view the /README.md
  */
 class Logger
 {
@@ -31,7 +27,7 @@ class Logger
     /**
      * which levels should be logged
      *
-     * @var array
+     * @var array<string, bool>
      */
     public static array $logLevels = [
         'debug' => true,
@@ -56,7 +52,7 @@ class Logger
      * event on fire event
      * log all events?
      *
-     * @param array|string $params
+     * @param array<string, mixed>|string $params
      */
     public static function logOnFireEvent(array | string $params): void
     {
@@ -64,7 +60,7 @@ class Logger
             self::$logOnFireEvent = false;
 
             try {
-                if (self::getPackage()->getConfig()->get('log', 'logAllEvents')) {
+                if (self::getPackage()->getConfig()?->get('log', 'logAllEvents')) {
                     self::$logOnFireEvent = true;
                 }
             } catch (\Exception) {
@@ -86,6 +82,11 @@ class Logger
         }
 
         $Logger = self::getLogger();
+
+        if ($Logger === null) {
+            return;
+        }
+
         $User = QUI::getUserBySession();
 
         $context = [
@@ -128,7 +129,11 @@ class Logger
         self::$Logger = $Logger;
 
         // which levels should be logged
-        self::$logLevels = self::getPackage()->getConfig()->get('log_levels');
+        $logLevels = self::getPackage()->getConfig()?->get('log_levels');
+
+        if (is_array($logLevels)) {
+            self::$logLevels = $logLevels;
+        }
 
         $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
 
@@ -157,14 +162,15 @@ class Logger
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger): void
     {
-        $graylog = self::getPackage()->getConfig()->get('graylog');
+        $Config = self::getPackage()->getConfig();
+        $graylog = $Config?->get('graylog');
 
         if (!$graylog) {
             return;
         }
 
-        $server = self::getPackage()->getConfig()->get('graylog', 'server');
-        $port = self::getPackage()->getConfig()->get('graylog', 'port');
+        $server = $Config->get('graylog', 'server');
+        $port = $Config->get('graylog', 'port');
 
         if (empty($server) || empty($port)) {
             return;
@@ -181,8 +187,8 @@ class Logger
         try {
             $Publisher = new \Gelf\Publisher(
                 new \Gelf\Transport\TcpTransport(
-                    self::getPackage()->getConfig()->get('graylog', 'server'),
-                    self::getPackage()->getConfig()->get('graylog', 'port')
+                    $server,
+                    $port
                 )
             );
 
@@ -203,20 +209,21 @@ class Logger
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
+        $Config = self::getPackage()->getConfig();
+        $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
             return;
         }
 
-        $chromephp = self::getPackage()->getConfig()->get('browser_logs', 'chromephp');
-        $userLogedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+        $chromePHP = $Config->get('browser_logs', 'chromephp');
+        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
 
-        if (empty($chromephp)) {
+        if (empty($chromePHP)) {
             return;
         }
 
-        if ($userLogedIn && !QUI::getUserBySession()->getId()) {
+        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
             return;
         }
 
@@ -239,14 +246,15 @@ class Logger
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
+        $Config = self::getPackage()->getConfig();
+        $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
             return;
         }
 
-        $firephp = self::getPackage()->getConfig()->get('browser_logs', 'firephp');
-        $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+        $firephp = $Config->get('browser_logs', 'firephp');
+        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
 
         if (empty($firephp)) {
             return;
@@ -271,14 +279,15 @@ class Logger
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $browser = self::getPackage()->getConfig()->get('browser_logs');
+        $Config = self::getPackage()->getConfig();
+        $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
             return;
         }
 
-        $browserPHP = self::getPackage()->getConfig()->get('browser_logs', 'browserphp');
-        $userLoggedIn = self::getPackage()->getConfig()->get('browser_logs', 'userLogedIn');
+        $browserPHP = $Config->get('browser_logs', 'browserphp');
+        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
 
         if (empty($browserPHP)) {
             return;
@@ -303,13 +312,14 @@ class Logger
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $cube = self::getPackage()->getConfig()->get('cube');
+        $Config = self::getPackage()->getConfig();
+        $cube = $Config?->get('cube');
 
         if (!$cube) {
             return;
         }
 
-        $server = self::getPackage()->getConfig()->get('cube', 'server');
+        $server = $Config->get('cube', 'server');
 
         if (empty($server)) {
             return;
@@ -333,13 +343,14 @@ class Logger
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $redis = self::getPackage()->getConfig()->get('redis');
+        $Config = self::getPackage()->getConfig();
+        $redis = $Config?->get('redis');
 
         if (!$redis) {
             return;
         }
 
-        $server = self::getPackage()->getConfig()->get('redis', 'server');
+        $server = $Config->get('redis', 'server');
 
         if (empty($server)) {
             return;
@@ -375,14 +386,15 @@ class Logger
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $syslog = self::getPackage()->getConfig()->get('syslogUdp');
+        $Config = self::getPackage()->getConfig();
+        $syslog = $Config?->get('syslogUdp');
 
         if (!$syslog) {
             return;
         }
 
-        $host = self::getPackage()->getConfig()->get('syslogUdp', 'host');
-        $port = self::getPackage()->getConfig()->get('syslogUdp', 'port');
+        $host = $Config->get('syslogUdp', 'host');
+        $port = $Config->get('syslogUdp', 'port');
 
         if (empty($host)) {
             return;
@@ -484,6 +496,11 @@ class Logger
     public static function write(string $message, int $loglevel = Log::LEVEL_INFO): void
     {
         $Logger = self::getLogger();
+
+        if ($Logger === null) {
+            return;
+        }
+
         $User = QUI::getUserBySession();
 
         $context = [
@@ -550,13 +567,14 @@ class Logger
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger): void
     {
-        $newRelic = self::getPackage()->getConfig()->get('newRelic');
+        $Config = self::getPackage()->getConfig();
+        $newRelic = $Config?->get('newRelic');
 
         if (!$newRelic) {
             return;
         }
 
-        $appName = self::getPackage()->getConfig()->get('newRelic', 'appname');
+        $appName = $Config->get('newRelic', 'appname');
 
         if (empty($appName)) {
             return;

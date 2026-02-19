@@ -10,9 +10,6 @@ use QUI;
 
 /**
  * QUIQQER logging service
- *
- * @package quiqqer/log
- * @author  Henning Leutz (PCSG)
  */
 class Admin
 {
@@ -23,7 +20,7 @@ class Admin
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
-        if ($Package->getConfig()->get('browser_logs', 'debug')) {
+        if ($Package->getConfig()?->get('browser_logs', 'debug')) {
             echo '<script type="text/javascript">
                   /* <![CDATA[ */
                     if ( typeof monitorEvents !== \'undefined\' )
@@ -45,7 +42,7 @@ class Admin
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
-        if ($Package->getConfig()->get('log', 'logAdminJsErrors')) {
+        if ($Package->getConfig()?->get('log', 'logAdminJsErrors')) {
             echo '<script type="text/javascript">
                   /* <![CDATA[ */
 

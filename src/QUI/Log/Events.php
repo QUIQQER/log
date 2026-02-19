@@ -14,11 +14,6 @@ use function file_get_contents;
 
 /**
  * Class Events - Main Events
- *
- * @package quiqqer/log
- *
- * @author Henning Leutz (PCSG)
- * @author Jan Wennrich (PCSG)
  */
 class Events
 {
@@ -33,7 +28,7 @@ class Events
     {
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
-        if (!$Package->getConfig()->get('log', 'logFrontendJsErrors')) {
+        if (!$Package->getConfig()?->get('log', 'logFrontendJsErrors')) {
             return;
         }
 
@@ -57,7 +52,7 @@ class Events
     public static function onPackageConfigSave(QUI\Package\Package $Package): void
     {
         if ($Package->getName() == "quiqqer/log") {
-            $isArchivingEnabled = $Package->getConfig()->getValue('log_cleanup', 'isArchivingEnabled');
+            $isArchivingEnabled = $Package->getConfig()?->getValue('log_cleanup', 'isArchivingEnabled');
             if ($isArchivingEnabled) {
                 try {
                     QUI\Archiver\Zip::check();
