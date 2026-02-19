@@ -11,8 +11,6 @@ use QUI\Interfaces\Users\User;
 
 /**
  * Class Permission
- *
- * @package QUI\Log
  */
 class Permission
 {
@@ -24,7 +22,7 @@ class Permission
      *
      * @return boolean
      */
-    public static function canUserDownloadLogs(null|User $User = null): bool
+    public static function canUserDownloadLogs(null | User $User = null): bool
     {
         if (is_null($User)) {
             $User = QUI::getUserBySession();

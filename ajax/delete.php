@@ -20,10 +20,14 @@ function package_quiqqer_log_ajax_delete(string $file): void
     $log = VAR_DIR . 'log/' . $file;
     $log = Orthos::clearPath($log);
 
+    if (!is_string($log)) {
+        return;
+    }
+
     File::unlink($log);
 }
 
-QUI::$Ajax->register(
+QUI::getAjax()->register(
     'package_quiqqer_log_ajax_delete',
     ['file'],
     'Permission::checkSU'

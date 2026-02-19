@@ -8,7 +8,7 @@
  * System logs
  *
  * @param string $file - Name of the log
- * @return array|boolean
+ * @return array{isLogTrimmed: bool, data: string}|false
  */
 function package_quiqqer_log_ajax_file(string $file): bool|array
 {
@@ -29,10 +29,19 @@ function package_quiqqer_log_ajax_file(string $file): bool|array
         if (filesize($log) > 1000000) {
             // Get last thousand lines
             $data = getLastLinesOfFile($log, 1000, false);
+
+            if (!is_string($data)) {
+                $data = '';
+            }
+
             $isLogTrimmed = true;
         } else {
             // Get the whole file
             $data = file_get_contents($log);
+
+            if (!is_string($data)) {
+                $data = '';
+            }
         }
     }
 
@@ -92,7 +101,13 @@ function getLastLinesOfFile(string $filepath, int $lines = 1, bool $adaptive = t
         // Do the jump (backwards, relative to where we are)
         fseek($f, -$seek, SEEK_CUR);
         // Read a chunk and prepend it to our output
-        $output = ($chunk = fread($f, $seek)) . $output;
+        $chunkData = fread($f, $seek);
+
+        if (!is_string($chunkData)) {
+            break;
+        }
+
+        $output = ($chunk = $chunkData) . $output;
         // Jump back to where we started reading
         fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
         // Decrease our line counter
@@ -112,7 +127,7 @@ function getLastLinesOfFile(string $filepath, int $lines = 1, bool $adaptive = t
     return trim($output);
 }
 
-QUI::$Ajax->register(
+QUI::getAjax()->register(
     'package_quiqqer_log_ajax_file',
     ['file'],
     'Permission::checkSU'

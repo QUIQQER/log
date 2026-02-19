@@ -13,7 +13,7 @@
  * @param string $sortOn
  * @param string $sortBy
  *
- * @return array
+ * @return array<string, mixed>
  */
 function package_quiqqer_log_ajax_get(
     int|string $page,
@@ -37,10 +37,10 @@ function package_quiqqer_log_ajax_get(
 
     $list = $LogManager->search($search);
 
-    return QUI\Utils\Grid::getResult($list, $page, $limit);
+    return QUI\Utils\Grid::getResult($list, (int)$page, (int)$limit);
 }
 
-QUI::$Ajax->register(
+QUI::getAjax()->register(
     'package_quiqqer_log_ajax_get',
     ['page', 'limit', 'search', 'sortOn', 'sortBy'],
     'Permission::checkSU'
