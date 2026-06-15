@@ -47,7 +47,14 @@ class Setup
 
 
         // if cron isn't installed, we try to execute the setup, so we can add the cron
-        if (QUI::getDataBase()->table()?->exist('cron') !== true) {
+        try {
+            $cronTableExists = QUI::getSchemaManager()->tablesExist(['cron']);
+        } catch (\Doctrine\DBAL\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+            $cronTableExists = false;
+        }
+
+        if (!$cronTableExists) {
             try {
                 $CronPackage = QUI::getPackage('quiqqer/cron');
                 $CronPackage->setup();
