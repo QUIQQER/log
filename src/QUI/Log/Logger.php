@@ -48,6 +48,33 @@ class Logger
     protected static ?bool $logOnFireEvent = null;
     protected static ?int $monologVersion = null;
 
+    private static function initialize(): void
+    {
+        $logLevels = self::getPackage()->getConfig()?->get('log_levels');
+
+        if (is_array($logLevels)) {
+            self::$logLevels = $logLevels;
+        }
+
+        self::$Logger = new Monolog\Logger('QUI:Log');
+
+        self::$Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
+
+        self::addGraylogToLogger(self::$Logger);
+        self::addChromePHPHandlerToLogger(self::$Logger);
+        self::addFirePHPHandlerToLogger(self::$Logger);
+        self::addBrowserPHPHandlerToLogger(self::$Logger);
+        self::addCubeHandlerToLogger(self::$Logger);
+        self::addRedisHandlerToLogger(self::$Logger);
+        self::addSyslogUDPHandlerToLogger(self::$Logger);
+
+        try {
+            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [self::$Logger]);
+        } catch (\Exception $Exception) {
+            self::$Logger->notice($Exception->getMessage());
+        }
+    }
+
     /**
      * event on fire event
      * log all events?
@@ -120,38 +147,11 @@ class Logger
      */
     public static function getLogger(): ?Monolog\Logger
     {
-        if (self::$Logger) {
-            return self::$Logger;
+        if (!self::$Logger) {
+            self::initialize();
         }
 
-        $Logger = new Monolog\Logger('QUI:Log');
-
-        self::$Logger = $Logger;
-
-        // which levels should be logged
-        $logLevels = self::getPackage()->getConfig()?->get('log_levels');
-
-        if (is_array($logLevels)) {
-            self::$logLevels = $logLevels;
-        }
-
-        $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
-
-        self::addGraylogToLogger($Logger);
-        self::addChromePHPHandlerToLogger($Logger);
-        self::addFirePHPHandlerToLogger($Logger);
-        self::addBrowserPHPHandlerToLogger($Logger);
-        self::addCubeHandlerToLogger($Logger);
-        self::addRedisHandlerToLogger($Logger);
-        self::addSyslogUDPHandlerToLogger($Logger);
-
-        try {
-            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [$Logger]);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-
-        return $Logger;
+        return self::$Logger;
     }
 
     /**
@@ -409,80 +409,82 @@ class Logger
         }
     }
 
-    /**
-     * event : on header loaded -> set error reporting
-     */
+    public static function onQuiqqerInit(): void
+    {
+        self::initialize();
+
+        self::configureErrorHandling();
+        self::configureExceptionHandling();
+    }
+
     public static function onHeaderLoaded(): void
     {
+        // This method has to be kept for backwards compatibility:
+        // Removing it makes the QUIQQER event manager write to a log
+        // …which instantiates the Logger
+        // …which instantiates the Package Manager
+        // …which instantiates the QUIQQER event manager
+        // …which tries to write to a log
+        // …which results in an infinite loop
+    }
+
+    private static function configureErrorHandling(): void
+    {
+        ini_set("error_log", VAR_DIR . 'log/error' . date('-Y-m-d') . '.log');
+
+        $errorReportingLevel = self::getPhpErrorReportingLevel();
+        error_reporting($errorReportingLevel);
+
+        set_error_handler(exception_error_handler(...), $errorReportingLevel);
+    }
+
+    private static function getPhpErrorReportingLevel(): int
+    {
+        if (DEBUG_MODE === true) {
+            return E_ALL;
+        }
+
+        $errorReportingLevel = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED;
+
+        $explicitlyLogDeprecatedErrors = !empty(QUI::conf('globals', 'log_deprecated_errors'));
+
+        // enable deprecation logging if in delevopment mode or explicitly enabled
+        if (DEVELOPMENT || $explicitlyLogDeprecatedErrors) {
+            $errorReportingLevel = $errorReportingLevel | E_DEPRECATED;
+            $errorReportingLevel = $errorReportingLevel | E_USER_DEPRECATED;
+        }
+
         if (
-            self::$logLevels['debug']
-            || (defined('DEVELOPMENT') && DEVELOPMENT === true) // @phpstan-ignore-line
+            self::$logLevels['emergency'] === false &&
+            self::$logLevels['alert'] === false &&
+            self::$logLevels['critical'] === false &&
+            self::$logLevels['error'] === false
         ) {
-            error_reporting(E_ALL);
-
-            // @phpstan-ignore-next-line
-            if (defined('DEVELOPMENT') && DEVELOPMENT === true) {
-                error_reporting(E_ALL | E_DEPRECATED);
-            }
-
-            return;
+            $errorReportingLevel = $errorReportingLevel & ~E_PARSE;
         }
 
-        $errorLevel = E_ERROR;
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_WARNING;
+        if (self::$logLevels['error'] === false) {
+            $errorReportingLevel = $errorReportingLevel
+                & ~E_ERROR
+                & ~E_CORE_ERROR
+                & ~E_COMPILE_ERROR
+                & ~E_USER_ERROR
+                & ~E_RECOVERABLE_ERROR;
         }
 
-        if (
-            self::$logLevels['error']
-            || self::$logLevels['critical']
-            || self::$logLevels['alert']
-        ) {
-            $errorLevel = $errorLevel | E_PARSE;
+        if (self::$logLevels['warning'] == false) {
+            $errorReportingLevel = $errorReportingLevel
+                & ~E_WARNING
+                & ~E_USER_WARNING
+                & ~E_CORE_WARNING
+                & ~E_COMPILE_WARNING;
         }
 
-        if (self::$logLevels['notice']) {
-            $errorLevel = $errorLevel | E_NOTICE;
+        if (self::$logLevels['notice'] == false) {
+            $errorReportingLevel = $errorReportingLevel & ~E_NOTICE & ~E_USER_NOTICE & ~@E_STRICT;
         }
 
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_CORE_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_CORE_WARNING;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_COMPILE_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_COMPILE_WARNING;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_USER_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_USER_WARNING;
-        }
-
-        if (self::$logLevels['notice']) {
-            $errorLevel = $errorLevel | E_USER_NOTICE;
-        }
-
-        if (self::$logLevels['info']) {
-            $errorLevel = $errorLevel | E_STRICT;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_RECOVERABLE_ERROR;
-        }
-
-        error_reporting($errorLevel);
+        return $errorReportingLevel;
     }
 
     /**
@@ -591,5 +593,10 @@ class Logger
         } catch (\Exception $Exception) {
             $Logger->notice($Exception->getMessage());
         }
+    }
+
+    private static function configureExceptionHandling(): void
+    {
+        set_exception_handler(exception_handler(...));
     }
 }
