@@ -12,10 +12,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
 {
     protected function write(LogRecord $record): void
     {
-        $customFilename = $this->getCustomFilename($record->context);
-
-        $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
-        $filename .= date('-Y-m-d');
+        $filename = $this->getLogFilename($record);
 
         $dir = VAR_DIR . 'log/';
         $file = $dir . $filename . '.log';
@@ -29,6 +26,14 @@ class LogHandlerV3 extends AbstractProcessingHandler
         $message .= "\n" . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
 
         error_log($message, 3, $file);
+    }
+
+    protected function getLogFilename(LogRecord $record): string
+    {
+        $customFilename = $this->getCustomFilename($record->context);
+        $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
+
+        return $filename . $record->datetime->format('-Y-m-d');
     }
 
     /**

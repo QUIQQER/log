@@ -2,6 +2,9 @@
 
 namespace QUI\Log\Tests\QUI\Log\Monolog;
 
+use DateTimeImmutable;
+use Monolog\Level;
+use Monolog\LogRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI\Log\Monolog\LogHandlerV3;
@@ -41,5 +44,25 @@ class LogHandlerV3Test extends TestCase
         };
 
         self::assertSame($expected, $Handler->getCustomFilenameForTest(['filename' => $filename]));
+    }
+
+    public function testLogFilenameUsesRecordDate(): void
+    {
+        $Handler = new class () extends LogHandlerV3 {
+            public function getLogFilenameForTest(LogRecord $record): string
+            {
+                return $this->getLogFilename($record);
+            }
+        };
+
+        $record = new LogRecord(
+            datetime: new DateTimeImmutable('2030-01-02 23:59:59+14:00'),
+            channel: 'test',
+            level: Level::Warning,
+            message: 'test',
+            context: ['filename' => 'auth']
+        );
+
+        self::assertSame('auth-2030-01-02', $Handler->getLogFilenameForTest($record));
     }
 }
