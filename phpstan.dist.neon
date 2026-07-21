@@ -8,3 +8,14 @@ parameters:
         - ajax
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    dynamicConstantNames:
+        - DEVELOPMENT
+        - DEBUG_MODE
+        - CMS_DIR
+        - URL_DIR
+        - QUIQQER_AJAX
+        - ERROR_SEND
+        - ERROR_MAIL
+        - QUIQQER_BACKEND
+        - QUIQQER_CONSOLE
+        - ADMIN
