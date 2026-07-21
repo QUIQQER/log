@@ -14,6 +14,9 @@ class Logger
     /**
      * which levels should be logged
      *
+     * @deprecated Use the corresponding methods in {@see Config} instead
+     * @todo Remove this property in the next major version or replace with property hooks once PHP 8.4 is the minimum requirement
+     *
      * @var array<string, bool>
      */
     public static array $logLevels = [
@@ -27,6 +30,7 @@ class Logger
         'alert' => true,
         'emergency' => true
     ];
+
     /**
      * log events?
      *
@@ -36,11 +40,17 @@ class Logger
 
     private static function initialize(): void
     {
-        $logLevels = self::getPackage()->getConfig()?->get('log_levels');
-
-        if (is_array($logLevels)) {
-            self::$logLevels = $logLevels;
-        }
+        self::$logLevels = [
+            'debug' => Config::isDebugLoggingEnabled(),
+            'deprecated' => Config::isDeprecationLoggingEnabled(),
+            'info' => Config::isInfoLoggingEnabled(),
+            'notice' => Config::isNoticeLoggingEnabled(),
+            'warning' => Config::isWarningLoggingEnabled(),
+            'error' => Config::isErrorLoggingEnabled(),
+            'critical' => Config::isCriticalLoggingEnabled(),
+            'alert' => Config::isAlertLoggingEnabled(),
+            'emergency' => Config::isEmergencyLoggingEnabled()
+        ];
 
         self::$Logger = new Monolog\Logger('QUI:Log');
 
@@ -329,49 +339,49 @@ class Logger
 
         switch ($loglevel) {
             case Log::LEVEL_DEBUG:
-                if (self::$logLevels['debug']) {
+                if (Config::isDebugLoggingEnabled()) {
                     $Logger->debug($message, $context);
                 }
                 break;
 
             case Log::LEVEL_INFO:
-                if (self::$logLevels['info']) {
+                if (Config::isInfoLoggingEnabled()) {
                     $Logger->info($message, $context);
                 }
                 break;
 
             case Log::LEVEL_NOTICE:
-                if (self::$logLevels['notice']) {
+                if (Config::isNoticeLoggingEnabled()) {
                     $Logger->notice($message, $context);
                 }
                 break;
 
             case Log::LEVEL_WARNING:
-                if (self::$logLevels['warning']) {
+                if (Config::isWarningLoggingEnabled()) {
                     $Logger->warning($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ERROR:
-                if (self::$logLevels['error']) {
+                if (Config::isErrorLoggingEnabled()) {
                     $Logger->error($message, $context);
                 }
                 break;
 
             case Log::LEVEL_CRITICAL:
-                if (self::$logLevels['critical']) {
+                if (Config::isCriticalLoggingEnabled()) {
                     $Logger->critical($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ALERT:
-                if (self::$logLevels['alert']) {
+                if (Config::isAlertLoggingEnabled()) {
                     $Logger->alert($message, $context);
                 }
                 break;
 
             case Log::LEVEL_EMERGENCY:
-                if (self::$logLevels['emergency']) {
+                if (Config::isEmergencyLoggingEnabled()) {
                     $Logger->emergency($message, $context);
                 }
                 break;
