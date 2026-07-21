@@ -551,6 +551,9 @@ class Logger
      * Write a message to the logger
      * event: onLogWrite
      *
+     * @todo Remove this method in the next major version
+     * @deprecated Use {@see Log::write()} instead
+     *
      * @param string $message - Log message
      * @param integer $loglevel - Log::LEVEL_*
      * @throws Exception
