@@ -3,12 +3,12 @@
 namespace QUI\Log\Tests\QUI\Log\Monolog;
 
 use DateTimeImmutable;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Level;
 use Monolog\LogRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI\Log\Monolog\LogHandlerV3;
-use RuntimeException;
 
 class LogHandlerV3Test extends TestCase
 {
@@ -22,12 +22,12 @@ class LogHandlerV3Test extends TestCase
         yield 'supported separators' => ['mail.delivery_1', 'mail.delivery_1'];
         yield 'parent directory traversal' => ['../outside', 'outside'];
         yield 'Windows directory traversal' => ['..\\outside', 'outside'];
-        yield 'absolute path' => ['/tmp/outside', 'tmp-outside'];
+        yield 'absolute path' => ['/tmp/outside', 'tmp_outside'];
         yield 'empty filename' => ['', null];
         yield 'current directory' => ['.', null];
         yield 'parent directory' => ['..', null];
-        yield 'whitespace' => ['custom log', 'custom-log'];
-        yield 'unsafe characters' => ['custom:*?log', 'custom-log'];
+        yield 'whitespace' => ['custom log', 'custom_log'];
+        yield 'unsafe characters' => ['custom:*?log', 'custom-_log'];
         yield 'non-string value' => [['outside'], null];
     }
 
@@ -36,15 +36,43 @@ class LogHandlerV3Test extends TestCase
     {
         $Handler = new class () extends LogHandlerV3 {
             /**
-             * @param array<string, mixed> $context
+             * @param LogRecord $record
              */
-            public function getCustomFilenameForTest(array $context): ?string
+            public function getCustomFilenameForTest(LogRecord $record): ?string
             {
-                return $this->getCustomFilename($context);
+                return $this->getCustomFilename($record);
             }
         };
 
-        self::assertSame($expected, $Handler->getCustomFilenameForTest(['filename' => $filename]));
+        $record = new LogRecord(
+            datetime: new DateTimeImmutable(),
+            channel: 'test',
+            level: Level::Warning,
+            message: 'test',
+            extra: ['quiqqer' => ['filename' => $filename]]
+        );
+
+        self::assertSame($expected, $Handler->getCustomFilenameForTest($record));
+    }
+
+    public function testCustomFilenameFallsBackToContext(): void
+    {
+        $Handler = new class () extends LogHandlerV3 {
+            public function getCustomFilenameForTest(LogRecord $record): ?string
+            {
+                return $this->getCustomFilename($record);
+            }
+        };
+
+        $record = new LogRecord(
+            datetime: new DateTimeImmutable(),
+            channel: 'test',
+            level: Level::Warning,
+            message: 'test',
+            context: ['filename' => 'legacy']
+        );
+
+        self::assertSame('legacy', $Handler->getCustomFilenameForTest($record));
     }
 
     public function testLogFilenameUsesRecordDate(): void
@@ -61,36 +89,47 @@ class LogHandlerV3Test extends TestCase
             channel: 'test',
             level: Level::Warning,
             message: 'test',
-            context: ['filename' => 'auth']
+            extra: ['quiqqer' => ['filename' => 'auth']]
         );
 
         self::assertSame('auth-2030-01-02', $Handler->getLogFilenameForTest($record));
     }
 
-    public function testExceptionContextIsNormalized(): void
+    public function testConfiguredFormatterOutputIsAppended(): void
     {
-        $Handler = new class () extends LogHandlerV3 {
-            /**
-             * @param array<string, mixed> $context
-             * @return array<array-key, mixed>
-             */
-            public function normalizeContextForTest(array $context): array
+        $file = tempnam(sys_get_temp_dir(), 'quiqqer-log-handler-');
+        self::assertNotFalse($file);
+
+        $Handler = new class ($file) extends LogHandlerV3 {
+            public function __construct(private readonly string $file)
             {
-                return $this->normalizeContext($context);
+                parent::__construct();
+            }
+
+            protected function getLogFilePath(LogRecord $record): string
+            {
+                return $this->file;
             }
         };
+        $Handler->setFormatter(new LineFormatter('%message%'));
 
-        $context = $Handler->normalizeContextForTest([
-            'exception' => new RuntimeException('Something failed', 42)
-        ]);
+        try {
+            $Handler->handle(new LogRecord(
+                datetime: new DateTimeImmutable(),
+                channel: 'test',
+                level: Level::Warning,
+                message: 'first'
+            ));
+            $Handler->handle(new LogRecord(
+                datetime: new DateTimeImmutable(),
+                channel: 'test',
+                level: Level::Warning,
+                message: 'second'
+            ));
 
-        self::assertSame(
-            [
-                'class' => RuntimeException::class,
-                'message' => 'Something failed',
-                'code' => 42
-            ],
-            array_intersect_key($context['exception'], array_flip(['class', 'message', 'code']))
-        );
+            self::assertSame('firstsecond', file_get_contents($file));
+        } finally {
+            unlink($file);
+        }
     }
 }

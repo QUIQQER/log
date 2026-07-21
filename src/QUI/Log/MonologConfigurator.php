@@ -18,6 +18,7 @@ final class MonologConfigurator
      */
     public static function configureQuiqqerLogging(Monolog\Logger $Logger): void
     {
+        $Logger->pushProcessor(new QUI\Log\Monolog\QuiqqerMetadataProcessor());
         $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
     }
 
