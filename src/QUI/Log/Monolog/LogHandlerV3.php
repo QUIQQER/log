@@ -16,12 +16,7 @@ class LogHandlerV3 extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
-        $filename = $this->getLogFilename($record);
-
-        $dir = VAR_DIR . 'log/';
-        $file = $dir . $filename . '.log';
-
-        QUI\Utils\System\File::mkdir($dir);
+        $file = $this->getLogFilePath($record);
 
         $message = "\n[{$record->datetime->format('Y-m-d H:i:s')}] - " .
             "{$record->level->getName()} - " .
@@ -56,6 +51,18 @@ class LogHandlerV3 extends AbstractProcessingHandler
         $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
 
         return $filename . $record->datetime->format('-Y-m-d');
+    }
+
+    private function getLogFilePath(LogRecord $record): string
+    {
+        $filename = $this->getLogFilename($record);
+
+        $dir = VAR_DIR . 'log/';
+        $file = $dir . $filename . '.log';
+
+        QUI\Utils\System\File::mkdir($dir);
+
+        return $file;
     }
 
     /**
