@@ -27,10 +27,13 @@ class LogHandlerV3 extends AbstractProcessingHandler
             "{$record->level->getName()} - " .
             $record->message;
 
-        $message .= "\n" . Utils::jsonEncode(
-            $this->normalizeContext($record->context),
-            Utils::DEFAULT_JSON_FLAGS | JSON_PRETTY_PRINT
-        ) . "\n";
+        $context = $this->normalizeContext($record->context);
+        if ($context) {
+            $message .= "\n" . Utils::jsonEncode(
+                    $context,
+                    Utils::DEFAULT_JSON_FLAGS | JSON_PRETTY_PRINT
+                ) . "\n";
+        }
 
         error_log($message, 3, $file);
     }
