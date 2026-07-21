@@ -53,4 +53,9 @@ final class Config
     {
         return (bool)Logger::getPackage()->getConfig()?->get('log_levels', $logLevel);
     }
+
+    public static function isAllEventLoggingEnabled(): bool
+    {
+        return (bool)Logger::getPackage()->getConfig()?->get('log', 'logAllEvents');
+    }
 }

@@ -32,7 +32,10 @@ class Logger
     ];
 
     /**
-     * log events?
+     * Log all events?
+     *
+     * @deprecated Use {@see Config::isAllEventLoggingEnabled()} instead
+     * @todo Remove with the next major release or replace with a property hook once PHP 8.4 is the minimum requirement
      *
      * @var boolean|null
      */
@@ -84,14 +87,7 @@ class Logger
     public static function logOnFireEvent(array | string $params): void
     {
         if (self::$logOnFireEvent === null) {
-            self::$logOnFireEvent = false;
-
-            try {
-                if (self::getPackage()->getConfig()?->get('log', 'logAllEvents')) {
-                    self::$logOnFireEvent = true;
-                }
-            } catch (\Exception) {
-            }
+            self::$logOnFireEvent = Config::isAllEventLoggingEnabled();
         }
 
         if (!self::$logOnFireEvent) {
