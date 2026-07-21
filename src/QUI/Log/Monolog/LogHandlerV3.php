@@ -18,19 +18,19 @@ class LogHandlerV3 extends AbstractProcessingHandler
     {
         $file = $this->getLogFilePath($record);
 
-        $message = "\n[{$record->datetime->format('Y-m-d H:i:s')}] - " .
+        $logEntry = "\n[{$record->datetime->format('Y-m-d H:i:s')}] - " .
             "{$record->level->getName()} - " .
             $record->message;
 
         $context = $this->normalizeContext($record->context);
         if ($context) {
-            $message .= "\n" . Utils::jsonEncode(
+            $logEntry .= "\n" . Utils::jsonEncode(
                     $context,
                     Utils::DEFAULT_JSON_FLAGS | JSON_PRETTY_PRINT
                 ) . "\n";
         }
 
-        error_log($message, 3, $file);
+        error_log($logEntry, 3, $file);
     }
 
     /**
