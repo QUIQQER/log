@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains \QUI\Log\Monolog\LogHandler
- */
-
 namespace QUI\Log\Monolog;
 
 use Monolog\Handler\AbstractProcessingHandler;
@@ -12,25 +8,10 @@ use QUI;
 
 use const JSON_PRETTY_PRINT;
 
-/**
- * Class LogHandler
- */
 class LogHandlerV3 extends AbstractProcessingHandler
 {
-    /**
-     * @param LogRecord $record
-     */
     protected function write(LogRecord $record): void
     {
-//        $record['message'];
-//        $record['context'];
-//        $record['level'];
-//        $record['level_name'];
-//        $record['channel'];
-//        $record['datetime'];
-//        $record['extra'];
-//        $record['formatted'];
-
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
             $filename = 'debug';
         } elseif (defined('DEVELOPMENT') && DEVELOPMENT) {
