@@ -34,8 +34,6 @@ class Logger
      */
     protected static ?bool $logOnFireEvent = null;
 
-    protected static ?int $monologVersion = null;
-
     private static function initialize(): void
     {
         $logLevels = self::getPackage()->getConfig()?->get('log_levels');
