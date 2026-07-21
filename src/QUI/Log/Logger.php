@@ -7,8 +7,6 @@ use QUI;
 use QUI\Exception;
 use QUI\System\Log;
 
-use function class_exists;
-
 class Logger
 {
     public static Monolog\Logger $Logger;
@@ -48,21 +46,25 @@ class Logger
 
         self::$Logger = new Monolog\Logger('QUI:Log');
 
-        self::$Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
-
-        self::configureGraylogIfEnabled(self::$Logger);
-        self::configureChromePHPHandlerIfEnabled(self::$Logger);
-        self::configureFirePHPHandlerIfEnabled(self::$Logger);
-        self::configureBrowserPHPHandlerIfEnabled(self::$Logger);
-        self::configureCubeHandlerIfEnabled(self::$Logger);
-        self::configureRedisHandlerIfEnabled(self::$Logger);
-        self::configureSyslogUDPHandlerIfEnabled(self::$Logger);
+        self::configureMonolog(self::$Logger);
 
         try {
             QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [self::$Logger]);
         } catch (\Exception $Exception) {
             self::$Logger->notice($Exception->getMessage());
         }
+    }
+
+    private static function configureMonolog(Monolog\Logger $monolog): void
+    {
+        MonologConfigurator::configureQuiqqerLogging($monolog);
+        MonologConfigurator::configureGraylogIfEnabled($monolog);
+        MonologConfigurator::configureChromePHPHandlerIfEnabled($monolog);
+        MonologConfigurator::configureFirePHPHandlerIfEnabled($monolog);
+        MonologConfigurator::configureBrowserPHPHandlerIfEnabled($monolog);
+        MonologConfigurator::configureCubeHandlerIfEnabled($monolog);
+        MonologConfigurator::configureRedisHandlerIfEnabled($monolog);
+        MonologConfigurator::configureSyslogUDPHandlerIfEnabled($monolog);
     }
 
     /**
@@ -144,53 +146,7 @@ class Logger
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger): void
     {
-        self::configureGraylogIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use Graylog, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureGraylogIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $graylog = $Config?->get('graylog');
-
-        if (!$graylog) {
-            return;
-        }
-
-        $server = $Config->get('graylog', 'server');
-        $port = $Config->get('graylog', 'port');
-
-        if (empty($server) || empty($port)) {
-            return;
-        }
-
-        if (!class_exists('Gelf\Publisher') || !class_exists('Gelf\Transport\TcpTransport')) {
-            $Logger->info(
-                '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
-            );
-
-            return;
-        }
-
-        try {
-            $Publisher = new \Gelf\Publisher(
-                new \Gelf\Transport\TcpTransport(
-                    $server,
-                    $port
-                )
-            );
-
-            // @phpstan-ignore-next-line
-            $Handler = new Monolog\Handler\GelfHandler($Publisher);
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureGraylogIfEnabled($Logger);
     }
 
     /**
@@ -203,39 +159,7 @@ class Logger
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureChromePHPHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use ChromePHP, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureChromePHPHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $chromePHP = $Config->get('browser_logs', 'chromephp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($chromePHP)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\ChromePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureChromePHPHandlerIfEnabled($Logger);
     }
 
     /**
@@ -248,39 +172,7 @@ class Logger
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureFirePHPHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use FirePHP, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureFirePHPHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $firephp = $Config->get('browser_logs', 'firephp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($firephp)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\FirePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureFirePHPHandlerIfEnabled($Logger);
     }
 
     /**
@@ -293,39 +185,7 @@ class Logger
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureBrowserPHPHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use BrowserPHP, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureBrowserPHPHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $browserPHP = $Config->get('browser_logs', 'browserphp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($browserPHP)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureBrowserPHPHandlerIfEnabled($Logger);
     }
 
     /**
@@ -338,35 +198,7 @@ class Logger
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureCubeHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use SyslogUDP, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureCubeHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $cube = $Config?->get('cube');
-
-        if (!$cube) {
-            return;
-        }
-
-        $server = $Config->get('cube', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        try {
-            $Handler = new Monolog\Handler\CubeHandler($server);
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureCubeHandlerIfEnabled($Logger);
     }
 
     /**
@@ -381,49 +213,7 @@ class Logger
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureRedisHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use Redis, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureRedisHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $redis = $Config?->get('redis');
-
-        if (!$redis) {
-            return;
-        }
-
-        $server = $Config->get('redis', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        if (!class_exists('Predis\Client')) {
-            $Logger->info(
-                '\Predis\Client class is missing.'
-            );
-
-            return;
-        }
-
-        try {
-            $Client = new \Predis\Client($server);
-
-            $Handler = new Monolog\Handler\RedisHandler(
-                $Client,
-                $server
-            );
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureRedisHandlerIfEnabled($Logger);
     }
 
     /**
@@ -436,37 +226,7 @@ class Logger
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        self::configureSyslogUDPHandlerIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use SyslogUDP, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureSyslogUDPHandlerIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $syslog = $Config?->get('syslogUdp');
-
-        if (!$syslog) {
-            return;
-        }
-
-        $host = $Config->get('syslogUdp', 'host');
-        $port = $Config->get('syslogUdp', 'port');
-
-        if (empty($host)) {
-            return;
-        }
-
-
-        try {
-            $Handler = new Monolog\Handler\SyslogUdpHandler($host, $port);
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureSyslogUDPHandlerIfEnabled($Logger);
     }
 
     public static function onQuiqqerInit(): void
@@ -630,40 +390,7 @@ class Logger
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger): void
     {
-        self::configureNewRelicIfEnabled($Logger);
-    }
-
-    /**
-     * Configure the given logger to use NewRelic, if settings and dependencies are available
-     *
-     * @throws Exception
-     */
-    private static function configureNewRelicIfEnabled(Monolog\Logger $Logger): void
-    {
-        $Config = self::getPackage()->getConfig();
-        $newRelic = $Config?->get('newRelic');
-
-        if (!$newRelic) {
-            return;
-        }
-
-        $appName = $Config->get('newRelic', 'appname');
-
-        if (empty($appName)) {
-            return;
-        }
-
-        try {
-            $Handler = new Monolog\Handler\NewRelicHandler(
-                Log::LEVEL_INFO,
-                true,
-                $appName
-            );
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        MonologConfigurator::configureNewRelicIfEnabled($Logger);
     }
 
     private static function configureExceptionHandling(): void
