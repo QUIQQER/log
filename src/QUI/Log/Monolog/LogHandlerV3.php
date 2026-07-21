@@ -35,14 +35,10 @@ class LogHandlerV3 extends AbstractProcessingHandler
             $filename = 'debug';
         } elseif (defined('DEVELOPMENT') && DEVELOPMENT) {
             $filename = 'dev';
-        } elseif (
-            $record->context
-            && isset($record->context['filename'])
-            && $record->context['filename']
-        ) {
-            $filename = $record->context['filename'] . date('-Y-m-d');
         } else {
-            $filename = QUI\System\Log::levelToLogName($record->level->value) . date('-Y-m-d');
+            $customFilename = $this->getCustomFilename($record->context);
+            $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
+            $filename .= date('-Y-m-d');
         }
 
         $dir = VAR_DIR . 'log/';
@@ -58,5 +54,27 @@ class LogHandlerV3 extends AbstractProcessingHandler
         $message .= "\n" . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
 
         error_log($message, 3, $file);
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    protected function getCustomFilename(array $context): ?string
+    {
+        $filename = $context['filename'] ?? null;
+
+        if (!is_string($filename)) {
+            return null;
+        }
+
+        $filename = preg_replace('/[^a-zA-Z0-9._-]+/', '-', $filename);
+
+        if ($filename === null) {
+            return null;
+        }
+
+        $filename = trim($filename, '.-_');
+
+        return $filename !== '' ? $filename : null;
     }
 }
