@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains QUI\Log\Logger class
- */
-
 namespace QUI\Log;
 
 use Monolog;
@@ -13,9 +9,6 @@ use QUI\System\Log;
 
 use function class_exists;
 
-/**
- * QUIQQER logging
- */
 class Logger
 {
     /**
@@ -129,9 +122,6 @@ class Logger
     }
 
     /**
-     * Return the quiqqer log plugins
-     *
-     * @return QUI\Package\Package
      * @throws Exception
      */
     public static function getPackage(): QUI\Package\Package
@@ -140,9 +130,6 @@ class Logger
     }
 
     /**
-     * Return the Logger object
-     *
-     * @return Monolog\Logger|null
      * @throws Exception
      */
     public static function getLogger(): ?Monolog\Logger
@@ -233,10 +220,6 @@ class Logger
             $Logger->notice($Exception->getMessage());
         }
     }
-
-    /**
-     * Handler
-     */
 
     /**
      * Add a FirePHP handler to the logger, if settings are available
