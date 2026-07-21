@@ -4,7 +4,7 @@
     <event on="onFireEvent" fire="\QUI\Log\Logger::logOnFireEvent"/>
     <event on="onAdminLoad" fire="\QUI\Log\Admin::onAdminLoad"/>
     <event on="onAdminLoadFooter" fire="\QUI\Log\Admin::onAdminLoadFooter"/>
-    <event on="onQuiqqerInit" fire="\QUI\Log\Logger::onQuiqqerInit"/>
+    <event on="onQuiqqerInit" fire="\QUI\Log\ErrorHandler::attach"/>
     <event on="onTemplateGetHeader" fire="\QUI\Log\Events::onTemplateGetHeader"/>
     <event on="onPackageSetup" fire="\QUI\Log\Setup::run"/>
     <event on="onPackageConfigSave" fire="\QUI\Log\Events::onPackageConfigSave"/>
