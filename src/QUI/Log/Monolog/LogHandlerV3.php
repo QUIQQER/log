@@ -12,19 +12,13 @@ class LogHandlerV3 extends AbstractProcessingHandler
 {
     protected function write(LogRecord $record): void
     {
-        if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            $filename = 'debug';
-        } elseif (defined('DEVELOPMENT') && DEVELOPMENT) {
-            $filename = 'dev';
-        } else {
-            $customFilename = $this->getCustomFilename($record->context);
-            $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
-            $filename .= date('-Y-m-d');
-        }
+        $customFilename = $this->getCustomFilename($record->context);
+
+        $filename = $customFilename ?? QUI\System\Log::levelToLogName($record->level->value);
+        $filename .= date('-Y-m-d');
 
         $dir = VAR_DIR . 'log/';
         $file = $dir . $filename . '.log';
-
 
         QUI\Utils\System\File::mkdir($dir);
 
