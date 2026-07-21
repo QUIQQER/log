@@ -11,12 +11,8 @@ use function class_exists;
 
 class Logger
 {
-    /**
-     * Monolog Logger
-     *
-     * @var ?Monolog\Logger
-     */
-    public static ?Monolog\Logger $Logger = null;
+    public static Monolog\Logger $Logger;
+
     /**
      * which levels should be logged
      *
@@ -39,6 +35,7 @@ class Logger
      * @var boolean|null
      */
     protected static ?bool $logOnFireEvent = null;
+
     protected static ?int $monologVersion = null;
 
     private static function initialize(): void
@@ -103,10 +100,6 @@ class Logger
 
         $Logger = self::getLogger();
 
-        if ($Logger === null) {
-            return;
-        }
-
         $User = QUI::getUserBySession();
 
         $context = [
@@ -132,9 +125,9 @@ class Logger
     /**
      * @throws Exception
      */
-    public static function getLogger(): ?Monolog\Logger
+    public static function getLogger(): Monolog\Logger
     {
-        if (!self::$Logger) {
+        if (!isset(self::$Logger)) {
             self::initialize();
         }
 
@@ -481,10 +474,6 @@ class Logger
     public static function write(string $message, int $loglevel = Log::LEVEL_INFO): void
     {
         $Logger = self::getLogger();
-
-        if ($Logger === null) {
-            return;
-        }
 
         $User = QUI::getUserBySession();
 
