@@ -76,6 +76,7 @@ class Logger
         MonologConfigurator::configureCubeHandlerIfEnabled($monolog);
         MonologConfigurator::configureRedisHandlerIfEnabled($monolog);
         MonologConfigurator::configureSyslogUDPHandlerIfEnabled($monolog);
+        MonologConfigurator::configureNewRelicIfEnabled($monolog);
     }
 
     /**
