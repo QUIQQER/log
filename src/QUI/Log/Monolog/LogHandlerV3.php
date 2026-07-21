@@ -2,14 +2,18 @@
 
 namespace QUI\Log\Monolog;
 
+use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
+use Monolog\Utils;
 use QUI;
 
 use const JSON_PRETTY_PRINT;
 
 class LogHandlerV3 extends AbstractProcessingHandler
 {
+    private ?NormalizerFormatter $contextNormalizer = null;
+
     protected function write(LogRecord $record): void
     {
         $filename = $this->getLogFilename($record);
@@ -23,9 +27,24 @@ class LogHandlerV3 extends AbstractProcessingHandler
             "{$record->level->getName()} - " .
             $record->message;
 
-        $message .= "\n" . json_encode($record->context, JSON_PRETTY_PRINT) . "\n";
+        $message .= "\n" . Utils::jsonEncode(
+            $this->normalizeContext($record->context),
+            Utils::DEFAULT_JSON_FLAGS | JSON_PRETTY_PRINT
+        ) . "\n";
 
         error_log($message, 3, $file);
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     * @return array<array-key, mixed>
+     */
+    protected function normalizeContext(array $context): array
+    {
+        $this->contextNormalizer ??= new NormalizerFormatter();
+        $normalizedContext = $this->contextNormalizer->normalizeValue($context);
+
+        return is_array($normalizedContext) ? $normalizedContext : [];
     }
 
     protected function getLogFilename(LogRecord $record): string

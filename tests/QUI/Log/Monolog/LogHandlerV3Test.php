@@ -8,6 +8,7 @@ use Monolog\LogRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI\Log\Monolog\LogHandlerV3;
+use RuntimeException;
 
 class LogHandlerV3Test extends TestCase
 {
@@ -64,5 +65,32 @@ class LogHandlerV3Test extends TestCase
         );
 
         self::assertSame('auth-2030-01-02', $Handler->getLogFilenameForTest($record));
+    }
+
+    public function testExceptionContextIsNormalized(): void
+    {
+        $Handler = new class () extends LogHandlerV3 {
+            /**
+             * @param array<string, mixed> $context
+             * @return array<array-key, mixed>
+             */
+            public function normalizeContextForTest(array $context): array
+            {
+                return $this->normalizeContext($context);
+            }
+        };
+
+        $context = $Handler->normalizeContextForTest([
+            'exception' => new RuntimeException('Something failed', 42)
+        ]);
+
+        self::assertSame(
+            [
+                'class' => RuntimeException::class,
+                'message' => 'Something failed',
+                'code' => 42
+            ],
+            array_intersect_key($context['exception'], array_flip(['class', 'message', 'code']))
+        );
     }
 }
