@@ -50,13 +50,13 @@ class Logger
 
         self::$Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
 
-        self::addGraylogToLogger(self::$Logger);
-        self::addChromePHPHandlerToLogger(self::$Logger);
-        self::addFirePHPHandlerToLogger(self::$Logger);
-        self::addBrowserPHPHandlerToLogger(self::$Logger);
-        self::addCubeHandlerToLogger(self::$Logger);
-        self::addRedisHandlerToLogger(self::$Logger);
-        self::addSyslogUDPHandlerToLogger(self::$Logger);
+        self::configureGraylogIfEnabled(self::$Logger);
+        self::configureChromePHPHandlerIfEnabled(self::$Logger);
+        self::configureFirePHPHandlerIfEnabled(self::$Logger);
+        self::configureBrowserPHPHandlerIfEnabled(self::$Logger);
+        self::configureCubeHandlerIfEnabled(self::$Logger);
+        self::configureRedisHandlerIfEnabled(self::$Logger);
+        self::configureSyslogUDPHandlerIfEnabled(self::$Logger);
 
         try {
             QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [self::$Logger]);
@@ -135,12 +135,24 @@ class Logger
     }
 
     /**
-     * Add a graylog handler to the logger, if settings are available
+     * Add a graylog handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureGraylogIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use Graylog, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureGraylogIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $graylog = $Config?->get('graylog');
@@ -182,12 +194,24 @@ class Logger
     }
 
     /**
-     * Add a ChromePHP handler to the logger, if settings are available
+     * Add a ChromePHP handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureChromePHPHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use ChromePHP, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureChromePHPHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $browser = $Config?->get('browser_logs');
@@ -215,12 +239,24 @@ class Logger
     }
 
     /**
-     * Add a FirePHP handler to the logger, if settings are available
+     * Add a FirePHP handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureFirePHPHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use FirePHP, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureFirePHPHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $browser = $Config?->get('browser_logs');
@@ -248,12 +284,24 @@ class Logger
     }
 
     /**
-     * Add a Browser php handler to the logger, if settings are available
+     * Add a Browser php handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureBrowserPHPHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use BrowserPHP, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureBrowserPHPHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $browser = $Config?->get('browser_logs');
@@ -281,12 +329,24 @@ class Logger
     }
 
     /**
-     * Add a Cube handler to the logger, if settings are available
+     * Add a Cube handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureCubeHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use SyslogUDP, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureCubeHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $cube = $Config?->get('cube');
@@ -310,14 +370,26 @@ class Logger
     }
 
     /**
-     * Add a Redis handler to the logger, if settings are available
+     * Add a Redis handler to the logger, if settings and dependencies are available
      *
      * @needle predis/predis
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureRedisHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use Redis, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureRedisHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $redis = $Config?->get('redis');
@@ -355,12 +427,24 @@ class Logger
     }
 
     /**
-     * Add a SystelogUPD handler to the logger, if settings are available
+     * Add a SystelogUPD handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureSyslogUDPHandlerIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use SyslogUDP, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureSyslogUDPHandlerIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $syslog = $Config?->get('syslogUdp');
@@ -534,12 +618,24 @@ class Logger
     }
 
     /**
-     * Add a NewRelic handler to the logger, if settings are available
+     * Add a NewRelic handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger): void
+    {
+        self::configureNewRelicIfEnabled($Logger);
+    }
+
+    /**
+     * Configure the given logger to use NewRelic, if settings and dependencies are available
+     *
+     * @throws Exception
+     */
+    private static function configureNewRelicIfEnabled(Monolog\Logger $Logger): void
     {
         $Config = self::getPackage()->getConfig();
         $newRelic = $Config?->get('newRelic');
