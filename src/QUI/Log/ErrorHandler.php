@@ -134,23 +134,9 @@ final class ErrorHandler
 
     public static function handleUncaughtException(Throwable $Exception): void
     {
-        $isCacheMissException = $Exception instanceof QUI\Cache\MissException;
-
-        if (!$isCacheMissException) {
-            Log::writeException($Exception);
-        }
+        self::logUncaughtException($Exception);
 
         if (php_sapi_name() === 'cli') {
-            $message =
-                'Uncaught Exception: ' . $Exception->getMessage() . PHP_EOL
-                . 'File: ' . $Exception->getFile() . PHP_EOL
-                . 'Line: ' . $Exception->getLine() . PHP_EOL;
-
-            if (!$isCacheMissException) {
-                $message .= 'Further details were written to the error log.' . PHP_EOL;
-            }
-
-            fwrite(STDERR, $message);
             exit(1);
         }
 
@@ -164,5 +150,23 @@ final class ErrorHandler
             'message' => 'An error occurred. Check the log for more details.',
             'code' => $Exception->getCode()
         ]);
+    }
+
+    public static function logUncaughtException(Throwable $Exception): void
+    {
+        if (php_sapi_name() === 'cli') {
+            $message = 'Uncaught Exception: ' . $Exception->getMessage() . PHP_EOL
+                . 'File: ' . $Exception->getFile() . PHP_EOL
+                . 'Line: ' . $Exception->getLine() . PHP_EOL
+                . 'Further details were written to the error log.' . PHP_EOL;
+
+            fwrite(STDERR, $message);
+        }
+
+        if ($Exception instanceof QUI\Cache\MissException) {
+            return;
+        }
+
+        Log::writeException($Exception);
     }
 }
