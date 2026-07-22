@@ -101,6 +101,10 @@ final class ErrorHandler
             return true;
         }
 
+        if (!(error_reporting() & $errorLevel)) {
+            return false;
+        }
+
         $context = [
             'file' => $errorFile,
             'line' => $errorLine
