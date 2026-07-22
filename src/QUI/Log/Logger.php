@@ -3,6 +3,7 @@
 namespace QUI\Log;
 
 use Monolog;
+use Monolog\Handler\HandlerInterface;
 use QUI;
 use QUI\Exception;
 use QUI\System\Log;
@@ -57,26 +58,13 @@ class Logger
 
         self::$Logger = new Monolog\Logger('QUI:Log');
 
-        self::configureMonolog(self::$Logger);
+        MonologConfigurator::configure(self::$Logger);
 
         try {
             QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [self::$Logger]);
         } catch (\Exception $Exception) {
             self::$Logger->notice($Exception->getMessage());
         }
-    }
-
-    private static function configureMonolog(Monolog\Logger $monolog): void
-    {
-        MonologConfigurator::configureQuiqqerLogging($monolog);
-        MonologConfigurator::configureGraylogIfEnabled($monolog);
-        MonologConfigurator::configureChromePHPHandlerIfEnabled($monolog);
-        MonologConfigurator::configureFirePHPHandlerIfEnabled($monolog);
-        MonologConfigurator::configureBrowserPHPHandlerIfEnabled($monolog);
-        MonologConfigurator::configureCubeHandlerIfEnabled($monolog);
-        MonologConfigurator::configureRedisHandlerIfEnabled($monolog);
-        MonologConfigurator::configureSyslogUDPHandlerIfEnabled($monolog);
-        MonologConfigurator::configureNewRelicIfEnabled($monolog);
     }
 
     /**
@@ -151,7 +139,7 @@ class Logger
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureGraylogIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createGraylogHandlerIfEnabled($Logger));
     }
 
     /**
@@ -164,7 +152,7 @@ class Logger
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureChromePHPHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createChromePHPHandlerIfEnabled($Logger));
     }
 
     /**
@@ -177,7 +165,7 @@ class Logger
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureFirePHPHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createFirePHPHandlerIfEnabled($Logger));
     }
 
     /**
@@ -190,7 +178,7 @@ class Logger
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureBrowserPHPHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createBrowserPHPHandlerIfEnabled($Logger));
     }
 
     /**
@@ -203,7 +191,7 @@ class Logger
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureCubeHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createCubeHandlerIfEnabled($Logger));
     }
 
     /**
@@ -218,7 +206,7 @@ class Logger
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureRedisHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createRedisHandlerIfEnabled($Logger));
     }
 
     /**
@@ -231,7 +219,7 @@ class Logger
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureSyslogUDPHandlerIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createSyslogUDPHandlerIfEnabled($Logger));
     }
 
     public static function onHeaderLoaded(): void
@@ -328,6 +316,17 @@ class Logger
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger): void
     {
-        MonologConfigurator::configureNewRelicIfEnabled($Logger);
+        self::pushHandler($Logger, MonologConfigurator::createNewRelicHandlerIfEnabled($Logger));
+    }
+
+    /**
+     * @deprecated
+     * @todo Remove this method in the next major version
+     */
+    private static function pushHandler(Monolog\Logger $Logger, ?HandlerInterface $Handler): void
+    {
+        if ($Handler !== null) {
+            $Logger->pushHandler($Handler);
+        }
     }
 }
