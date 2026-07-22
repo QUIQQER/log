@@ -75,6 +75,27 @@ class LogHandlerV3Test extends TestCase
         self::assertSame('legacy', $Handler->getCustomFilenameForTest($record));
     }
 
+    public function testProcessedMetadataTakesPrecedenceOverLegacyContext(): void
+    {
+        $Handler = new class () extends LogHandlerV3 {
+            public function getCustomFilenameForTest(LogRecord $record): ?string
+            {
+                return $this->getCustomFilename($record);
+            }
+        };
+
+        $record = new LogRecord(
+            datetime: new DateTimeImmutable(),
+            channel: 'test',
+            level: Level::Warning,
+            message: 'test',
+            context: ['filename' => 'legacy'],
+            extra: ['quiqqer' => ['filename' => 'processed']]
+        );
+
+        self::assertSame('processed', $Handler->getCustomFilenameForTest($record));
+    }
+
     public function testLogFilenameUsesRecordDate(): void
     {
         $Handler = new class () extends LogHandlerV3 {
@@ -93,6 +114,25 @@ class LogHandlerV3Test extends TestCase
         );
 
         self::assertSame('auth-2030-01-02', $Handler->getLogFilenameForTest($record));
+    }
+
+    public function testLogFilenameFallsBackToTheLevelName(): void
+    {
+        $Handler = new class () extends LogHandlerV3 {
+            public function getLogFilenameForTest(LogRecord $record): string
+            {
+                return $this->getLogFilename($record);
+            }
+        };
+
+        $record = new LogRecord(
+            datetime: new DateTimeImmutable('2030-01-02 23:59:59+14:00'),
+            channel: 'test',
+            level: Level::Critical,
+            message: 'test'
+        );
+
+        self::assertSame('critical-2030-01-02', $Handler->getLogFilenameForTest($record));
     }
 
     public function testConfiguredFormatterOutputIsAppended(): void
