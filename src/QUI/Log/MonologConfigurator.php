@@ -60,7 +60,7 @@ final class MonologConfigurator
      */
     public static function createGraylogHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $graylog = $Config?->get('graylog');
 
         if (!$graylog) {
@@ -109,7 +109,7 @@ final class MonologConfigurator
      */
     public static function createChromePHPHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
@@ -144,7 +144,7 @@ final class MonologConfigurator
      */
     public static function createFirePHPHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
@@ -179,7 +179,7 @@ final class MonologConfigurator
      */
     public static function createBrowserPHPHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $browser = $Config?->get('browser_logs');
 
         if (!$browser) {
@@ -214,7 +214,7 @@ final class MonologConfigurator
      */
     public static function createCubeHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $cube = $Config?->get('cube');
 
         if (!$cube) {
@@ -245,7 +245,7 @@ final class MonologConfigurator
      */
     public static function createRedisHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $redis = $Config?->get('redis');
 
         if (!$redis) {
@@ -290,7 +290,7 @@ final class MonologConfigurator
      */
     public static function createSyslogUDPHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $syslog = $Config?->get('syslogUdp');
 
         if (!$syslog) {
@@ -322,7 +322,7 @@ final class MonologConfigurator
      */
     public static function createNewRelicHandlerIfEnabled(Monolog\Logger $Logger): ?HandlerInterface
     {
-        $Config = Logger::getPackage()->getConfig();
+        $Config = Config::getPackageConfig();
         $newRelic = $Config?->get('newRelic');
 
         if (!$newRelic) {

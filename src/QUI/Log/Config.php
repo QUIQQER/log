@@ -2,6 +2,8 @@
 
 namespace QUI\Log;
 
+use QUI;
+
 final class Config
 {
     public static function isDebugLoggingEnabled(): bool
@@ -11,7 +13,7 @@ final class Config
 
     public static function isDeprecationLoggingEnabled(): bool
     {
-        return !empty(\QUI::conf('globals', 'log_deprecated_errors'));
+        return !empty(QUI::conf('globals', 'log_deprecated_errors'));
     }
 
     public static function isInfoLoggingEnabled(): bool
@@ -51,11 +53,20 @@ final class Config
 
     private static function isLoggingEnabled(string $logLevel): bool
     {
-        return (bool)Logger::getPackage()->getConfig()?->get('log_levels', $logLevel);
+        return self::getPackageConfig()?->get('log_levels', $logLevel);
     }
 
     public static function isAllEventLoggingEnabled(): bool
     {
-        return (bool)Logger::getPackage()->getConfig()?->get('log', 'logAllEvents');
+        return (bool)self::getPackageConfig()?->get('log', 'logAllEvents');
+    }
+
+    public static function getPackageConfig(): ?QUI\Config
+    {
+        try {
+            return QUI::getConfig('etc/plugins/quiqqer/log.ini.php');
+        } catch (QUI\Exception $e) {
+            return null;
+        }
     }
 }
