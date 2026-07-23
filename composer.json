@@ -15,7 +15,7 @@
         "email": "support@pcsg.de"
     },
     "require": {
-        "php": "^8",
+        "php": "^8.2",
         "ext-zip": "*",
         "quiqqer/core": "^2",
         "monolog/monolog": "^3",

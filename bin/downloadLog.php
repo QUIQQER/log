@@ -17,7 +17,7 @@ if (!\QUI\Log\Permission::canUserDownloadLogs()) {
 
 $logDir = VAR_DIR . 'log/';
 
-$requestedLogName = urldecode(filter_var($_GET['log'], FILTER_SANITIZE_STRING));
+$requestedLogName = urldecode(filter_var($_GET['log'], FILTER_SANITIZE_STRING) ?: "");
 $requestedLogPath = $logDir . $requestedLogName;
 
 if (
