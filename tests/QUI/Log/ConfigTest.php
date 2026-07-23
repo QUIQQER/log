@@ -30,7 +30,7 @@ class ConfigTest extends TestCase
 
     protected function setUp(): void
     {
-        $PackageConfig = Logger::getPackage()->getConfig();
+        $PackageConfig = Config::getPackageConfig();
         self::assertNotNull($PackageConfig);
 
         $this->PackageConfig = $PackageConfig;

@@ -222,17 +222,6 @@ class Logger
         self::pushHandler($Logger, MonologConfigurator::createSyslogUDPHandlerIfEnabled($Logger));
     }
 
-    public static function onHeaderLoaded(): void
-    {
-        // This method has to be kept for backwards compatibility:
-        // Removing it makes the QUIQQER event manager write to a log
-        // …which instantiates the Logger
-        // …which instantiates the Package Manager
-        // …which instantiates the QUIQQER event manager
-        // …which tries to write to a log
-        // …which results in an infinite loop
-    }
-
     /**
      * Write a message to the logger
      * event: onLogWrite

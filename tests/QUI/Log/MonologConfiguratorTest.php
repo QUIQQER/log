@@ -26,7 +26,7 @@ class MonologConfiguratorTest extends TestCase
     {
         $this->OriginalLogger = Logger::getLogger();
 
-        $PackageConfig = Logger::getPackage()->getConfig();
+        $PackageConfig = \QUI\Log\Config::getPackageConfig();
         self::assertNotNull($PackageConfig);
         $this->PackageConfig = $PackageConfig;
         $this->OriginalBrowserLogConfig = $PackageConfig->get('browser_logs');

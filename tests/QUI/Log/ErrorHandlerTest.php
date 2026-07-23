@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI;
 use QUI\Config as QuiqqerConfig;
+use QUI\Log\Config;
 use QUI\Log\ErrorHandler;
 use QUI\Log\Logger;
 use ReflectionMethod;
@@ -46,7 +47,7 @@ class ErrorHandlerTest extends TestCase
         $this->Handler = new TestHandler();
         Logger::$Logger = new MonologLogger('test', [$this->Handler]);
 
-        $PackageConfig = Logger::getPackage()->getConfig();
+        $PackageConfig = Config::getPackageConfig();
         self::assertNotNull($PackageConfig);
         $this->PackageConfig = $PackageConfig;
         $this->OriginalLogLevels = $PackageConfig->get('log_levels');
