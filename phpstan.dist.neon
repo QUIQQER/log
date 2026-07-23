@@ -3,8 +3,23 @@ includes:
 
 parameters:
     level: 8
+    phpVersion:
+        min: 80200 # 8.2.0
+        max: 80509 # 8.5.9
     paths:
         - src
         - ajax
+        - bin
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    dynamicConstantNames:
+        - DEVELOPMENT
+        - DEBUG_MODE
+        - CMS_DIR
+        - URL_DIR
+        - QUIQQER_AJAX
+        - ERROR_SEND
+        - ERROR_MAIL
+        - QUIQQER_BACKEND
+        - QUIQQER_CONSOLE
+        - ADMIN

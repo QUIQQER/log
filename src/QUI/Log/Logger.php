@@ -1,31 +1,22 @@
 <?php
 
-/**
- * This file contains QUI\Log\Logger class
- */
-
 namespace QUI\Log;
 
 use Monolog;
+use Monolog\Handler\HandlerInterface;
 use QUI;
 use QUI\Exception;
 use QUI\System\Log;
 
-use function class_exists;
-
-/**
- * QUIQQER logging
- */
 class Logger
 {
-    /**
-     * Monolog Logger
-     *
-     * @var ?Monolog\Logger
-     */
-    public static ?Monolog\Logger $Logger = null;
+    public static Monolog\Logger $Logger;
+
     /**
      * which levels should be logged
+     *
+     * @deprecated Use the corresponding methods in {@see Config} instead
+     * @todo Remove this property in the next major version or replace with property hooks once PHP 8.4 is the minimum requirement
      *
      * @var array<string, bool>
      */
@@ -40,13 +31,41 @@ class Logger
         'alert' => true,
         'emergency' => true
     ];
+
     /**
-     * log events?
+     * Log all events?
+     *
+     * @deprecated Use {@see Config::isAllEventLoggingEnabled()} instead
+     * @todo Remove with the next major release or replace with a property hook once PHP 8.4 is the minimum requirement
      *
      * @var boolean|null
      */
     protected static ?bool $logOnFireEvent = null;
-    protected static ?int $monologVersion = null;
+
+    private static function initialize(): void
+    {
+        self::$logLevels = [
+            'debug' => Config::isDebugLoggingEnabled(),
+            'deprecated' => Config::isDeprecationLoggingEnabled(),
+            'info' => Config::isInfoLoggingEnabled(),
+            'notice' => Config::isNoticeLoggingEnabled(),
+            'warning' => Config::isWarningLoggingEnabled(),
+            'error' => Config::isErrorLoggingEnabled(),
+            'critical' => Config::isCriticalLoggingEnabled(),
+            'alert' => Config::isAlertLoggingEnabled(),
+            'emergency' => Config::isEmergencyLoggingEnabled()
+        ];
+
+        self::$Logger = new Monolog\Logger('QUI:Log');
+
+        MonologConfigurator::configure(self::$Logger);
+
+        try {
+            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [self::$Logger]);
+        } catch (\Exception $Exception) {
+            self::$Logger->notice($Exception->getMessage());
+        }
+    }
 
     /**
      * event on fire event
@@ -57,14 +76,7 @@ class Logger
     public static function logOnFireEvent(array | string $params): void
     {
         if (self::$logOnFireEvent === null) {
-            self::$logOnFireEvent = false;
-
-            try {
-                if (self::getPackage()->getConfig()?->get('log', 'logAllEvents')) {
-                    self::$logOnFireEvent = true;
-                }
-            } catch (\Exception) {
-            }
+            self::$logOnFireEvent = Config::isAllEventLoggingEnabled();
         }
 
         if (!self::$logOnFireEvent) {
@@ -83,10 +95,6 @@ class Logger
 
         $Logger = self::getLogger();
 
-        if ($Logger === null) {
-            return;
-        }
-
         $User = QUI::getUserBySession();
 
         $context = [
@@ -102,9 +110,6 @@ class Logger
     }
 
     /**
-     * Return the quiqqer log plugins
-     *
-     * @return QUI\Package\Package
      * @throws Exception
      */
     public static function getPackage(): QUI\Package\Package
@@ -113,381 +118,127 @@ class Logger
     }
 
     /**
-     * Return the Logger object
-     *
-     * @return Monolog\Logger|null
      * @throws Exception
      */
-    public static function getLogger(): ?Monolog\Logger
+    public static function getLogger(): Monolog\Logger
     {
-        if (self::$Logger) {
-            return self::$Logger;
+        if (!isset(self::$Logger)) {
+            self::initialize();
         }
 
-        $Logger = new Monolog\Logger('QUI:Log');
-
-        self::$Logger = $Logger;
-
-        // which levels should be logged
-        $logLevels = self::getPackage()->getConfig()?->get('log_levels');
-
-        if (is_array($logLevels)) {
-            self::$logLevels = $logLevels;
-        }
-
-        $Logger->pushHandler(new QUI\Log\Monolog\LogHandlerV3());
-
-        self::addGraylogToLogger($Logger);
-        self::addChromePHPHandlerToLogger($Logger);
-        self::addFirePHPHandlerToLogger($Logger);
-        self::addBrowserPHPHandlerToLogger($Logger);
-        self::addCubeHandlerToLogger($Logger);
-        self::addRedisHandlerToLogger($Logger);
-        self::addSyslogUDPHandlerToLogger($Logger);
-
-        try {
-            QUI::getEvents()->fireEvent('quiqqerLogGetLogger', [$Logger]);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
-
-        return $Logger;
+        return self::$Logger;
     }
 
     /**
-     * Add a graylog handler to the logger, if settings are available
+     * Add a graylog handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addGraylogToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $graylog = $Config?->get('graylog');
-
-        if (!$graylog) {
-            return;
-        }
-
-        $server = $Config->get('graylog', 'server');
-        $port = $Config->get('graylog', 'port');
-
-        if (empty($server) || empty($port)) {
-            return;
-        }
-
-        if (!class_exists('Gelf\Publisher') || !class_exists('Gelf\Transport\TcpTransport')) {
-            $Logger->info(
-                '\Gelf\Publisher class is missing. Please install: "graylog2/gelf-php": "~1.2"'
-            );
-
-            return;
-        }
-
-        try {
-            $Publisher = new \Gelf\Publisher(
-                new \Gelf\Transport\TcpTransport(
-                    $server,
-                    $port
-                )
-            );
-
-            // @phpstan-ignore-next-line
-            $Handler = new Monolog\Handler\GelfHandler($Publisher);
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createGraylogHandlerIfEnabled($Logger));
     }
 
     /**
-     * Add a ChromePHP handler to the logger, if settings are available
+     * Add a ChromePHP handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addChromePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $chromePHP = $Config->get('browser_logs', 'chromephp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($chromePHP)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\ChromePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createChromePHPHandlerIfEnabled($Logger));
     }
 
     /**
-     * Handler
-     */
-
-    /**
-     * Add a FirePHP handler to the logger, if settings are available
+     * Add a FirePHP handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addFirePHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $firephp = $Config->get('browser_logs', 'firephp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($firephp)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\FirePHPHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createFirePHPHandlerIfEnabled($Logger));
     }
 
     /**
-     * Add a Browser php handler to the logger, if settings are available
+     * Add a Browser php handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addBrowserPHPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $browser = $Config?->get('browser_logs');
-
-        if (!$browser) {
-            return;
-        }
-
-        $browserPHP = $Config->get('browser_logs', 'browserphp');
-        $userLoggedIn = $Config->get('browser_logs', 'userLogedIn');
-
-        if (empty($browserPHP)) {
-            return;
-        }
-
-        if ($userLoggedIn && !QUI::getUserBySession()->getId()) {
-            return;
-        }
-
-        try {
-            $Logger->pushHandler(new Monolog\Handler\BrowserConsoleHandler());
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createBrowserPHPHandlerIfEnabled($Logger));
     }
 
     /**
-     * Add a Cube handler to the logger, if settings are available
+     * Add a Cube handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addCubeHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $cube = $Config?->get('cube');
-
-        if (!$cube) {
-            return;
-        }
-
-        $server = $Config->get('cube', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        try {
-            $Handler = new Monolog\Handler\CubeHandler($server);
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createCubeHandlerIfEnabled($Logger));
     }
 
     /**
-     * Add a Redis handler to the logger, if settings are available
+     * Add a Redis handler to the logger, if settings and dependencies are available
      *
      * @needle predis/predis
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addRedisHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $redis = $Config?->get('redis');
-
-        if (!$redis) {
-            return;
-        }
-
-        $server = $Config->get('redis', 'server');
-
-        if (empty($server)) {
-            return;
-        }
-
-        if (!class_exists('Predis\Client')) {
-            $Logger->info(
-                '\Predis\Client class is missing.'
-            );
-
-            return;
-        }
-
-        try {
-            $Client = new \Predis\Client($server);
-
-            $Handler = new Monolog\Handler\RedisHandler(
-                $Client,
-                $server
-            );
-
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createRedisHandlerIfEnabled($Logger));
     }
 
     /**
-     * Add a SystelogUPD handler to the logger, if settings are available
+     * Add a SystelogUPD handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addSyslogUDPHandlerToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $syslog = $Config?->get('syslogUdp');
-
-        if (!$syslog) {
-            return;
-        }
-
-        $host = $Config->get('syslogUdp', 'host');
-        $port = $Config->get('syslogUdp', 'port');
-
-        if (empty($host)) {
-            return;
-        }
-
-
-        try {
-            $Handler = new Monolog\Handler\SyslogUdpHandler($host, $port);
-            $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
-        }
+        self::pushHandler($Logger, MonologConfigurator::createSyslogUDPHandlerIfEnabled($Logger));
     }
 
-    /**
-     * event : on header loaded -> set error reporting
-     */
     public static function onHeaderLoaded(): void
     {
-        if (
-            self::$logLevels['debug']
-            || (defined('DEVELOPMENT') && DEVELOPMENT === true) // @phpstan-ignore-line
-        ) {
-            error_reporting(E_ALL);
-
-            // @phpstan-ignore-next-line
-            if (defined('DEVELOPMENT') && DEVELOPMENT === true) {
-                error_reporting(E_ALL | E_DEPRECATED);
-            }
-
-            return;
-        }
-
-        $errorLevel = E_ERROR;
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_WARNING;
-        }
-
-        if (
-            self::$logLevels['error']
-            || self::$logLevels['critical']
-            || self::$logLevels['alert']
-        ) {
-            $errorLevel = $errorLevel | E_PARSE;
-        }
-
-        if (self::$logLevels['notice']) {
-            $errorLevel = $errorLevel | E_NOTICE;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_CORE_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_CORE_WARNING;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_COMPILE_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_COMPILE_WARNING;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_USER_ERROR;
-        }
-
-        if (self::$logLevels['warning']) {
-            $errorLevel = $errorLevel | E_USER_WARNING;
-        }
-
-        if (self::$logLevels['notice']) {
-            $errorLevel = $errorLevel | E_USER_NOTICE;
-        }
-
-        if (self::$logLevels['info']) {
-            $errorLevel = $errorLevel | E_STRICT;
-        }
-
-        if (self::$logLevels['error']) {
-            $errorLevel = $errorLevel | E_RECOVERABLE_ERROR;
-        }
-
-        error_reporting($errorLevel);
+        // This method has to be kept for backwards compatibility:
+        // Removing it makes the QUIQQER event manager write to a log
+        // …which instantiates the Logger
+        // …which instantiates the Package Manager
+        // …which instantiates the QUIQQER event manager
+        // …which tries to write to a log
+        // …which results in an infinite loop
     }
 
     /**
      * Write a message to the logger
      * event: onLogWrite
+     *
+     * @todo Remove this method in the next major version
+     * @deprecated Use {@see Log::write()} instead
      *
      * @param string $message - Log message
      * @param integer $loglevel - Log::LEVEL_*
@@ -496,10 +247,6 @@ class Logger
     public static function write(string $message, int $loglevel = Log::LEVEL_INFO): void
     {
         $Logger = self::getLogger();
-
-        if ($Logger === null) {
-            return;
-        }
 
         $User = QUI::getUserBySession();
 
@@ -510,49 +257,49 @@ class Logger
 
         switch ($loglevel) {
             case Log::LEVEL_DEBUG:
-                if (self::$logLevels['debug']) {
+                if (Config::isDebugLoggingEnabled()) {
                     $Logger->debug($message, $context);
                 }
                 break;
 
             case Log::LEVEL_INFO:
-                if (self::$logLevels['info']) {
+                if (Config::isInfoLoggingEnabled()) {
                     $Logger->info($message, $context);
                 }
                 break;
 
             case Log::LEVEL_NOTICE:
-                if (self::$logLevels['notice']) {
+                if (Config::isNoticeLoggingEnabled()) {
                     $Logger->notice($message, $context);
                 }
                 break;
 
             case Log::LEVEL_WARNING:
-                if (self::$logLevels['warning']) {
+                if (Config::isWarningLoggingEnabled()) {
                     $Logger->warning($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ERROR:
-                if (self::$logLevels['error']) {
+                if (Config::isErrorLoggingEnabled()) {
                     $Logger->error($message, $context);
                 }
                 break;
 
             case Log::LEVEL_CRITICAL:
-                if (self::$logLevels['critical']) {
+                if (Config::isCriticalLoggingEnabled()) {
                     $Logger->critical($message, $context);
                 }
                 break;
 
             case Log::LEVEL_ALERT:
-                if (self::$logLevels['alert']) {
+                if (Config::isAlertLoggingEnabled()) {
                     $Logger->alert($message, $context);
                 }
                 break;
 
             case Log::LEVEL_EMERGENCY:
-                if (self::$logLevels['emergency']) {
+                if (Config::isEmergencyLoggingEnabled()) {
                     $Logger->emergency($message, $context);
                 }
                 break;
@@ -560,36 +307,26 @@ class Logger
     }
 
     /**
-     * Add a NewRelic handler to the logger, if settings are available
+     * Add a NewRelic handler to the logger, if settings and dependencies are available
      *
-     * @param Monolog\Logger $Logger
+     * @deprecated This method is unintentionally public and will become private in the future
+     * @todo Remove this method in the next major version
+     *
      * @throws Exception
      */
     public static function addNewRelicToLogger(Monolog\Logger $Logger): void
     {
-        $Config = self::getPackage()->getConfig();
-        $newRelic = $Config?->get('newRelic');
+        self::pushHandler($Logger, MonologConfigurator::createNewRelicHandlerIfEnabled($Logger));
+    }
 
-        if (!$newRelic) {
-            return;
-        }
-
-        $appName = $Config->get('newRelic', 'appname');
-
-        if (empty($appName)) {
-            return;
-        }
-
-        try {
-            $Handler = new Monolog\Handler\NewRelicHandler(
-                Log::LEVEL_INFO,
-                true,
-                $appName
-            );
-
+    /**
+     * @deprecated
+     * @todo Remove this method in the next major version
+     */
+    private static function pushHandler(Monolog\Logger $Logger, ?HandlerInterface $Handler): void
+    {
+        if ($Handler !== null) {
             $Logger->pushHandler($Handler);
-        } catch (\Exception $Exception) {
-            $Logger->notice($Exception->getMessage());
         }
     }
 }
