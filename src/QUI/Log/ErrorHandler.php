@@ -144,9 +144,16 @@ final class ErrorHandler
             exit(1);
         }
 
+        $errorPage = self::getErrorPage();
+
         if (!headers_sent()) {
             http_response_code(503);
-            header('Content-Type: application/json');
+            header('Content-Type: ' . ($errorPage === null ? 'application/json' : 'text/html; charset=UTF-8'));
+        }
+
+        if ($errorPage !== null) {
+            echo $errorPage;
+            return;
         }
 
         echo json_encode([
@@ -154,6 +161,46 @@ final class ErrorHandler
             'message' => 'An error occurred. Check the log for more details.',
             'code' => $Exception->getCode()
         ]);
+    }
+
+    private static function getErrorPage(): ?string
+    {
+        try {
+            $restConfiguration = null;
+
+            if (QUI::getPackageManager()->isInstalled('quiqqer/rest')) {
+                $Config = QUI::getPackage('quiqqer/rest')->getConfig();
+
+                if ($Config === null) {
+                    return null;
+                }
+
+                $basePath = $Config->getValue('general', 'basePath');
+                $baseHost = $Config->getValue('general', 'baseHost');
+                $restConfiguration = [
+                    'basePath' => is_string($basePath) ? $basePath : '',
+                    'baseHost' => is_string($baseHost) ? $baseHost : ''
+                ];
+            }
+
+            if (
+                !ErrorResponseFormat::wantsHtml(
+                    QUI::getRequest(),
+                    defined('QUIQQER_AJAX') && QUIQQER_AJAX,
+                    $restConfiguration,
+                    QUI::getGlobalResponse()->headers->get('Content-Type', '') ?? ''
+                )
+            ) {
+                return null;
+            }
+
+            $page = @file_get_contents(LIB_DIR . 'templates/error.html');
+
+            return is_string($page) && $page !== '' ? $page : null;
+        } catch (Throwable) {
+            // Bootstrap or configuration may be the original failure. Keep the JSON fallback available.
+            return null;
+        }
     }
 
     public static function logUncaughtException(Throwable $Exception): void
