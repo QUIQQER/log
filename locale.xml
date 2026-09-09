@@ -4,216 +4,413 @@
         <locale name="package.title">
             <de><![CDATA[QUIQQER - Log]]></de>
             <en><![CDATA[QUIQQER - Log]]></en>
+            <es><![CDATA[QUIQQER - Registros]]></es>
+            <pt><![CDATA[QUIQQER - Registos]]></pt>
+            <fr><![CDATA[QUIQQER - Journaux]]></fr>
+            <it><![CDATA[QUIQQER - Log]]></it>
+            <pl><![CDATA[QUIQQER - Dzienniki]]></pl>
         </locale>
         <locale name="package.description">
-            <de>
-                <![CDATA[Ergänzt QUIQQER um eine erweiterte Log-Verwaltung. Verwalten Sie die Logs von QUIQQER, schauen Sie Fehlermeldungen nach oder machen Sie sich ein Überblick was im System so passiert.]]></de>
-            <en>
-                <![CDATA[Extend QUIQQER with a log management. Manage the logs of QUIQQER, check for errors, or get an overview of what's happening in the system.]]></en>
+            <de><![CDATA[Ergänzt QUIQQER um eine erweiterte Log-Verwaltung. Verwalten Sie die Logs von QUIQQER, sehen Sie Fehlermeldungen ein und verschaffen Sie sich einen Überblick über die Vorgänge im System.]]></de>
+            <en><![CDATA[Extends QUIQQER with advanced log management. Manage QUIQQER logs, review error messages and get an overview of what is happening in the system.]]></en>
+            <es><![CDATA[Amplía QUIQQER con funciones avanzadas de gestión de registros. Gestione los registros de QUIQQER, consulte los mensajes de error y vea qué ocurre en el sistema.]]></es>
+            <pt><![CDATA[Adiciona ao QUIQQER funcionalidades avançadas de gestão de registos. Faça a gestão dos registos do QUIQQER, consulte mensagens de erro e acompanhe a atividade do sistema.]]></pt>
+            <fr><![CDATA[Ajoute à QUIQQER des fonctions avancées de gestion des journaux. Gérez les journaux de QUIQQER, consultez les messages d’erreur et suivez l’activité du système.]]></fr>
+            <it><![CDATA[Aggiunge a QUIQQER funzionalità avanzate per la gestione dei log. Gestisci i log di QUIQQER, consulta i messaggi di errore e monitora le attività del sistema.]]></it>
+            <pl><![CDATA[Rozszerza QUIQQER o zaawansowane zarządzanie dziennikami. Zarządzaj dziennikami QUIQQER, sprawdzaj komunikaty o błędach i monitoruj aktywność systemu.]]></pl>
         </locale>
     </groups>
     <groups name="quiqqer/log" datatype="php,js">
         <locale name="menu.title">
             <de><![CDATA[Log-Verwaltung]]></de>
             <en><![CDATA[Log Management]]></en>
+            <es><![CDATA[Gestión de registros]]></es>
+            <pt><![CDATA[Gestão de registos]]></pt>
+            <fr><![CDATA[Gestion des journaux]]></fr>
+            <it><![CDATA[Gestione dei log]]></it>
+            <pl><![CDATA[Zarządzanie dziennikami]]></pl>
         </locale>
     </groups>
     <groups name="quiqqer/log" datatype="php">
         <locale name="settings.general.text">
             <de><![CDATA[Allgemeine Log-Einstellungen]]></de>
             <en><![CDATA[General Log Settings]]></en>
+            <es><![CDATA[Configuración general de registros]]></es>
+            <pt><![CDATA[Definições gerais de registos]]></pt>
+            <fr><![CDATA[Paramètres généraux des journaux]]></fr>
+            <it><![CDATA[Impostazioni generali dei log]]></it>
+            <pl><![CDATA[Ogólne ustawienia dzienników]]></pl>
         </locale>
 
         <locale name="settings.general.log.title">
             <de><![CDATA[Allgemeine Einstellungen]]></de>
             <en><![CDATA[General Settings]]></en>
+            <es><![CDATA[Configuración general]]></es>
+            <pt><![CDATA[Definições gerais]]></pt>
+            <fr><![CDATA[Paramètres généraux]]></fr>
+            <it><![CDATA[Impostazioni generali]]></it>
+            <pl><![CDATA[Ustawienia ogólne]]></pl>
         </locale>
         <locale name="settings.general.log.logAllEvents.text">
             <de><![CDATA[Alle Events und Aktionen der Benutzer loggen]]></de>
             <en><![CDATA[Log all events and user actions]]></en>
+            <es><![CDATA[Registrar todos los eventos y acciones de los usuarios]]></es>
+            <pt><![CDATA[Registar todos os eventos e ações dos utilizadores]]></pt>
+            <fr><![CDATA[Journaliser tous les événements et toutes les actions des utilisateurs]]></fr>
+            <it><![CDATA[Registra tutti gli eventi e le azioni degli utenti]]></it>
+            <pl><![CDATA[Rejestruj wszystkie zdarzenia i działania użytkowników]]></pl>
         </locale>
         <locale name="settings.general.log.logAllEvents.description">
-            <de><![CDATA[
-                Es werden alle Aktionen der Benutzer geloggt. Zum Beispiel welche Änderungen diese machen.
-                Diese Funktion kann unter Umständen performance fressend sein, daher sollte diese Funktion mit bedacht aktiviert werden.
-                <br />
-                Die Nachrichten werden als Info Nachrichten geloggt.
-            ]]></de>
-            <en><![CDATA[
-                All user actions will be logged. For example which changes they make.
-                This function may cause performance issues, so it should be enabled advisedly.
-                <br />
-                The messages are logged as info messages.
-            ]]></en>
+            <de><![CDATA[Es werden alle Aktionen der Benutzer protokolliert, zum Beispiel die Änderungen, die sie vornehmen. Diese Funktion kann die Leistung beeinträchtigen und sollte daher mit Bedacht aktiviert werden.<br />Die Nachrichten werden als Info-Meldungen protokolliert.]]></de>
+            <en><![CDATA[All user actions are logged, such as the changes they make. This feature may affect performance and should be enabled with care.<br />Messages are logged at the Info level.]]></en>
+            <es><![CDATA[Se registran todas las acciones de los usuarios, por ejemplo, los cambios que realizan. Esta función puede afectar al rendimiento, por lo que debe activarse con precaución.<br />Los mensajes se registran con el nivel Info.]]></es>
+            <pt><![CDATA[São registadas todas as ações dos utilizadores, por exemplo, as alterações que efetuam. Esta função pode afetar o desempenho, pelo que deve ser ativada com precaução.<br />As mensagens são registadas com o nível Info.]]></pt>
+            <fr><![CDATA[Toutes les actions des utilisateurs sont journalisées, par exemple les modifications qu’ils effectuent. Cette fonction peut affecter les performances et doit donc être activée avec précaution.<br />Les messages sont journalisés au niveau Info.]]></fr>
+            <it><![CDATA[Vengono registrate tutte le azioni degli utenti, ad esempio le modifiche che apportano. Questa funzione può influire sulle prestazioni e va quindi attivata con cautela.<br />I messaggi vengono registrati con il livello Info.]]></it>
+            <pl><![CDATA[Rejestrowane są wszystkie działania użytkowników, na przykład wprowadzane przez nich zmiany. Ta funkcja może wpływać na wydajność, dlatego należy włączać ją z rozwagą.<br />Komunikaty są zapisywane na poziomie Info.]]></pl>
         </locale>
         <locale name="settings.general.log.logAdminJsErrors.text">
-            <de><![CDATA[JavaScript Fehler in der Administration loggen]]></de>
+            <de><![CDATA[JavaScript-Fehler in der Administration loggen]]></de>
             <en><![CDATA[Log administration JavaScript errors]]></en>
+            <es><![CDATA[Registrar errores de JavaScript en la administración]]></es>
+            <pt><![CDATA[Registar erros de JavaScript na administração]]></pt>
+            <fr><![CDATA[Journaliser les erreurs JavaScript de l’administration]]></fr>
+            <it><![CDATA[Registra gli errori JavaScript nell’amministrazione]]></it>
+            <pl><![CDATA[Rejestruj błędy JavaScript w panelu administracyjnym]]></pl>
         </locale>
         <locale name="settings.general.log.logAdminJsErrors.description">
-            <de>
-                <![CDATA[Falls JavaScript Fehler in der Administration auftreten, werden diese an den Server gesendet und in einem seperaten JavaScript error log gespeichert.]]></de>
-            <en>
-                <![CDATA[If JavaScript errors occur in the administration they are sent to the server and stored in a seperate JavaScript error log.]]></en>
+            <de><![CDATA[JavaScript-Fehler in der Administration werden an den Server gesendet und in einem separaten JavaScript-Fehlerlog gespeichert.]]></de>
+            <en><![CDATA[JavaScript errors in the administration are sent to the server and stored in a separate JavaScript error log.]]></en>
+            <es><![CDATA[Los errores de JavaScript que se produzcan en la administración se envían al servidor y se guardan en un registro de errores de JavaScript independiente.]]></es>
+            <pt><![CDATA[Os erros de JavaScript que ocorram na administração são enviados para o servidor e guardados num registo de erros de JavaScript separado.]]></pt>
+            <fr><![CDATA[Les erreurs JavaScript survenant dans l’administration sont envoyées au serveur et enregistrées dans un journal d’erreurs JavaScript distinct.]]></fr>
+            <it><![CDATA[Gli errori JavaScript che si verificano nell’amministrazione vengono inviati al server e salvati in un log degli errori JavaScript separato.]]></it>
+            <pl><![CDATA[Błędy JavaScript występujące w panelu administracyjnym są wysyłane na serwer i zapisywane w osobnym dzienniku błędów JavaScript.]]></pl>
         </locale>
         <locale name="settings.general.log.logFrontendJsErrors.text">
-            <de><![CDATA[JavaScript Fehler im Frontend loggen]]></de>
+            <de><![CDATA[JavaScript-Fehler im Frontend loggen]]></de>
             <en><![CDATA[Log frontend JavaScript errors]]></en>
+            <es><![CDATA[Registrar errores de JavaScript en el frontend]]></es>
+            <pt><![CDATA[Registar erros de JavaScript no frontend]]></pt>
+            <fr><![CDATA[Journaliser les erreurs JavaScript du frontend]]></fr>
+            <it><![CDATA[Registra gli errori JavaScript nel frontend]]></it>
+            <pl><![CDATA[Rejestruj błędy JavaScript we frontendzie]]></pl>
         </locale>
         <locale name="settings.general.log.logFrontendJsErrors.description">
-            <de>
-                <![CDATA[Falls JavaScript Fehler im Frontend auftreten, werden diese an den Server gesendet und in einem separaten JavaScript error log gespeichert.]]></de>
-            <en>
-                <![CDATA[If JavaScript errors occur in the frontend they are sent to the server and stored in a separate JavaScript error log.]]></en>
+            <de><![CDATA[JavaScript-Fehler im Frontend werden an den Server gesendet und in einem separaten JavaScript-Fehlerlog gespeichert.]]></de>
+            <en><![CDATA[JavaScript errors in the frontend are sent to the server and stored in a separate JavaScript error log.]]></en>
+            <es><![CDATA[Los errores de JavaScript que se produzcan en el frontend se envían al servidor y se guardan en un registro de errores de JavaScript independiente.]]></es>
+            <pt><![CDATA[Os erros de JavaScript que ocorram no frontend são enviados para o servidor e guardados num registo de erros de JavaScript separado.]]></pt>
+            <fr><![CDATA[Les erreurs JavaScript survenant dans le frontend sont envoyées au serveur et enregistrées dans un journal d’erreurs JavaScript distinct.]]></fr>
+            <it><![CDATA[Gli errori JavaScript che si verificano nel frontend vengono inviati al server e salvati in un log degli errori JavaScript separato.]]></it>
+            <pl><![CDATA[Błędy JavaScript występujące we frontendzie są wysyłane na serwer i zapisywane w osobnym dzienniku błędów JavaScript.]]></pl>
         </locale>
 
         <locale name="settings.general.logLevels.title">
-            <de><![CDATA[Log Level Einstellungen]]></de>
+            <de><![CDATA[Log-Level-Einstellungen]]></de>
             <en><![CDATA[Log Level Settings]]></en>
+            <es><![CDATA[Configuración de niveles de registro]]></es>
+            <pt><![CDATA[Definições dos níveis de registo]]></pt>
+            <fr><![CDATA[Paramètres des niveaux de journalisation]]></fr>
+            <it><![CDATA[Impostazioni dei livelli di log]]></it>
+            <pl><![CDATA[Ustawienia poziomów rejestrowania]]></pl>
         </locale>
         <locale name="settings.general.logLevels.alert.text">
             <de><![CDATA[Alert-Meldungen (Alarme) loggen]]></de>
-            <en><![CDATA[Log Alert-Messages]]></en>
+            <en><![CDATA[Log Alert messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Alert (alerta)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Alert (alerta)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Alert (alerte)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Alert (allarme)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Alert (alarm)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.debug.text">
             <de><![CDATA[Debug-Meldungen loggen]]></de>
-            <en><![CDATA[Log Debug-Messages]]></en>
+            <en><![CDATA[Log Debug messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Debug (depuración)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Debug (depuração)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Debug (débogage)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Debug (debug)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Debug (debugowanie)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.critical.text">
             <de><![CDATA[Critical-Meldungen (kritisch) loggen]]></de>
-            <en><![CDATA[Log Critical-Messages]]></en>
+            <en><![CDATA[Log Critical messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Critical (crítico)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Critical (crítico)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Critical (critique)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Critical (critico)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Critical (błąd krytyczny)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.emergency.text">
             <de><![CDATA[Emergency-Meldungen (Notfälle) loggen]]></de>
-            <en><![CDATA[Log Emergency-Messages]]></en>
+            <en><![CDATA[Log Emergency messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Emergency (emergencia)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Emergency (emergência)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Emergency (urgence)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Emergency (emergenza)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Emergency (awaria)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.error.text">
             <de><![CDATA[Error-Meldungen (Fehler) loggen]]></de>
-            <en><![CDATA[Log Error-Messages ]]></en>
+            <en><![CDATA[Log Error messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Error (error)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Error (erro)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Error (erreur)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Error (errore)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Error (błąd)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.info.text">
             <de><![CDATA[Info-Meldungen loggen]]></de>
-            <en><![CDATA[Log Info-Messages]]></en>
+            <en><![CDATA[Log Info messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Info (información)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Info (informação)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Info (information)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Info (informazione)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Info (informacja)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.notice.text">
             <de><![CDATA[Notice-Meldungen (Hinweise) loggen]]></de>
-            <en><![CDATA[Log Notice-Messages]]></en>
+            <en><![CDATA[Log Notice messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Notice (aviso)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Notice (aviso)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Notice (notification)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Notice (notifica)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Notice (powiadomienie)]]></pl>
         </locale>
         <locale name="settings.general.logLevels.warning.text">
             <de><![CDATA[Warning-Meldungen (Warnungen) loggen]]></de>
-            <en><![CDATA[Log Warning-Messages]]></en>
+            <en><![CDATA[Log Warning messages]]></en>
+            <es><![CDATA[Registrar mensajes de nivel Warning (advertencia)]]></es>
+            <pt><![CDATA[Registar mensagens de nível Warning (advertência)]]></pt>
+            <fr><![CDATA[Journaliser les messages de niveau Warning (avertissement)]]></fr>
+            <it><![CDATA[Registra i messaggi di livello Warning (avviso)]]></it>
+            <pl><![CDATA[Rejestruj komunikaty na poziomie Warning (ostrzeżenie)]]></pl>
         </locale>
 
         <locale name="settings.general.browserLogs.title">
-            <de><![CDATA[Browser Log Einstellungen]]></de>
+            <de><![CDATA[Browser-Log-Einstellungen]]></de>
             <en><![CDATA[Browser Log Settings]]></en>
+            <es><![CDATA[Configuración de registros del navegador]]></es>
+            <pt><![CDATA[Definições dos registos do navegador]]></pt>
+            <fr><![CDATA[Paramètres des journaux du navigateur]]></fr>
+            <it><![CDATA[Impostazioni dei log del browser]]></it>
+            <pl><![CDATA[Ustawienia dzienników w przeglądarce]]></pl>
         </locale>
         <locale name="settings.general.browserLogs.userLoggedIn.text">
-            <de><![CDATA[Browser Log nur für angemeldete Benutzer anzeigen.]]></de>
-            <en><![CDATA[Show browser log only to signed in users]]></en>
+            <de><![CDATA[Browser-Log nur für angemeldete Benutzer anzeigen]]></de>
+            <en><![CDATA[Show browser log only to signed-in users]]></en>
+            <es><![CDATA[Mostrar el registro del navegador solo a los usuarios que hayan iniciado sesión]]></es>
+            <pt><![CDATA[Mostrar o registo do navegador apenas aos utilizadores com sessão iniciada]]></pt>
+            <fr><![CDATA[Afficher le journal du navigateur uniquement aux utilisateurs connectés]]></fr>
+            <it><![CDATA[Mostra il log del browser solo agli utenti che hanno effettuato l’accesso]]></it>
+            <pl><![CDATA[Pokazuj dziennik w przeglądarce tylko zalogowanym użytkownikom]]></pl>
         </locale>
         <locale name="settings.general.browserLogs.browserPhp.text">
             <de><![CDATA[BrowserPHP Logs einschalten]]></de>
             <en><![CDATA[Enable BrowserPHP Logs]]></en>
+            <es><![CDATA[Activar registros de BrowserPHP]]></es>
+            <pt><![CDATA[Ativar registos do BrowserPHP]]></pt>
+            <fr><![CDATA[Activer les journaux BrowserPHP]]></fr>
+            <it><![CDATA[Abilita i log di BrowserPHP]]></it>
+            <pl><![CDATA[Włącz rejestrowanie za pomocą BrowserPHP]]></pl>
         </locale>
         <locale name="settings.general.browserLogs.firePhp.text">
             <de><![CDATA[FirePHP Logs einschalten]]></de>
             <en><![CDATA[Enable FirePHP Logs]]></en>
+            <es><![CDATA[Activar registros de FirePHP]]></es>
+            <pt><![CDATA[Ativar registos do FirePHP]]></pt>
+            <fr><![CDATA[Activer les journaux FirePHP]]></fr>
+            <it><![CDATA[Abilita i log di FirePHP]]></it>
+            <pl><![CDATA[Włącz rejestrowanie za pomocą FirePHP]]></pl>
         </locale>
         <locale name="settings.general.browserLogs.chromePhp.text">
             <de><![CDATA[ChromePHP Logs einschalten]]></de>
             <en><![CDATA[Enable ChromePHP Logs]]></en>
+            <es><![CDATA[Activar registros de ChromePHP]]></es>
+            <pt><![CDATA[Ativar registos do ChromePHP]]></pt>
+            <fr><![CDATA[Activer les journaux ChromePHP]]></fr>
+            <it><![CDATA[Abilita i log di ChromePHP]]></it>
+            <pl><![CDATA[Włącz rejestrowanie za pomocą ChromePHP]]></pl>
         </locale>
         <locale name="settings.general.browserLogs.debug.text">
             <de><![CDATA[Browser-Debugging einschalten]]></de>
             <en><![CDATA[Enable browser debugging]]></en>
+            <es><![CDATA[Activar la depuración en el navegador]]></es>
+            <pt><![CDATA[Ativar a depuração no navegador]]></pt>
+            <fr><![CDATA[Activer le débogage dans le navigateur]]></fr>
+            <it><![CDATA[Abilita il debug nel browser]]></it>
+            <pl><![CDATA[Włącz debugowanie w przeglądarce]]></pl>
         </locale>
 
         <locale name="settings.cleanup.text">
             <de><![CDATA[Log-Bereinigung & -Archivierung]]></de>
             <en><![CDATA[Log Cleanup & Archiving]]></en>
+            <es><![CDATA[Limpieza y archivado de registros]]></es>
+            <pt><![CDATA[Limpeza e arquivo de registos]]></pt>
+            <fr><![CDATA[Nettoyage et archivage des journaux]]></fr>
+            <it><![CDATA[Pulizia e archiviazione dei log]]></it>
+            <pl><![CDATA[Czyszczenie i archiwizacja dzienników]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.title">
             <de><![CDATA[Log-Archivierung]]></de>
             <en><![CDATA[Log Archiving]]></en>
+            <es><![CDATA[Archivado de registros]]></es>
+            <pt><![CDATA[Arquivo de registos]]></pt>
+            <fr><![CDATA[Archivage des journaux]]></fr>
+            <it><![CDATA[Archiviazione dei log]]></it>
+            <pl><![CDATA[Archiwizacja dzienników]]></pl>
         </locale>
 
         <locale name="settings.cleanup.deletion.title">
             <de><![CDATA[Log-Bereinigung]]></de>
             <en><![CDATA[Log Cleanup]]></en>
+            <es><![CDATA[Limpieza de registros]]></es>
+            <pt><![CDATA[Limpeza de registos]]></pt>
+            <fr><![CDATA[Nettoyage des journaux]]></fr>
+            <it><![CDATA[Pulizia dei log]]></it>
+            <pl><![CDATA[Czyszczenie dzienników]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.isArchivingEnabled">
             <de><![CDATA[Logs archivieren?]]></de>
             <en><![CDATA[Archive logs?]]></en>
+            <es><![CDATA[¿Archivar los registros?]]></es>
+            <pt><![CDATA[Arquivar os registos?]]></pt>
+            <fr><![CDATA[Archiver les journaux ?]]></fr>
+            <it><![CDATA[Archiviare i log?]]></it>
+            <pl><![CDATA[Archiwizować dzienniki?]]></pl>
         </locale>
         <locale name="settings.cleanup.archiving.isArchivingEnabled.description">
-            <de>
-                <![CDATA[Fasst alte Log-Dateien in einem ZIP-Archiv zusammen um Speicherplatz freizumachen und um den Überblick zu bewahren.]]></de>
-            <en>
-                <![CDATA[Moves old log files into a zip archive to free storage and prevents losing the overview.]]></en>
+            <de><![CDATA[Fasst alte Log-Dateien in einem ZIP-Archiv zusammen, um Speicherplatz freizugeben und die Übersicht zu bewahren.]]></de>
+            <en><![CDATA[Groups old log files into a ZIP archive to free up storage space and keep logs organized.]]></en>
+            <es><![CDATA[Agrupa los archivos de registro antiguos en un archivo ZIP para liberar espacio de almacenamiento y mantenerlos organizados.]]></es>
+            <pt><![CDATA[Agrupa os ficheiros de registo antigos num arquivo ZIP para libertar espaço de armazenamento e mantê-los organizados.]]></pt>
+            <fr><![CDATA[Regroupe les anciens fichiers journaux dans une archive ZIP pour libérer de l’espace de stockage et faciliter leur gestion.]]></fr>
+            <it><![CDATA[Raggruppa i vecchi file di log in un archivio ZIP per liberare spazio di archiviazione e mantenerli organizzati.]]></it>
+            <pl><![CDATA[Pakuje stare pliki dzienników do archiwum ZIP, aby zwolnić miejsce i ułatwić zarządzanie dziennikami.]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.minLogAgeForArchiving">
             <de><![CDATA[Logs nach wie vielen Tagen archivieren?]]></de>
             <en><![CDATA[Archive logs after how many days?]]></en>
+            <es><![CDATA[¿Después de cuántos días se deben archivar los registros?]]></es>
+            <pt><![CDATA[Ao fim de quantos dias devem os registos ser arquivados?]]></pt>
+            <fr><![CDATA[Au bout de combien de jours faut-il archiver les journaux ?]]></fr>
+            <it><![CDATA[Dopo quanti giorni archiviare i log?]]></it>
+            <pl><![CDATA[Po ilu dniach archiwizować dzienniki?]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.minLogAgeForDelete">
             <de><![CDATA[Logs nach wie vielen Tagen löschen?]]></de>
             <en><![CDATA[Delete logs after how many days?]]></en>
+            <es><![CDATA[¿Después de cuántos días se deben eliminar los registros?]]></es>
+            <pt><![CDATA[Ao fim de quantos dias devem os registos ser eliminados?]]></pt>
+            <fr><![CDATA[Au bout de combien de jours faut-il supprimer les journaux ?]]></fr>
+            <it><![CDATA[Dopo quanti giorni eliminare i log?]]></it>
+            <pl><![CDATA[Po ilu dniach usuwać dzienniki?]]></pl>
         </locale>
         <locale name="settings.cleanup.archiving.minLogAgeForDelete.description">
             <de><![CDATA[Betrifft nur Log-Dateien, die nicht archiviert wurden.]]></de>
-            <en><![CDATA[Only affects non archived log files.]]></en>
+            <en><![CDATA[Only affects log files that have not been archived.]]></en>
+            <es><![CDATA[Solo se aplica a los archivos de registro que no se han archivado.]]></es>
+            <pt><![CDATA[Aplica-se apenas aos ficheiros de registo que não foram arquivados.]]></pt>
+            <fr><![CDATA[S’applique uniquement aux fichiers journaux non archivés.]]></fr>
+            <it><![CDATA[Si applica solo ai file di log non archiviati.]]></it>
+            <pl><![CDATA[Dotyczy tylko plików dzienników, które nie zostały zarchiwizowane.]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.isArchiveDeletionEnabled">
             <de><![CDATA[Archivierte Logs löschen?]]></de>
             <en><![CDATA[Delete archived logs?]]></en>
+            <es><![CDATA[¿Eliminar los registros archivados?]]></es>
+            <pt><![CDATA[Eliminar os registos arquivados?]]></pt>
+            <fr><![CDATA[Supprimer les journaux archivés ?]]></fr>
+            <it><![CDATA[Eliminare i log archiviati?]]></it>
+            <pl><![CDATA[Usuwać zarchiwizowane dzienniki?]]></pl>
         </locale>
 
         <locale name="settings.cleanup.archiving.minArchiveAgeForDelete">
             <de><![CDATA[Archivierte Logs nach wie vielen Tagen löschen?]]></de>
             <en><![CDATA[Delete archived logs after how many days?]]></en>
+            <es><![CDATA[¿Después de cuántos días se deben eliminar los registros archivados?]]></es>
+            <pt><![CDATA[Ao fim de quantos dias devem os registos arquivados ser eliminados?]]></pt>
+            <fr><![CDATA[Au bout de combien de jours faut-il supprimer les journaux archivés ?]]></fr>
+            <it><![CDATA[Dopo quanti giorni eliminare i log archiviati?]]></it>
+            <pl><![CDATA[Po ilu dniach usuwać zarchiwizowane dzienniki?]]></pl>
         </locale>
 
 
         <locale name="settings.graylog.text">
             <de><![CDATA[GrayLog2 Server]]></de>
             <en><![CDATA[GrayLog2 Server]]></en>
+            <es><![CDATA[Servidor GrayLog2]]></es>
+            <pt><![CDATA[Servidor GrayLog2]]></pt>
+            <fr><![CDATA[Serveur GrayLog2]]></fr>
+            <it><![CDATA[Server GrayLog2]]></it>
+            <pl><![CDATA[Serwer GrayLog2]]></pl>
         </locale>
 
         <locale name="settings.graylog.title">
             <de><![CDATA[GrayLog2 Server Einstellungen]]></de>
             <en><![CDATA[GrayLog2 Server Settings]]></en>
+            <es><![CDATA[Configuración del servidor GrayLog2]]></es>
+            <pt><![CDATA[Definições do servidor GrayLog2]]></pt>
+            <fr><![CDATA[Paramètres du serveur GrayLog2]]></fr>
+            <it><![CDATA[Impostazioni del server GrayLog2]]></it>
+            <pl><![CDATA[Ustawienia serwera GrayLog2]]></pl>
         </locale>
 
         <locale name="settings.graylog.server">
             <de><![CDATA[GrayLog2 Server URL]]></de>
             <en><![CDATA[GrayLog2 Server URL]]></en>
+            <es><![CDATA[URL del servidor GrayLog2]]></es>
+            <pt><![CDATA[URL do servidor GrayLog2]]></pt>
+            <fr><![CDATA[URL du serveur GrayLog2]]></fr>
+            <it><![CDATA[URL del server GrayLog2]]></it>
+            <pl><![CDATA[Adres URL serwera GrayLog2]]></pl>
         </locale>
 
         <locale name="settings.graylog.port">
             <de><![CDATA[GrayLog2 Server Port]]></de>
             <en><![CDATA[GrayLog2 Server Port]]></en>
+            <es><![CDATA[Puerto del servidor GrayLog2]]></es>
+            <pt><![CDATA[Porta do servidor GrayLog2]]></pt>
+            <fr><![CDATA[Port du serveur GrayLog2]]></fr>
+            <it><![CDATA[Porta del server GrayLog2]]></it>
+            <pl><![CDATA[Port serwera GrayLog2]]></pl>
         </locale>
 
 
         <locale name="settings.cube.text">
             <de><![CDATA[Cube Server]]></de>
             <en><![CDATA[Cube Server]]></en>
+            <es><![CDATA[Servidor Cube]]></es>
+            <pt><![CDATA[Servidor Cube]]></pt>
+            <fr><![CDATA[Serveur Cube]]></fr>
+            <it><![CDATA[Server Cube]]></it>
+            <pl><![CDATA[Serwer Cube]]></pl>
         </locale>
 
         <locale name="settings.cube.title">
             <de><![CDATA[Cube Server Einstellungen]]></de>
             <en><![CDATA[Cube Server Settings]]></en>
+            <es><![CDATA[Configuración del servidor Cube]]></es>
+            <pt><![CDATA[Definições do servidor Cube]]></pt>
+            <fr><![CDATA[Paramètres du serveur Cube]]></fr>
+            <it><![CDATA[Impostazioni del server Cube]]></it>
+            <pl><![CDATA[Ustawienia serwera Cube]]></pl>
         </locale>
 
         <locale name="settings.cube.server.text">
             <de><![CDATA[Cube Server URL]]></de>
             <en><![CDATA[Cube Server URL]]></en>
+            <es><![CDATA[URL del servidor Cube]]></es>
+            <pt><![CDATA[URL do servidor Cube]]></pt>
+            <fr><![CDATA[URL du serveur Cube]]></fr>
+            <it><![CDATA[URL del server Cube]]></it>
+            <pl><![CDATA[Adres URL serwera Cube]]></pl>
         </locale>
 
         <locale name="settings.cube.server.description">
@@ -221,22 +418,42 @@
                 <![CDATA[Mehr Informationen zu Cube Server finden Sie unter: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></de>
             <en>
                 <![CDATA[More information about Cube Server can be found at: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></en>
+            <es><![CDATA[Más información sobre Cube Server: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></es>
+            <pt><![CDATA[Mais informações sobre Cube Server: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></pt>
+            <fr><![CDATA[Pour en savoir plus sur Cube Server : <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></fr>
+            <it><![CDATA[Per maggiori informazioni su Cube Server: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></it>
+            <pl><![CDATA[Więcej informacji o Cube Server: <a href="https://github.com/square/cube" target="_blank">https://github.com/square/cube</a>]]></pl>
         </locale>
 
 
         <locale name="settings.newrelic.text">
             <de><![CDATA[NewRelic]]></de>
             <en><![CDATA[NewRelic]]></en>
+            <es><![CDATA[NewRelic]]></es>
+            <pt><![CDATA[NewRelic]]></pt>
+            <fr><![CDATA[NewRelic]]></fr>
+            <it><![CDATA[NewRelic]]></it>
+            <pl><![CDATA[NewRelic]]></pl>
         </locale>
 
         <locale name="settings.newrelic.title">
             <de><![CDATA[NewRelic Einstellungen]]></de>
             <en><![CDATA[NewRelic Settings]]></en>
+            <es><![CDATA[Configuración de NewRelic]]></es>
+            <pt><![CDATA[Definições do NewRelic]]></pt>
+            <fr><![CDATA[Paramètres de NewRelic]]></fr>
+            <it><![CDATA[Impostazioni di NewRelic]]></it>
+            <pl><![CDATA[Ustawienia NewRelic]]></pl>
         </locale>
 
         <locale name="settings.newrelic.appname.text">
             <de><![CDATA[NewRelic App-Name]]></de>
             <en><![CDATA[NewRelic App-Name]]></en>
+            <es><![CDATA[Nombre de la aplicación en NewRelic]]></es>
+            <pt><![CDATA[Nome da aplicação no NewRelic]]></pt>
+            <fr><![CDATA[Nom de l’application dans NewRelic]]></fr>
+            <it><![CDATA[Nome dell’applicazione in NewRelic]]></it>
+            <pl><![CDATA[Nazwa aplikacji w NewRelic]]></pl>
         </locale>
 
         <locale name="settings.newrelic.appname.description">
@@ -244,33 +461,63 @@
                 <![CDATA[Mehr Informationen zu New Relic finden Sie unter: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></de>
             <en>
                 <![CDATA[More information about New Relic can be found at: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></en>
+            <es><![CDATA[Más información sobre New Relic: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></es>
+            <pt><![CDATA[Mais informações sobre New Relic: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></pt>
+            <fr><![CDATA[Pour en savoir plus sur New Relic : <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></fr>
+            <it><![CDATA[Per maggiori informazioni su New Relic: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></it>
+            <pl><![CDATA[Więcej informacji o New Relic: <a href="https://www.newrelic.com" target="_blank">https://www.newrelic.com</a>]]></pl>
         </locale>
 
 
         <locale name="settings.syslogudp.text">
             <de><![CDATA[Syslog UDP Server]]></de>
             <en><![CDATA[Syslog UDP Server]]></en>
+            <es><![CDATA[Servidor Syslog UDP]]></es>
+            <pt><![CDATA[Servidor Syslog UDP]]></pt>
+            <fr><![CDATA[Serveur Syslog UDP]]></fr>
+            <it><![CDATA[Server Syslog UDP]]></it>
+            <pl><![CDATA[Serwer Syslog UDP]]></pl>
         </locale>
 
         <locale name="settings.syslogudp.title">
             <de><![CDATA[Syslog UDP Server Einstellungen]]></de>
             <en><![CDATA[Syslog UDP Server Settings]]></en>
+            <es><![CDATA[Configuración del servidor Syslog UDP]]></es>
+            <pt><![CDATA[Definições do servidor Syslog UDP]]></pt>
+            <fr><![CDATA[Paramètres du serveur Syslog UDP]]></fr>
+            <it><![CDATA[Impostazioni del server Syslog UDP]]></it>
+            <pl><![CDATA[Ustawienia serwera Syslog UDP]]></pl>
         </locale>
 
         <locale name="settings.syslogudp.host.text">
             <de><![CDATA[Syslog UDP Host]]></de>
             <en><![CDATA[Syslog UDP Host]]></en>
+            <es><![CDATA[Host de Syslog UDP]]></es>
+            <pt><![CDATA[Host de Syslog UDP]]></pt>
+            <fr><![CDATA[Hôte Syslog UDP]]></fr>
+            <it><![CDATA[Host Syslog UDP]]></it>
+            <pl><![CDATA[Host Syslog UDP]]></pl>
         </locale>
 
         <locale name="settings.syslogudp.host.description">
             <de>
                 <![CDATA[Es kann eine IP-Adresse oder eine Domain angegeben werden (z.B.: 192.168.1.200 oder my.server.com).]]></de>
-            <en><![CDATA[You can enter an IP-address or a domain (e.g.: 192.168.1.200 or my.server.com).]]></en>
+            <en><![CDATA[You can enter an IP address or a domain (e.g. 192.168.1.200 or my.server.com).]]></en>
+            <es><![CDATA[Puede introducir una dirección IP o un dominio (p. ej., 192.168.1.200 o my.server.com).]]></es>
+            <pt><![CDATA[Pode introduzir um endereço IP ou um domínio (por exemplo, 192.168.1.200 ou my.server.com).]]></pt>
+            <fr><![CDATA[Vous pouvez saisir une adresse IP ou un nom de domaine (par exemple, 192.168.1.200 ou my.server.com).]]></fr>
+            <it><![CDATA[Puoi inserire un indirizzo IP o un dominio (ad esempio, 192.168.1.200 o my.server.com).]]></it>
+            <pl><![CDATA[Możesz podać adres IP lub domenę (np. 192.168.1.200 lub my.server.com).]]></pl>
         </locale>
 
         <locale name="settings.syslogudp.port.text">
             <de><![CDATA[Syslog UDP Port]]></de>
             <en><![CDATA[Syslog UDP Port]]></en>
+            <es><![CDATA[Puerto de Syslog UDP]]></es>
+            <pt><![CDATA[Porta de Syslog UDP]]></pt>
+            <fr><![CDATA[Port Syslog UDP]]></fr>
+            <it><![CDATA[Porta Syslog UDP]]></it>
+            <pl><![CDATA[Port Syslog UDP]]></pl>
         </locale>
 
         <!-- region Crons -->
@@ -278,12 +525,21 @@
         <locale name="cron.mail.title">
             <de><![CDATA[Logs: Gestrige Logs an E-Mail-Adresse senden]]></de>
             <en><![CDATA[Logs: Send yesterday's logs to email address]]></en>
+            <es><![CDATA[Registros: enviar los registros de ayer por correo electrónico]]></es>
+            <pt><![CDATA[Registos: enviar os registos de ontem por e-mail]]></pt>
+            <fr><![CDATA[Journaux : envoyer les journaux de la veille par e-mail]]></fr>
+            <it><![CDATA[Log: invia i log di ieri via e-mail]]></it>
+            <pl><![CDATA[Dzienniki: wyślij wczorajsze dzienniki e-mailem]]></pl>
         </locale>
         <locale name="cron.mail.desc">
-            <de>
-                <![CDATA[Sendet die Log-Dateien des Vortages an die per Cron-Einstellung angegebene E-Mail Adresse.]]></de>
+            <de><![CDATA[Sendet die Log-Dateien des Vortages an die in den Cron-Einstellungen angegebene E-Mail-Adresse.]]></de>
             <en>
                 <![CDATA[Sends the log files of the previous day to the e-mail address specified by the cron setting.]]></en>
+            <es><![CDATA[Envía los archivos de registro del día anterior a la dirección de correo electrónico indicada en la configuración de la tarea cron.]]></es>
+            <pt><![CDATA[Envia os ficheiros de registo do dia anterior para o endereço de e-mail indicado nas definições da tarefa cron.]]></pt>
+            <fr><![CDATA[Envoie les fichiers journaux de la veille à l’adresse e-mail indiquée dans les paramètres de la tâche cron.]]></fr>
+            <it><![CDATA[Invia i file di log del giorno precedente all’indirizzo e-mail specificato nelle impostazioni del processo cron.]]></it>
+            <pl><![CDATA[Wysyła pliki dzienników z poprzedniego dnia na adres e-mail podany w ustawieniach zadania cron.]]></pl>
         </locale>
         <!-- endregion -->
 
@@ -291,17 +547,32 @@
         <locale name="cron.cleanup.delete.title">
             <de><![CDATA[Logs: Alte Logs löschen]]></de>
             <en><![CDATA[Logs: Delete old logs]]></en>
+            <es><![CDATA[Registros: eliminar registros antiguos]]></es>
+            <pt><![CDATA[Registos: eliminar registos antigos]]></pt>
+            <fr><![CDATA[Journaux : supprimer les anciens journaux]]></fr>
+            <it><![CDATA[Log: elimina i vecchi log]]></it>
+            <pl><![CDATA[Dzienniki: usuń stare dzienniki]]></pl>
         </locale>
         <locale name="cron.cleanup.delete.desc">
             <de>
                 <![CDATA[Löscht Log-Dateien (auch archivierte, wenn in den Einstellungen aktiviert), die älter sind als in den Log-Einstellungen festgelegt.]]></de>
             <en>
                 <![CDATA[Deletes log files (also archived ones, if enabled in the settings) which are older than defined in the log settings.]]></en>
+            <es><![CDATA[Elimina los archivos de registro que superan la antigüedad definida en la configuración de registros, incluidos los archivados si esta opción está activada.]]></es>
+            <pt><![CDATA[Elimina os ficheiros de registo que excedem a antiguidade definida nas definições de registos, incluindo os arquivados se essa opção estiver ativada.]]></pt>
+            <fr><![CDATA[Supprime les fichiers journaux dont l’ancienneté dépasse la durée définie dans les paramètres des journaux, y compris les fichiers archivés si cette option est activée.]]></fr>
+            <it><![CDATA[Elimina i file di log più vecchi del limite definito nelle impostazioni dei log, compresi quelli archiviati se l’opzione è abilitata.]]></it>
+            <pl><![CDATA[Usuwa pliki dzienników starsze niż okres określony w ustawieniach dzienników, również zarchiwizowane, jeśli włączono tę opcję.]]></pl>
         </locale>
 
         <locale name="error.setup.cron.deletion">
-            <de><![CDATA[Standard Aufgabe zur Log Bereinigung konnte nicht hinzugefügt werden.]]></de>
-            <en><![CDATA[Default cron for log cleanup couldn't be added.]]></en>
+            <de><![CDATA[Die Standardaufgabe zur Log-Bereinigung konnte nicht hinzugefügt werden.]]></de>
+            <en><![CDATA[The default cron job for log cleanup could not be added.]]></en>
+            <es><![CDATA[No se ha podido añadir la tarea cron predeterminada para la limpieza de registros.]]></es>
+            <pt><![CDATA[Não foi possível adicionar a tarefa cron predefinida para a limpeza de registos.]]></pt>
+            <fr><![CDATA[Impossible d’ajouter la tâche cron par défaut pour le nettoyage des journaux.]]></fr>
+            <it><![CDATA[Impossibile aggiungere il processo cron predefinito per la pulizia dei log.]]></it>
+            <pl><![CDATA[Nie udało się dodać domyślnego zadania cron do czyszczenia dzienników.]]></pl>
         </locale>
         <!-- endregion -->
 
@@ -309,23 +580,43 @@
         <locale name="cron.cleanup.archive.title">
             <de><![CDATA[Logs: Alte Logs archivieren]]></de>
             <en><![CDATA[Logs: Archive old logs]]></en>
+            <es><![CDATA[Registros: archivar registros antiguos]]></es>
+            <pt><![CDATA[Registos: arquivar registos antigos]]></pt>
+            <fr><![CDATA[Journaux : archiver les anciens journaux]]></fr>
+            <it><![CDATA[Log: archivia i vecchi log]]></it>
+            <pl><![CDATA[Dzienniki: archiwizuj stare dzienniki]]></pl>
         </locale>
         <locale name="cron.cleanup.archive.desc">
             <de><![CDATA[Archiviert Log-Dateien, die älter sind als in den Log-Einstellungen festgelegt.]]></de>
             <en><![CDATA[Archives log files which are older than defined in the log settings.]]></en>
+            <es><![CDATA[Archiva los archivos de registro que superan la antigüedad definida en la configuración de registros.]]></es>
+            <pt><![CDATA[Arquiva os ficheiros de registo que excedem a antiguidade definida nas definições de registos.]]></pt>
+            <fr><![CDATA[Archive les fichiers journaux dont l’ancienneté dépasse la durée définie dans les paramètres des journaux.]]></fr>
+            <it><![CDATA[Archivia i file di log più vecchi del limite definito nelle impostazioni dei log.]]></it>
+            <pl><![CDATA[Archiwizuje pliki dzienników starsze niż okres określony w ustawieniach dzienników.]]></pl>
         </locale>
 
         <locale name="error.setup.cron.archiving">
-            <de><![CDATA[Standard Aufgabe zur Log Archivierung konnte nicht hinzugefügt werden.]]></de>
-            <en><![CDATA[Default cron for log archiving couldn't be added.]]></en>
+            <de><![CDATA[Die Standardaufgabe zur Log-Archivierung konnte nicht hinzugefügt werden.]]></de>
+            <en><![CDATA[The default cron job for log archiving could not be added.]]></en>
+            <es><![CDATA[No se ha podido añadir la tarea cron predeterminada para el archivado de registros.]]></es>
+            <pt><![CDATA[Não foi possível adicionar a tarefa cron predefinida para o arquivo de registos.]]></pt>
+            <fr><![CDATA[Impossible d’ajouter la tâche cron par défaut pour l’archivage des journaux.]]></fr>
+            <it><![CDATA[Impossibile aggiungere il processo cron predefinito per l’archiviazione dei log.]]></it>
+            <pl><![CDATA[Nie udało się dodać domyślnego zadania cron do archiwizacji dzienników.]]></pl>
         </locale>
         <!-- endregion -->
         <!-- endregion -->
 
 
         <locale name="error.config.save.zip">
-            <de><![CDATA[Die php-Erweiterung "zip" wird benötigt um Logs zu archivieren.]]></de>
-            <en><![CDATA[The php-extension "zip" is required to archive logs.]]></en>
+            <de><![CDATA[Die PHP-Erweiterung "zip" wird benötigt, um Logs zu archivieren.]]></de>
+            <en><![CDATA[The PHP extension "zip" is required to archive logs.]]></en>
+            <es><![CDATA[Para archivar los registros se necesita la extensión PHP "zip".]]></es>
+            <pt><![CDATA[É necessária a extensão PHP "zip" para arquivar os registos.]]></pt>
+            <fr><![CDATA[L’extension PHP "zip" est nécessaire pour archiver les journaux.]]></fr>
+            <it><![CDATA[Per archiviare i log è necessaria l’estensione PHP "zip".]]></it>
+            <pl><![CDATA[Do archiwizacji dzienników wymagane jest rozszerzenie PHP "zip".]]></pl>
         </locale>
     </groups>
 
@@ -333,69 +624,148 @@
         <locale name="logs.panel.title">
             <de><![CDATA[Log-Manager]]></de>
             <en><![CDATA[Log manager]]></en>
+            <es><![CDATA[Gestor de registros]]></es>
+            <pt><![CDATA[Gestor de registos]]></pt>
+            <fr><![CDATA[Gestionnaire de journaux]]></fr>
+            <it><![CDATA[Gestione dei log]]></it>
+            <pl><![CDATA[Menedżer dzienników]]></pl>
         </locale>
         <locale name="logs.panel.log.file">
             <de><![CDATA[Log-Datei]]></de>
             <en><![CDATA[Log file]]></en>
+            <es><![CDATA[Archivo de registro]]></es>
+            <pt><![CDATA[Ficheiro de registo]]></pt>
+            <fr><![CDATA[Fichier journal]]></fr>
+            <it><![CDATA[File di log]]></it>
+            <pl><![CDATA[Plik dziennika]]></pl>
         </locale>
         <locale name="logs.panel.log.title">
             <de><![CDATA[Logs: [file]]]></de>
             <en><![CDATA[Logs: [file]]]></en>
+            <es><![CDATA[Registros: [file]]]></es>
+            <pt><![CDATA[Registos: [file]]]></pt>
+            <fr><![CDATA[Journaux : [file]]]></fr>
+            <it><![CDATA[Log: [file]]]></it>
+            <pl><![CDATA[Dzienniki: [file]]]></pl>
         </locale>
         <locale name="logs.panel.btn.refresh">
             <de><![CDATA[Log-Datei aktualisieren]]></de>
             <en><![CDATA[Refresh log file]]></en>
+            <es><![CDATA[Actualizar archivo de registro]]></es>
+            <pt><![CDATA[Atualizar ficheiro de registo]]></pt>
+            <fr><![CDATA[Actualiser le fichier journal]]></fr>
+            <it><![CDATA[Aggiorna il file di log]]></it>
+            <pl><![CDATA[Odśwież plik dziennika]]></pl>
         </locale>
         <locale name="logs.panel.btn.delete.marked">
-            <de><![CDATA[Markierte Log-Dateien löschen]]></de>
-            <en><![CDATA[Delete selected log files]]></en>
+            <de><![CDATA[Markierte Log-Datei löschen]]></de>
+            <en><![CDATA[Delete selected log file]]></en>
+            <es><![CDATA[Eliminar el archivo de registro seleccionado]]></es>
+            <pt><![CDATA[Eliminar o ficheiro de registo selecionado]]></pt>
+            <fr><![CDATA[Supprimer le fichier journal sélectionné]]></fr>
+            <it><![CDATA[Elimina il file di log selezionato]]></it>
+            <pl><![CDATA[Usuń wybrany plik dziennika]]></pl>
         </locale>
         <locale name="logs.panel.btn.download.marked">
             <de><![CDATA[Markierte Log-Datei herunterladen]]></de>
             <en><![CDATA[Download selected log file]]></en>
+            <es><![CDATA[Descargar el archivo de registro seleccionado]]></es>
+            <pt><![CDATA[Descarregar o ficheiro de registo selecionado]]></pt>
+            <fr><![CDATA[Télécharger le fichier journal sélectionné]]></fr>
+            <it><![CDATA[Scarica il file di log selezionato]]></it>
+            <pl><![CDATA[Pobierz wybrany plik dziennika]]></pl>
         </locale>
         <locale name="logs.panel.btn.open.log">
             <de><![CDATA[Log vom [date] öffnen]]></de>
             <en><![CDATA[Open log from [date]]]></en>
+            <es><![CDATA[Abrir el registro del [date]]]></es>
+            <pt><![CDATA[Abrir o registo de [date]]]></pt>
+            <fr><![CDATA[Ouvrir le journal du [date]]]></fr>
+            <it><![CDATA[Apri il log del [date]]]></it>
+            <pl><![CDATA[Otwórz dziennik z dnia [date]]]></pl>
         </locale>
         <locale name="logs.panel.btn.close.log">
             <de><![CDATA[Log schließen]]></de>
             <en><![CDATA[Close log file]]></en>
+            <es><![CDATA[Cerrar archivo de registro]]></es>
+            <pt><![CDATA[Fechar ficheiro de registo]]></pt>
+            <fr><![CDATA[Fermer le fichier journal]]></fr>
+            <it><![CDATA[Chiudi il file di log]]></it>
+            <pl><![CDATA[Zamknij plik dziennika]]></pl>
         </locale>
         <locale name="logs.panel.delete.window.title">
             <de><![CDATA[Log löschen: [file]]]></de>
             <en><![CDATA[Delete log: [file]]]></en>
+            <es><![CDATA[Eliminar registro: [file]]]></es>
+            <pt><![CDATA[Eliminar registo: [file]]]></pt>
+            <fr><![CDATA[Supprimer le journal : [file]]]></fr>
+            <it><![CDATA[Elimina log: [file]]]></it>
+            <pl><![CDATA[Usuń dziennik: [file]]]></pl>
         </locale>
         <locale name="logs.panel.delete.window.text">
             <de><![CDATA[Möchten Sie die Log-Datei wirklich löschen?]]></de>
-            <en><![CDATA[Would you really want to delete the log file?]]></en>
+            <en><![CDATA[Are you sure you want to delete the log file?]]></en>
+            <es><![CDATA[¿Seguro que desea eliminar el archivo de registro?]]></es>
+            <pt><![CDATA[Tem a certeza de que pretende eliminar o ficheiro de registo?]]></pt>
+            <fr><![CDATA[Voulez-vous vraiment supprimer ce fichier journal ?]]></fr>
+            <it><![CDATA[Vuoi davvero eliminare il file di log?]]></it>
+            <pl><![CDATA[Czy na pewno chcesz usunąć plik dziennika?]]></pl>
         </locale>
         <locale name="logs.panel.search.placeholder">
             <de><![CDATA[Suche nach...]]></de>
             <en><![CDATA[Search...]]></en>
+            <es><![CDATA[Buscar...]]></es>
+            <pt><![CDATA[Pesquisar...]]></pt>
+            <fr><![CDATA[Rechercher...]]></fr>
+            <it><![CDATA[Cerca...]]></it>
+            <pl><![CDATA[Szukaj...]]></pl>
         </locale>
         <locale name="logs.panel.search.btn.start.alt">
             <de><![CDATA[Suche starten]]></de>
             <en><![CDATA[Start search]]></en>
+            <es><![CDATA[Iniciar búsqueda]]></es>
+            <pt><![CDATA[Iniciar pesquisa]]></pt>
+            <fr><![CDATA[Lancer la recherche]]></fr>
+            <it><![CDATA[Avvia la ricerca]]></it>
+            <pl><![CDATA[Rozpocznij wyszukiwanie]]></pl>
         </locale>
         <locale name="logs.panel.search.btn.start.title">
             <de><![CDATA[Suche starten]]></de>
             <en><![CDATA[Start search]]></en>
+            <es><![CDATA[Iniciar búsqueda]]></es>
+            <pt><![CDATA[Iniciar pesquisa]]></pt>
+            <fr><![CDATA[Lancer la recherche]]></fr>
+            <it><![CDATA[Avvia la ricerca]]></it>
+            <pl><![CDATA[Rozpocznij wyszukiwanie]]></pl>
         </locale>
         <locale name="logs.panel.message.trimmed">
-            <de>
-                <![CDATA[Hinweis: Diese Log-Datei ist zu groß um sie komplett anzuzeigen, daher wurde sie gekürzt. Herunterladen um den gesamten Inhalt zu sehen.]]></de>
+            <de><![CDATA[Hinweis: Diese Log-Datei ist zu groß, um sie vollständig anzuzeigen. Daher wird nur ein Teil angezeigt. Laden Sie die Datei herunter, um den gesamten Inhalt zu sehen.]]></de>
             <en>
                 <![CDATA[Notice: This log file is too large to display, therefore it was truncated. Download it to view the entire content.]]></en>
+            <es><![CDATA[Aviso: este archivo de registro es demasiado grande para mostrarlo completo, por lo que solo se muestra una parte. Descárguelo para ver todo el contenido.]]></es>
+            <pt><![CDATA[Aviso: este ficheiro de registo é demasiado grande para ser apresentado na íntegra, pelo que apenas é apresentada uma parte. Descarregue-o para ver todo o conteúdo.]]></pt>
+            <fr><![CDATA[Remarque : ce fichier journal est trop volumineux pour être affiché en entier. Seule une partie est affichée. Téléchargez-le pour consulter l’intégralité de son contenu.]]></fr>
+            <it><![CDATA[Nota: questo file di log è troppo grande per essere visualizzato per intero, quindi ne viene mostrata solo una parte. Scaricalo per visualizzare tutto il contenuto.]]></it>
+            <pl><![CDATA[Uwaga: ten plik dziennika jest zbyt duży, aby wyświetlić go w całości, dlatego wyświetlana jest tylko jego część. Pobierz plik, aby zobaczyć pełną zawartość.]]></pl>
         </locale>
         <locale name="logs.panel.message.permission">
-            <de><![CDATA[Du hast nicht die nötigen Berechtigungen, um diese Datei anzusehen.]]></de>
+            <de><![CDATA[Sie haben nicht die nötigen Berechtigungen, um diese Datei anzusehen.]]></de>
             <en><![CDATA[You do not have the necessary permissions to view this file.]]></en>
+            <es><![CDATA[No tiene los permisos necesarios para ver este archivo.]]></es>
+            <pt><![CDATA[Não tem as permissões necessárias para visualizar este ficheiro.]]></pt>
+            <fr><![CDATA[Vous ne disposez pas des autorisations nécessaires pour consulter ce fichier.]]></fr>
+            <it><![CDATA[Non hai i permessi necessari per visualizzare questo file.]]></it>
+            <pl><![CDATA[Nie masz uprawnień do wyświetlenia tego pliku.]]></pl>
         </locale>
 
         <locale name="logs.download.message.permission">
-            <de><![CDATA[Du hast nicht die nötigen Berechtigungen, um diese Datei herunterzuladen.]]></de>
+            <de><![CDATA[Sie haben nicht die nötigen Berechtigungen, um diese Datei herunterzuladen.]]></de>
             <en><![CDATA[You do not have the necessary permissions to download this file.]]></en>
+            <es><![CDATA[No tiene los permisos necesarios para descargar este archivo.]]></es>
+            <pt><![CDATA[Não tem as permissões necessárias para descarregar este ficheiro.]]></pt>
+            <fr><![CDATA[Vous ne disposez pas des autorisations nécessaires pour télécharger ce fichier.]]></fr>
+            <it><![CDATA[Non hai i permessi necessari per scaricare questo file.]]></it>
+            <pl><![CDATA[Nie masz uprawnień do pobrania tego pliku.]]></pl>
         </locale>
     </groups>
 </locales>
