@@ -363,7 +363,7 @@ define('package/quiqqer/log/bin/Manager', [
                     dataType: 'string',
                     width: 200
                 }, {
-                    header: Locale.get('quiqqer/system', 'e_date'),
+                    header: Locale.get('quiqqer/core', 'e_date'),
                     dataIndex: 'mdate',
                     dataType: 'date',
                     width: 200
