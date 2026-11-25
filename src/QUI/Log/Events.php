@@ -9,9 +9,6 @@ namespace QUI\Log;
 use QUI;
 use QUI\Exception;
 
-use function dirname;
-use function file_get_contents;
-
 /**
  * Class Events - Main Events
  */
@@ -32,9 +29,7 @@ class Events
             return;
         }
 
-        $Template->extendHeader(
-            '<script type="text/javascript">' . file_get_contents(dirname(__FILE__) . '/logEvents.js') . '</script>'
-        );
+        $Template->extendHeader(JavaScriptErrorLogger::getScript());
     }
 
 
