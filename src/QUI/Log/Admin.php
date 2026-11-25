@@ -43,53 +43,7 @@ class Admin
         $Package = QUI::getPackageManager()->getInstalledPackage('quiqqer/log');
 
         if ($Package->getConfig()?->get('log', 'logAdminJsErrors')) {
-            echo '<script type="text/javascript">
-                  /* <![CDATA[ */
-
-                    require(["qui/QUI", "Ajax"], function(QUI, Ajax) {
-                        QUI.addEvent("onError", function(msg, url, linenumber) {
-                            console.error(
-                                "Message "+ msg +"\n"+
-                                "URL "+ url +"\n"+
-                                "Linenumber "+ linenumber
-                            );
-
-                            const context = [];
-                            
-                            for (let i in Ajax.$onprogress) {
-                                if (!Ajax.$onprogress.hasOwnProperty(i)) {
-                                    continue;
-                                }
-                                
-                                context.push({
-                                    method: Ajax.$onprogress[i].getAttribute("_rf")                   
-                                });
-                            }
-
-                            require(["Ajax"], function(Ajax) {
-                                if (typeof Ajax === "undefined") {
-                                    return;
-                                }
-
-                                if (msg === "" && url === "" && linenumber === "" ) {
-                                    return;
-                                }
-
-                                Ajax.post("package_quiqqer_log_ajax_logJsError", false, {
-                                    "package" : "quiqqer/log",
-                                    errMsg        : msg,
-                                    errUrl        : url,
-                                    errLinenumber : linenumber,
-                                    browser       : navigator.userAgent.toString(),
-                                    context       : JSON.encode(context)
-                                });
-                            })
-                        });
-                    });
-
-                  /* ]]> */
-                  </script>
-            ';
+            echo JavaScriptErrorLogger::getScript();
         }
     }
 }
